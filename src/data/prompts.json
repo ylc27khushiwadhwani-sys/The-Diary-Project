@@ -1,0 +1,50 @@
+[
+  {
+    "id": "prompt-1",
+    "title": "To the one who left without saying goodbye",
+    "category": "Closure",
+    "description": "What remained frozen in your throat the day the door closed?"
+  },
+  {
+    "id": "prompt-2",
+    "title": "The apology I never had the courage to give",
+    "category": "Forgiveness",
+    "description": "Where did pride win over what was true between you two?"
+  },
+  {
+    "id": "prompt-3",
+    "title": "Things I swallowed to keep the peace",
+    "category": "Truth",
+    "description": "The sentences that bruised you on the inside as you kept quiet."
+  },
+  {
+    "id": "prompt-4",
+    "title": "To the version of me I had to bury",
+    "category": "Self",
+    "description": "Who were you before the world taught you what to be careful of?"
+  },
+  {
+    "id": "prompt-5",
+    "title": "I still remember the afternoon by the water",
+    "category": "Nostalgia",
+    "description": "A fragile memory you preserve like a pressed leaf in a dark book."
+  },
+  {
+    "id": "prompt-6",
+    "title": "What I wanted you to know when I smiled",
+    "category": "Vulnerability",
+    "description": "The silent grief masked beneath an ordinary conversation."
+  },
+  {
+    "id": "prompt-7",
+    "title": "To the parent I never fully understood",
+    "category": "Family",
+    "description": "The questions you never knew how to ask until it was too late."
+  },
+  {
+    "id": "prompt-8",
+    "title": "To someone I will never meet again",
+    "category": "Stranger",
+    "description": "A brief stranger whose glance or kindness anchored you for a moment."
+  }
+]

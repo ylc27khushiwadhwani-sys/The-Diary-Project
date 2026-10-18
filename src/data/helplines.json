@@ -1,0 +1,51 @@
+[
+  {
+    "country": "India",
+    "name": "Vandrevala Foundation Helpline",
+    "phone": "+91 9999 666 555",
+    "website": "https://www.vandrevalafoundation.com",
+    "hours": "24/7",
+    "notes": "Free, confidential emotional support & crisis intervention across India in multiple languages."
+  },
+  {
+    "country": "India",
+    "name": "Tele-MANAS (Govt of India)",
+    "phone": "14416 / 1800-891-4416",
+    "website": "https://telemanas.mohfw.gov.in",
+    "hours": "24/7",
+    "notes": "Toll-free national mental health helpline operated by the Ministry of Health."
+  },
+  {
+    "country": "India",
+    "name": "iCall Psychosocial Helpline (TISS)",
+    "phone": "+91 9152 987 821",
+    "website": "https://icallhelpline.org",
+    "hours": "Mon-Sat: 10 AM - 8 PM",
+    "notes": "Professional counseling run by Tata Institute of Social Sciences."
+  },
+  {
+    "country": "United States & Canada",
+    "name": "988 Suicide & Crisis Lifeline",
+    "phone": "988",
+    "sms": "Text HOME to 741741",
+    "website": "https://988lifeline.org",
+    "hours": "24/7",
+    "notes": "Free and confidential support for people in distress, prevention and crisis resources."
+  },
+  {
+    "country": "United Kingdom",
+    "name": "Samaritans",
+    "phone": "116 123",
+    "website": "https://www.samaritans.org",
+    "hours": "24/7",
+    "notes": "Whatever you're going through, a Samaritan will face it with you."
+  },
+  {
+    "country": "International / Global",
+    "name": "Befrienders Worldwide",
+    "phone": "Varies by country",
+    "website": "https://www.befrienders.org",
+    "hours": "24/7",
+    "notes": "Global directory of emotional support and suicide prevention centers worldwide."
+  }
+]
