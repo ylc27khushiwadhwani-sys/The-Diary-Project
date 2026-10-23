@@ -1,24 +1,15 @@
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { ModerationResult } from '../types/database';
+import sharedPatterns from '../../supabase/functions/_shared/moderation-patterns.json';
 
-const LOCAL_SELF_HARM_PATTERNS = [
-  /suicid/i,
-  /kill(?:ing)?\s+myself/i,
-  /want(?:ing)?\s+to\s+die/i,
-  /end(?:ing)?\s+(?:my|this)\s+life/i,
-  /self[- ]harm/i,
-  /cut(?:ting)?\s+myself/i,
-  /take\s+my\s+(?:own\s+)?life/i,
-  /hang(?:ing)?\s+myself/i,
-  /overdose/i,
-  /better\s+off\s+dead/i,
-];
+// One shared pattern source (supabase/functions/_shared/moderation-patterns.json),
+// compiled identically here and in the screen-content Edge Function so the two
+// classifiers can never drift apart.
+const compilePatterns = (entries: { pattern: string; flags: string }[]) =>
+  entries.map((entry) => new RegExp(entry.pattern, entry.flags));
 
-const LOCAL_PII_PATTERNS = [
-  /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/,
-  /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/,
-  /\b\d{10}\b/,
-];
+const LOCAL_SELF_HARM_PATTERNS = compilePatterns(sharedPatterns.selfHarmPatterns);
+const LOCAL_PII_PATTERNS = compilePatterns(sharedPatterns.piiPatterns);
 
 export async function screenNoteContent(content: string, title: string = ''): Promise<ModerationResult> {
   const fullText = `${title} ${content}`.trim();

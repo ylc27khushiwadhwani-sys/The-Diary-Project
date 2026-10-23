@@ -1,0 +1,19 @@
+{
+  "selfHarmPatterns": [
+    { "pattern": "suicid", "flags": "i" },
+    { "pattern": "kill(?:ing)?\\s+myself", "flags": "i" },
+    { "pattern": "want(?:ing)?\\s+to\\s+die", "flags": "i" },
+    { "pattern": "end(?:ing)?\\s+(?:my|this)\\s+life", "flags": "i" },
+    { "pattern": "self[- ]harm", "flags": "i" },
+    { "pattern": "cut(?:ting)?\\s+myself", "flags": "i" },
+    { "pattern": "take\\s+my\\s+(?:own\\s+)?life", "flags": "i" },
+    { "pattern": "hang(?:ing)?\\s+myself", "flags": "i" },
+    { "pattern": "overdose", "flags": "i" },
+    { "pattern": "better\\s+off\\s+dead", "flags": "i" }
+  ],
+  "piiPatterns": [
+    { "pattern": "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b", "flags": "" },
+    { "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b", "flags": "" },
+    { "pattern": "\\b\\d{10}\\b", "flags": "" }
+  ]
+}

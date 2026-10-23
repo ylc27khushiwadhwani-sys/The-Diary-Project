@@ -2,6 +2,7 @@
 // Deno runtime for automated AI safety screening before public release
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import sharedPatterns from "../_shared/moderation-patterns.json" with { type: "json" };
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -13,25 +14,14 @@ interface ScreenRequest {
   title?: string;
 }
 
-// Heuristic emergency safety patterns to guarantee offline and zero-latency safety
-const SELF_HARM_PATTERNS = [
-  /suicid/i,
-  /kill(?:ing)?\s+myself/i,
-  /want(?:ing)?\s+to\s+die/i,
-  /end(?:ing)?\s+(?:my|this)\s+life/i,
-  /self[- ]harm/i,
-  /cut(?:ting)?\s+myself/i,
-  /take\s+my\s+(?:own\s+)?life/i,
-  /hang(?:ing)?\s+myself/i,
-  /overdose/i,
-  /better\s+off\s+dead/i,
-];
+// Heuristic emergency safety patterns to guarantee offline and zero-latency
+// safety. One shared source with the client-side fallback: both sides compile
+// these string patterns identically, so the two classifiers cannot drift apart.
+const compilePatterns = (entries: { pattern: string; flags: string }[]) =>
+  entries.map((entry) => new RegExp(entry.pattern, entry.flags));
 
-const PII_PATTERNS = [
-  /\b\d{3}[-.]?\d{3}[-.]?\d{4}\b/, // Phone number format
-  /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/, // Email
-  /\b\d{10}\b/, // 10-digit phone number
-];
+const SELF_HARM_PATTERNS = compilePatterns(sharedPatterns.selfHarmPatterns);
+const PII_PATTERNS = compilePatterns(sharedPatterns.piiPatterns);
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -50,10 +40,13 @@ serve(async (req) => {
 
     // 3. Optional: Call external OpenAI / Gemini moderation API if key exists
     const apiKey = Deno.env.get("MODERATION_API_KEY");
-    let externalFlagged = false;
     let externalCategory = "";
 
     if (apiKey && !isSelfHarm && !isPII) {
+      // Bounded external call: abort after 5s so a hung request degrades to the
+      // local heuristic verdicts below instead of stalling the screening call.
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000);
       try {
         const response = await fetch("https://api.openai.com/v1/moderations", {
           method: "POST",
@@ -61,22 +54,23 @@ serve(async (req) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${apiKey}`,
           },
-          body: JSON.stringify({ input: fullText }),
+          body: JSON.stringify({ input: fullText, model: "omni-moderation-latest" }),
+          signal: controller.signal,
         });
 
         if (response.ok) {
           const result = await response.json();
           const flags = result.results?.[0]?.categories;
           if (flags?.["self-harm"] || flags?.["self-harm/intent"]) {
-            externalFlagged = true;
             externalCategory = "self_harm";
           } else if (flags?.harassment || flags?.hate) {
-            externalFlagged = true;
             externalCategory = "abuse";
           }
         }
-      } catch (err) {
-        console.warn("External moderation API timed out, falling back to local heuristics:", err);
+      } catch {
+        // Timed out or unreachable: the local heuristic verdicts below are the fallback.
+      } finally {
+        clearTimeout(timeoutId);
       }
     }
 
@@ -131,7 +125,7 @@ serve(async (req) => {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: error.message, status: "held_private", allowed: false }),
+      JSON.stringify({ error: error instanceof Error ? error.message : String(error), status: "held_private", allowed: false }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 500 }
     );
   }
