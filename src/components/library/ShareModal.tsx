@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { Globe, X, MessageSquare, AlertCircle, ShieldCheck } from 'lucide-react';
+import { X, MessageSquare, AlertCircle, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import { screenNoteContent } from '../../services/moderation';
+import { WaxSeal } from './WaxSeal';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -57,87 +58,89 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
       onSuccess(allowResponses);
       onClose();
-    } catch (err) {
+    } catch {
       setIsScreening(false);
       setErrorWarning('A temporary error occurred while checking safety. Please try again.');
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md bg-parchment-50 border border-parchment-300 rounded-2xl p-6 shadow-2xl text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-md parchment-sheet border border-amber-900/40 rounded-2xl p-7 shadow-2xl text-left text-wood-950">
+        <div className="scroll-roll-top -mx-4 -mt-5 mb-4" />
+
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-ink-100 hover:text-ink-900 transition-colors"
+          className="absolute top-4 right-4 text-wood-600 hover:text-wood-950 transition-colors p-1"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-3">
-          <div className="w-10 h-10 rounded-full bg-sage-100 text-sage-700 flex items-center justify-center">
-            <Globe className="w-5 h-5" />
-          </div>
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
+          <WaxSeal color="gold" size="md" icon="crest" />
           <div>
-            <h3 className="font-serif text-lg font-medium text-ink-900">
-              Share to the Public Library
+            <h3 className="font-cinzel text-lg font-bold text-wood-950">
+              Release to the Grand Library
             </h3>
-            <p className="text-xs text-ink-100">Release this note to be witnessed</p>
+            <p className="font-cormorant text-xs text-wood-800 italic">Place your parchment in the public reading hall</p>
           </div>
         </div>
 
-        <p className="text-xs text-ink-500 leading-relaxed mb-4">
-          This letter will be placed on the open library feed under your pen name (
-          <span className="font-medium text-ink-900">{profile?.pen_name}</span>). Nobody will ever see your email or real identity.
+        <p className="font-cormorant text-xs text-wood-800 leading-relaxed mb-4 italic">
+          This letter will be placed on the grand reading tables under your pseudonymous pen name (
+          <span className="font-cinzel font-bold text-wood-950 not-italic">{profile?.pen_name}</span>). No reader will ever learn your email or real identity.
         </p>
 
         {errorWarning && (
-          <div className="p-3 mb-4 text-xs bg-rosewood-50 text-rosewood-700 border border-rosewood-200 rounded-xl flex items-start gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <div className="p-3 mb-4 text-xs bg-red-900/10 text-red-900 border border-red-800/20 rounded-xl flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 shrink-0 mt-0.5 text-red-700" />
             <p className="leading-relaxed">{errorWarning}</p>
           </div>
         )}
 
-        <div className="p-3.5 bg-white border border-parchment-200 rounded-xl space-y-3 mb-5">
+        <div className="p-4 bg-amber-50/80 border border-amber-900/30 rounded-xl space-y-3 mb-5">
           <label className="flex items-start gap-3 cursor-pointer">
             <input
               type="checkbox"
               checked={allowResponses}
               onChange={(e) => setAllowResponses(e.target.checked)}
-              className="mt-0.5 rounded border-parchment-300 text-sage-600 focus:ring-sage-500"
+              className="mt-0.5 rounded border-amber-800 text-wax-crimson focus:ring-amber-500"
             />
             <div className="text-xs">
-              <span className="font-medium text-ink-900 flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-sage-700" />
-                Allow gentle response letters
+              <span className="font-cinzel font-bold text-wood-950 flex items-center gap-1.5">
+                <MessageSquare className="w-3.5 h-3.5 text-amber-800" />
+                Allow reader response letters
               </span>
-              <p className="text-ink-100 text-[11px] mt-0.5 leading-relaxed">
-                Other anonymous writers can send heartfelt responses. They arrive in your private inbox first and will only be public if you approve them.
+              <p className="font-cormorant text-wood-800 text-xs mt-1 leading-relaxed italic">
+                Kind strangers can send handwritten replies. They arrive in your private letterbox first and only become public if you choose to pin them.
               </p>
             </div>
           </label>
         </div>
 
-        <div className="flex items-center gap-2 text-[11px] text-sage-700 mb-5">
-          <ShieldCheck className="w-4 h-4 shrink-0" />
-          <span>Screened for self-harm & privacy safety prior to release.</span>
+        <div className="flex items-center gap-2 text-xs font-cinzel text-emerald-900 mb-5">
+          <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-700" />
+          <span>Screened for crisis & privacy safety prior to release.</span>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2.5">
           <button
             onClick={handleConfirmShare}
             disabled={isScreening}
-            className="flex-1 py-2.5 bg-ink-900 hover:bg-ink-800 text-white rounded-xl text-xs font-medium transition shadow-xs disabled:opacity-50"
+            className="flex-1 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-cinzel font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
           >
-            {isScreening ? 'Screening note safety...' : 'Confirm & Publish Anonymously'}
+            {isScreening ? 'Screening letter...' : 'Seal & Release to Grand Library'}
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2.5 bg-parchment-200 text-ink-800 rounded-xl text-xs hover:bg-parchment-300 transition"
+            className="px-4 py-2.5 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer"
           >
-            Keep Private
+            Keep in Private Study
           </button>
         </div>
+
+        <div className="scroll-roll-bottom -mx-4 -mb-5 mt-4" />
       </div>
     </div>
   );

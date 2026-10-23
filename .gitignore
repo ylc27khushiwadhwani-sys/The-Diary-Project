@@ -10,3 +10,10 @@ Thumbs.db
 
 # Compound Engineering local override (the committed example stays tracked)
 .compound-engineering/config.local.yaml
+
+# Compound Engineering local scratch
+.context/compound-engineering/
+
+# Freebuff app workspace metadata
+.freebuff/
+/freebuff-sites-build/

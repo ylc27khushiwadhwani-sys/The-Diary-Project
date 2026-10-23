@@ -22,8 +22,7 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
   const [saving, setSaving] = useState(false);
 
   const displayPenName = propPenName || profile?.pen_name || 'Anonymous Writer';
-  const displayColor = propAvatarColor || profile?.avatar_color || '#52796F';
-  // Allow menu if explicit interactive or if it's the current user's own badge
+  const displayColor = propAvatarColor || profile?.avatar_color || '#801313';
   const canInteract = interactive ?? (!propPenName || propPenName === profile?.pen_name);
 
   const handleStartEdit = () => {
@@ -51,17 +50,17 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
         type="button"
         disabled={!canInteract}
         onClick={() => canInteract && setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-2.5 py-1 rounded-full bg-parchment-200/80 border border-parchment-300 transition text-ink-800 ${
-          canInteract ? 'hover:bg-parchment-300 cursor-pointer' : 'cursor-default'
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-full bg-wood-900/90 border border-amber-800/40 transition text-amber-200 ${
+          canInteract ? 'hover:bg-wood-850 hover:border-amber-600/60 cursor-pointer shadow-candle' : 'cursor-default'
         }`}
       >
         <span
-          className={`${avatarSizeClasses} rounded-full text-white font-medium flex items-center justify-center shadow-xs shrink-0`}
+          className={`${avatarSizeClasses} rounded-full text-white font-cinzel font-bold flex items-center justify-center shadow-wax-seal shrink-0 border border-white/20`}
           style={{ backgroundColor: displayColor }}
         >
           {displayPenName.charAt(0).toUpperCase()}
         </span>
-        <span className={`font-serif font-medium ${textSizeClasses} tracking-wide truncate max-w-[160px]`}>
+        <span className={`font-cinzel font-semibold ${textSizeClasses} tracking-wide truncate max-w-[170px]`}>
           {displayPenName}
         </span>
       </button>
@@ -75,17 +74,17 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
               setIsEditing(false);
             }}
           />
-          <div className="absolute right-0 mt-2 w-72 bg-parchment-50 border border-parchment-300 rounded-xl shadow-xl p-4 z-50 text-left animate-fade-in">
-            <div className="flex items-center gap-2 pb-3 border-b border-parchment-200">
+          <div className="absolute right-0 mt-2 w-72 parchment-sheet border border-amber-900/40 rounded-xl shadow-2xl p-5 z-50 text-left animate-fade-in text-wood-950">
+            <div className="flex items-center gap-2.5 pb-3 border-b border-amber-900/20">
               <span
-                className="w-8 h-8 rounded-full text-white text-xs font-medium flex items-center justify-center shadow-xs"
-                style={{ backgroundColor: profile.avatar_color || '#52796F' }}
+                className="w-8 h-8 rounded-full text-white font-cinzel font-bold text-xs flex items-center justify-center shadow-wax-seal border border-white/20"
+                style={{ backgroundColor: profile.avatar_color || '#801313' }}
               >
                 {profile.pen_name.charAt(0).toUpperCase()}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-xs text-ink-100">Pen Name</p>
-                <p className="font-serif font-medium text-sm text-ink-900 truncate">
+                <p className="text-[10px] font-cinzel uppercase tracking-widest text-wood-700">Author Pen Name</p>
+                <p className="font-cinzel font-bold text-sm text-wood-950 truncate">
                   {profile.pen_name}
                 </p>
               </div>
@@ -94,7 +93,7 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
             <div className="py-3">
               {isEditing ? (
                 <form onSubmit={handleSave} className="space-y-2">
-                  <label className="block text-xs font-medium text-ink-500">
+                  <label className="block text-xs font-cinzel font-semibold text-wood-800">
                     Customize Pen Name
                   </label>
                   <input
@@ -102,20 +101,20 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
                     required
                     value={newPenName}
                     onChange={(e) => setNewPenName(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-white border border-parchment-300 rounded text-xs text-ink-900 focus:outline-none focus:ring-1 focus:ring-sage-600"
+                    className="w-full px-2.5 py-1.5 bg-amber-50/80 border border-amber-900/30 rounded-lg text-xs font-cinzel text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600"
                   />
                   <div className="flex gap-2">
                     <button
                       type="submit"
                       disabled={saving}
-                      className="px-3 py-1 bg-ink-900 text-white rounded text-xs hover:bg-ink-800 transition"
+                      className="px-3 py-1 bg-wood-900 text-amber-100 rounded-lg text-xs font-cinzel font-semibold hover:bg-wood-800 transition"
                     >
                       {saving ? 'Saving...' : 'Save'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setIsEditing(false)}
-                      className="px-2 py-1 text-xs text-ink-500 hover:text-ink-900"
+                      className="px-2 py-1 text-xs font-cinzel text-wood-700 hover:text-wood-950"
                     >
                       Cancel
                     </button>
@@ -125,17 +124,17 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
                 <button
                   type="button"
                   onClick={handleStartEdit}
-                  className="w-full flex items-center gap-2 text-xs text-ink-500 hover:text-ink-900 py-1 transition cursor-pointer"
+                  className="w-full flex items-center gap-2 text-xs font-cinzel text-wood-800 hover:text-wood-950 py-1 transition cursor-pointer"
                 >
-                  <Edit2 className="w-3.5 h-3.5" />
-                  <span>Change pen name</span>
+                  <Edit2 className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Rename pseudonym</span>
                 </button>
               )}
             </div>
 
-            <div className="pt-2 border-t border-parchment-200 space-y-2">
-              <div className="flex items-center gap-1.5 text-[11px] text-sage-700 bg-sage-50 p-2 rounded-md">
-                <ShieldCheck className="w-3.5 h-3.5 shrink-0" />
+            <div className="pt-2 border-t border-amber-900/20 space-y-2">
+              <div className="flex items-center gap-1.5 text-[11px] text-emerald-900 bg-emerald-900/10 p-2 rounded-lg border border-emerald-800/20 font-cormorant italic">
+                <ShieldCheck className="w-3.5 h-3.5 shrink-0 text-emerald-700" />
                 <span>Your real email is permanently hidden from readers.</span>
               </div>
 
@@ -145,10 +144,10 @@ export const PenNameBadge: React.FC<PenNameBadgeProps> = ({
                   signOut();
                   setIsOpen(false);
                 }}
-                className="w-full flex items-center gap-2 text-xs text-rosewood-500 hover:text-rosewood-700 py-1 transition cursor-pointer"
+                className="w-full flex items-center gap-2 text-xs font-cinzel font-semibold text-red-800 hover:text-red-950 py-1 transition cursor-pointer"
               >
                 <LogOut className="w-3.5 h-3.5" />
-                <span>Sign Out</span>
+                <span>Exit Sanctuary (Sign Out)</span>
               </button>
             </div>
           </div>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Plus, BookOpen, Feather, Mail } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, BookOpen, Feather, Mail, KeyRound } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Note, Shelf, Prompt } from '../types/database';
@@ -8,9 +8,67 @@ import { PromptSelector } from '../components/library/PromptSelector';
 import { NoteCard } from '../components/library/NoteCard';
 import { NoteEditor } from '../components/editor/NoteEditor';
 import { AuthorInbox } from '../components/library/AuthorInbox';
+import { WaxSeal } from '../components/library/WaxSeal';
 
 const DEMO_NOTES_KEY = 'unsent_library_demo_notes';
 const DEMO_SHELVES_KEY = 'unsent_library_demo_shelves';
+
+const loadShelves = async (userId: string): Promise<Shelf[] | null> => {
+  if (!isSupabaseConfigured) {
+    const saved = localStorage.getItem(DEMO_SHELVES_KEY);
+    if (saved) return JSON.parse(saved) as Shelf[];
+    const defaultShelves: Shelf[] = [
+      { id: 'shelf-1', user_id: userId, name: 'Unspoken Words', icon: 'feather', created_at: new Date().toISOString() },
+      { id: 'shelf-2', user_id: userId, name: 'Letters Never Sent', icon: 'bookmark', created_at: new Date().toISOString() },
+      { id: 'shelf-3', user_id: userId, name: 'Grief & Healing', icon: 'heart', created_at: new Date().toISOString() },
+    ];
+    localStorage.setItem(DEMO_SHELVES_KEY, JSON.stringify(defaultShelves));
+    return defaultShelves;
+  }
+
+  const { data } = await supabase
+    .from('shelves')
+    .select('*')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: true });
+
+  return data ? (data as Shelf[]) : null;
+};
+
+const loadNotes = async (userId: string): Promise<Note[] | null> => {
+  if (!isSupabaseConfigured) {
+    const saved = localStorage.getItem(DEMO_NOTES_KEY);
+    if (saved) return JSON.parse(saved) as Note[];
+    const sampleNotes: Note[] = [
+      {
+        id: 'sample-1',
+        user_id: userId,
+        shelf_id: 'shelf-1',
+        title: 'The words left on the platform',
+        content: 'I watched the train pull away, and my hands stayed in my pockets. Everything I planned to say felt too heavy to carry through the station air. I hope the quiet didn\'t sound like I didn\'t care.',
+        prompt_id: 'prompt-1',
+        is_locked: false,
+        passcode_hash: null,
+        is_public: false,
+        allow_responses: true,
+        moderation_status: 'clean',
+        report_count: 0,
+        published_at: null,
+        created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
+      },
+    ];
+    localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(sampleNotes));
+    return sampleNotes;
+  }
+
+  const { data } = await supabase
+    .from('notes')
+    .select('*, shelves(*)')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false });
+
+  return data ? (data as Note[]) : null;
+};
 
 export const LibraryPage: React.FC = () => {
   const { user, profile, loginAsGuestDemo } = useAuth();
@@ -22,91 +80,26 @@ export const LibraryPage: React.FC = () => {
   const [isInboxOpen, setIsInboxOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Fetch Shelves
-  const fetchShelves = useCallback(async () => {
-    if (!user) return;
-    if (!isSupabaseConfigured) {
-      const saved = localStorage.getItem(DEMO_SHELVES_KEY);
-      if (saved) {
-        setShelves(JSON.parse(saved));
-      } else {
-        const defaultShelves: Shelf[] = [
-          { id: 'shelf-1', user_id: user.id, name: 'Unspoken Words', icon: 'feather', created_at: new Date().toISOString() },
-          { id: 'shelf-2', user_id: user.id, name: 'Letters Never Sent', icon: 'bookmark', created_at: new Date().toISOString() },
-          { id: 'shelf-3', user_id: user.id, name: 'Grief & Healing', icon: 'heart', created_at: new Date().toISOString() },
-        ];
-        setShelves(defaultShelves);
-        localStorage.setItem(DEMO_SHELVES_KEY, JSON.stringify(defaultShelves));
-      }
-      return;
-    }
-
-    const { data } = await supabase
-      .from('shelves')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: true });
-
-    if (data) setShelves(data);
-  }, [user]);
-
-  // Fetch Notes
-  const fetchNotes = useCallback(async () => {
-    if (!user) return;
-    if (!isSupabaseConfigured) {
-      const saved = localStorage.getItem(DEMO_NOTES_KEY);
-      if (saved) {
-        setNotes(JSON.parse(saved));
-      } else {
-        const sampleNotes: Note[] = [
-          {
-            id: 'sample-1',
-            user_id: user.id,
-            shelf_id: 'shelf-1',
-            title: 'The words left on the platform',
-            content: 'I watched the train pull away, and my hands stayed in my pockets. Everything I planned to say felt too heavy to carry through the station air.',
-            prompt_id: 'prompt-1',
-            is_locked: false,
-            passcode_hash: null,
-            is_public: false,
-            allow_responses: true,
-            moderation_status: 'clean',
-            report_count: 0,
-            published_at: null,
-            created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-          },
-        ];
-        setNotes(sampleNotes);
-        localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(sampleNotes));
-      }
-      setLoading(false);
-      return;
-    }
-
-    const { data } = await supabase
-      .from('notes')
-      .select('*, shelves(*)')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false });
-
-    if (data) setNotes(data);
-    setLoading(false);
-  }, [user]);
-
   useEffect(() => {
-    if (user) {
-      fetchShelves();
-      fetchNotes();
-    } else {
-      setLoading(false);
-    }
-  }, [user, fetchShelves, fetchNotes]);
+    if (!user) return;
+    let cancelled = false;
+    Promise.all([loadShelves(user.id), loadNotes(user.id)]).then(
+      ([loadedShelves, loadedNotes]) => {
+        if (cancelled) return;
+        if (loadedShelves) setShelves(loadedShelves);
+        if (loadedNotes) setNotes(loadedNotes);
+        setLoading(false);
+      }
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
-  // Create Shelf
   const handleCreateShelf = async (name: string, icon: string) => {
     if (!user) return;
     const newShelf: Shelf = {
-      id: isSupabaseConfigured ? undefined as any : 'shelf-' + Date.now(),
+      id: isSupabaseConfigured ? (undefined as unknown as string) : 'shelf-' + Date.now(),
       user_id: user.id,
       name,
       icon,
@@ -124,7 +117,6 @@ export const LibraryPage: React.FC = () => {
     if (data) setShelves((prev) => [...prev, data]);
   };
 
-  // Delete Shelf
   const handleDeleteShelf = async (shelfId: string) => {
     if (!isSupabaseConfigured) {
       const updated = shelves.filter((s) => s.id !== shelfId);
@@ -139,7 +131,6 @@ export const LibraryPage: React.FC = () => {
     if (selectedShelfId === shelfId) setSelectedShelfId(null);
   };
 
-  // Save Note
   const handleSaveNote = async (noteData: Partial<Note>) => {
     if (!user) return;
     const isNew = !noteData.id;
@@ -163,6 +154,7 @@ export const LibraryPage: React.FC = () => {
           report_count: 0,
           published_at: noteData.is_public ? now : null,
           created_at: now,
+          profiles: profile || undefined,
         };
         updatedList = [newNote, ...notes];
       } else {
@@ -193,7 +185,6 @@ export const LibraryPage: React.FC = () => {
     setIsEditorOpen(false);
   };
 
-  // Delete Note
   const handleDeleteNote = async (noteId: string) => {
     if (!isSupabaseConfigured) {
       const updated = notes.filter((n) => n.id !== noteId);
@@ -225,34 +216,43 @@ export const LibraryPage: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="max-w-2xl mx-auto py-16 px-4 text-center">
-        <div className="w-16 h-16 rounded-full bg-sage-100 text-sage-700 flex items-center justify-center mx-auto mb-4">
-          <BookOpen className="w-8 h-8" />
+      <div className="max-w-xl mx-auto py-16 px-4 text-center">
+        <div className="parchment-sheet p-8 sm:p-12 rounded-2xl shadow-parchment text-wood-950 relative overflow-hidden">
+          <div className="scroll-roll-top -mx-4 -mt-6 mb-6" />
+
+          <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-5 shadow-inner">
+            <WaxSeal color="crimson" size="lg" icon="lock" />
+          </div>
+
+          <h2 className="font-cinzel text-2xl sm:text-3xl font-bold text-wood-950 mb-3 tracking-tight">
+            Your Private Sanctuary
+          </h2>
+          <p className="font-cormorant text-base sm:text-lg text-wood-900 leading-relaxed max-w-md mx-auto mb-8 italic">
+            "A candlelit chamber in the grand library, where your unsaid truths rest upon private wooden shelves, locked from all prying eyes."
+          </p>
+
+          <button
+            onClick={loginAsGuestDemo}
+            className="px-6 py-3 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full font-cinzel text-xs font-bold transition shadow-candle border border-amber-600/40 cursor-pointer inline-flex items-center gap-2"
+          >
+            <KeyRound className="w-4 h-4 text-amber-400" />
+            <span>Enter Sanctuary as Anonymous Guest</span>
+          </button>
+
+          <div className="scroll-roll-bottom -mx-4 -mb-6 mt-8" />
         </div>
-        <h2 className="font-serif text-3xl font-medium text-ink-900 mb-3">Your Private Library</h2>
-        <p className="text-sm text-ink-500 max-w-md mx-auto mb-6 leading-relaxed">
-          A locked sanctuary where you can carry your thoughts in quiet honesty. Sign in with email or start writing as an anonymous guest.
-        </p>
-        <button
-          onClick={loginAsGuestDemo}
-          className="px-6 py-3 bg-ink-900 hover:bg-ink-800 text-white rounded-xl text-sm font-medium transition shadow-md"
-        >
-          Open Sanctuary as Guest
-        </button>
       </div>
     );
   }
 
   if (isEditorOpen) {
     return (
-      <div className="max-w-4xl mx-auto py-6 px-4">
-        <NoteEditor
-          note={activeEditingNote}
-          shelves={shelves}
-          onSave={handleSaveNote}
-          onClose={() => setIsEditorOpen(false)}
-        />
-      </div>
+      <NoteEditor
+        note={activeEditingNote}
+        shelves={shelves}
+        onSave={handleSaveNote}
+        onClose={() => setIsEditorOpen(false)}
+      />
     );
   }
 
@@ -261,40 +261,50 @@ export const LibraryPage: React.FC = () => {
     : notes;
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4">
-      {/* Header bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-parchment-200">
-        <div>
-          <h1 className="font-serif text-3xl font-medium text-ink-900">
-            {profile?.pen_name ? `${profile.pen_name}'s Library` : 'Your Private Library'}
-          </h1>
-          <p className="text-xs text-ink-100 mt-1">
-            {filteredNotes.length} {filteredNotes.length === 1 ? 'letter' : 'letters'} resting on these shelves
-          </p>
+    <div className="max-w-6xl mx-auto py-6 px-4">
+      {/* Sanctuary Wooden Header */}
+      <div className="bg-wood-900/80 border border-amber-900/40 rounded-2xl p-6 sm:p-8 mb-8 backdrop-blur-md shadow-2xl flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <WaxSeal color="crimson" size="lg" icon="crest" />
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="font-cinzel text-[11px] font-bold uppercase tracking-widest text-amber-400">
+                Private Bookcase
+              </span>
+            </div>
+            <h1 className="font-cinzel text-2xl sm:text-3xl font-bold text-amber-100 tracking-tight">
+              {profile?.pen_name ? `${profile.pen_name}'s Sanctuary` : 'Your Private Sanctuary'}
+            </h1>
+            <p className="font-cormorant text-sm text-amber-200/70 italic mt-0.5">
+              {filteredNotes.length} {filteredNotes.length === 1 ? 'letter' : 'letters'} resting upon these shelves
+            </p>
+          </div>
         </div>
 
-        <div className="flex items-center gap-2 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={() => setIsInboxOpen(true)}
-            className="flex items-center gap-2 px-4 py-2.5 bg-parchment-200/80 hover:bg-parchment-300 text-ink-900 border border-parchment-300 rounded-xl text-xs font-medium transition cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 bg-wood-850 hover:bg-wood-800 text-amber-200 border border-amber-700/40 rounded-xl font-cinzel text-xs font-semibold transition cursor-pointer shadow-xs"
           >
-            <Mail className="w-4 h-4 text-sage-700" />
-            <span>Letters in Response</span>
+            <Mail className="w-4 h-4 text-amber-400" />
+            <span>Responses Inbox</span>
           </button>
+
           <button
             onClick={handleCreateNewBlank}
-            className="flex items-center gap-2 px-5 py-2.5 bg-ink-900 hover:bg-ink-800 text-white rounded-xl text-xs font-medium transition shadow-xs cursor-pointer"
+            className="flex items-center gap-2 px-5 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl font-cinzel text-xs font-bold transition shadow-candle border border-red-500/40 cursor-pointer"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4 text-amber-300" />
             <span>Write an Unsent Letter</span>
           </button>
         </div>
       </div>
 
+      {/* Bookshelf Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Left Column: Shelves Navigation */}
+        {/* Left Column: Shelf Manager */}
         <div className="lg:col-span-1">
-          <div className="bg-white/80 border border-parchment-200 rounded-2xl p-4 shadow-2xs sticky top-24">
+          <div className="bg-wood-900/85 border border-amber-900/40 rounded-2xl p-5 shadow-2xl sticky top-24 backdrop-blur-sm">
             <ShelfManager
               shelves={shelves}
               selectedShelfId={selectedShelfId}
@@ -305,28 +315,45 @@ export const LibraryPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Columns: Prompts & Notes Listing */}
+        {/* Right Columns: Prompts & Notes Listing on Wooden Shelves */}
         <div className="lg:col-span-3 space-y-6">
           <PromptSelector onSelectPrompt={handleStartFromPrompt} />
 
+          {/* Wooden Shelf Ledge Header */}
+          <div className="wood-shelf-ledge px-5 py-3 rounded-xl flex items-center justify-between text-xs font-cinzel font-bold text-amber-200">
+            <div className="flex items-center gap-2">
+              <BookOpen className="w-4 h-4 text-amber-400" />
+              <span>
+                {selectedShelfId
+                  ? shelves.find((s) => s.id === selectedShelfId)?.name || 'Custom Shelf'
+                  : 'All Preserved Letters'}
+              </span>
+            </div>
+            <span className="text-amber-400/80 text-[11px]">
+              {filteredNotes.length} Documents
+            </span>
+          </div>
+
           {loading ? (
-            <div className="py-12 text-center text-xs text-ink-100">Opening library shelves...</div>
+            <div className="py-16 text-center text-xs font-cinzel text-amber-300/70 italic">
+              Unlocking your private shelves...
+            </div>
           ) : filteredNotes.length === 0 ? (
-            <div className="text-center py-16 bg-white/50 border border-dashed border-parchment-300 rounded-2xl p-8">
-              <Feather className="w-8 h-8 text-parchment-400 mx-auto mb-3" />
-              <h3 className="font-serif text-lg font-medium text-ink-900 mb-1">This shelf is empty</h3>
-              <p className="text-xs text-ink-100 max-w-sm mx-auto mb-4">
-                No unsent letters here yet. Pick a prompt above or begin writing with an open heart.
+            <div className="text-center py-16 bg-wood-950/60 border border-dashed border-amber-800/40 rounded-2xl p-8 backdrop-blur-sm">
+              <Feather className="w-10 h-10 text-amber-500/60 mx-auto mb-3" />
+              <h3 className="font-cinzel text-lg font-bold text-amber-200 mb-1">This shelf is empty</h3>
+              <p className="font-cormorant text-sm text-amber-300/70 max-w-sm mx-auto mb-5 italic">
+                No unsent letters rest here yet. Choose a prompt above or dip your quill into a blank parchment.
               </p>
               <button
                 onClick={handleCreateNewBlank}
-                className="px-4 py-2 bg-parchment-200 hover:bg-parchment-300 text-ink-900 rounded-lg text-xs font-medium transition"
+                className="px-5 py-2.5 bg-amber-600 hover:bg-amber-500 text-wood-950 font-cinzel font-bold rounded-full text-xs transition cursor-pointer"
               >
                 Write First Letter
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {filteredNotes.map((note) => (
                 <NoteCard
                   key={note.id}

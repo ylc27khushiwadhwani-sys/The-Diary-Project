@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Sparkles, ArrowRight, Feather } from 'lucide-react';
 import promptsData from '../../data/prompts.json';
 import { Prompt } from '../../types/database';
 
@@ -11,11 +11,11 @@ export const PromptSelector: React.FC<PromptSelectorProps> = ({ onSelectPrompt }
   const prompts: Prompt[] = promptsData;
 
   return (
-    <div className="py-4">
+    <div className="py-2">
       <div className="flex items-center gap-2 mb-3">
-        <Sparkles className="w-4 h-4 text-sage-600" />
-        <h3 className="font-serif text-sm font-medium text-ink-900 tracking-wide">
-          Need a spark? Writing Prompts
+        <Sparkles className="w-4 h-4 text-amber-400" />
+        <h3 className="font-cinzel text-xs font-bold text-amber-200 tracking-wider uppercase">
+          Whispers from the Archive • Writing Prompts
         </h3>
       </div>
 
@@ -24,22 +24,23 @@ export const PromptSelector: React.FC<PromptSelectorProps> = ({ onSelectPrompt }
           <div
             key={p.id}
             onClick={() => onSelectPrompt(p)}
-            className="group cursor-pointer p-3.5 bg-white/70 hover:bg-white border border-parchment-200 hover:border-sage-600/40 rounded-xl transition duration-200 shadow-xs flex flex-col justify-between"
+            className="group cursor-pointer p-4 parchment-sheet rounded-xl border border-amber-800/30 hover:shadow-candle transition-all duration-300 flex flex-col justify-between"
           >
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-sage-700 font-medium bg-sage-100/60 px-2 py-0.5 rounded-full inline-block mb-1.5">
+              <span className="text-[10px] font-cinzel uppercase tracking-wider text-amber-900 font-bold bg-amber-900/10 px-2 py-0.5 rounded-full inline-block mb-1.5 border border-amber-900/20">
                 {p.category}
               </span>
-              <h4 className="font-serif text-sm font-medium text-ink-900 group-hover:text-sage-700 transition">
+              <h4 className="font-cinzel text-sm font-bold text-wood-950 group-hover:text-amber-900 transition leading-snug">
                 {p.title}
               </h4>
-              <p className="text-xs text-ink-100 mt-1 line-clamp-2 leading-relaxed">
-                {p.description}
+              <p className="font-cormorant text-xs text-wood-900/80 mt-1 line-clamp-2 leading-relaxed italic">
+                "{p.description}"
               </p>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-sage-600 font-medium mt-2 opacity-80 group-hover:opacity-100 transition">
-              <span>Write from this</span>
-              <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition" />
+            <div className="flex items-center gap-1.5 text-xs font-cinzel text-amber-900 font-semibold mt-3 pt-2 border-t border-amber-900/15 group-hover:text-wood-950 transition">
+              <Feather className="w-3 h-3 text-amber-800" />
+              <span>Dip quill & write</span>
+              <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition text-amber-700" />
             </div>
           </div>
         ))}

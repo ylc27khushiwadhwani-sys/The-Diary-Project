@@ -4,21 +4,62 @@
 
 @layer base {
   body {
-    background-color: #F5F2EB;
-    color: #0F172A;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #0d0b09;
+    color: #f3ece0;
+    font-family: 'Lora', Georgia, serif;
+    background-image: 
+      radial-gradient(ellipse at 50% 15%, rgba(212, 163, 115, 0.14) 0%, transparent 65%),
+      radial-gradient(ellipse at 20% 50%, rgba(139, 74, 82, 0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(212, 163, 115, 0.08) 0%, transparent 60%);
+    background-attachment: fixed;
   }
 
   ::selection {
-    background-color: #E3EBE3;
-    color: #231F19;
+    background-color: #801313;
+    color: #fffdf9;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
   }
 }
 
-@keyframes fadeIn {
+/* Label Caps Utility */
+.label-caps {
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #d4a373;
+}
+
+/* Candle Glow Background */
+.candle-glow {
+  background: radial-gradient(ellipse at 50% 20%, rgba(212, 163, 115, 0.18) 0%, rgba(13, 11, 9, 0) 70%);
+  pointer-events: none;
+}
+
+/* Subtle Floating Embers / Motes */
+@keyframes floatUp {
+  0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(-130px) translateX(15px) scale(0.6); opacity: 0; }
+}
+
+.mote, .ember-particle {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, #fde68a 0%, #d4a373 60%, transparent 100%);
+  pointer-events: none;
+  animation: floatUp 12s ease-in-out infinite;
+}
+
+/* Fade Up Intersection Animation */
+@keyframes fadeUpAnim {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(14px);
   }
   to {
     opacity: 1;
@@ -26,25 +67,93 @@
   }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.fade-up {
+  animation: fadeUpAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Custom delicate scrollbar */
+/* Antique Parchment Paper Texture */
+.parchment-sheet {
+  background-color: #fbf5e8;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(237, 226, 204, 0.7) 100%),
+    linear-gradient(to right, rgba(165, 141, 85, 0.12) 0%, transparent 8%, transparent 92%, rgba(165, 141, 85, 0.12) 100%),
+    linear-gradient(to bottom, rgba(165, 141, 85, 0.15) 0%, transparent 6%, transparent 94%, rgba(165, 141, 85, 0.18) 100%);
+  box-shadow: 
+    0 15px 40px -10px rgba(0, 0, 0, 0.75),
+    0 2px 8px rgba(0, 0, 0, 0.4),
+    inset 0 0 40px rgba(189, 162, 104, 0.25);
+  position: relative;
+}
+
+.scroll-roll-top {
+  height: 16px;
+  background: linear-gradient(to bottom, #d4be8a 0%, #eee2c4 40%, #bda268 85%, #8e723e 100%);
+  border-radius: 8px 8px 3px 3px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+}
+
+.scroll-roll-bottom {
+  height: 16px;
+  background: linear-gradient(to top, #d4be8a 0%, #eee2c4 40%, #bda268 85%, #8e723e 100%);
+  border-radius: 3px 3px 8px 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45), inset 0 -1px 2px rgba(255, 255, 255, 0.4);
+}
+
+/* Wax Seal 3D Stamped Effect */
+.wax-seal-badge {
+  background: radial-gradient(circle at 35% 35%, #a51c1c 0%, #801313 50%, #4a0707 90%, #300303 100%);
+  box-shadow: 
+    0 6px 14px rgba(0, 0, 0, 0.65),
+    inset 0 2px 4px rgba(255, 255, 255, 0.35),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(90, 10, 10, 0.5);
+  border-radius: 9999px;
+  position: relative;
+}
+
+.wax-seal-gold {
+  background: radial-gradient(circle at 35% 35%, #e5c158 0%, #b8860b 50%, #755503 90%, #473300 100%);
+  box-shadow: 
+    0 6px 14px rgba(0, 0, 0, 0.65),
+    inset 0 2px 4px rgba(255, 255, 255, 0.45),
+    inset 0 -3px 5px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(110, 80, 5, 0.5);
+  border-radius: 9999px;
+  position: relative;
+}
+
+/* Wooden Bookshelf Shelf Ledge */
+.wood-shelf-ledge {
+  background: linear-gradient(to bottom, #2b221b 0%, #1c1612 40%, #110d0a 85%, #080605 100%);
+  border-top: 2px solid #5a4537;
+  border-bottom: 3px solid #080605;
+  box-shadow: 
+    0 12px 24px -2px rgba(0, 0, 0, 0.85),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Book Spine 3D Preservation */
+.book-spine-container {
+  transform-style: preserve-3d;
+  perspective: 900px;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: transparent;
+  background: #0f0e0c;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DFD6C2;
+  background: #2b241e;
   border-radius: 9999px;
+  border: 1px solid #45372c;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #D1C4A8;
+  background: #45372c;
 }

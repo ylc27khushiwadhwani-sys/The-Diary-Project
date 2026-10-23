@@ -25,7 +25,7 @@ export const LockNoteToggle: React.FC<LockNoteToggleProps> = ({ isLocked, onLock
   const handleSetPin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (pin.length < 4) {
-      setError('PIN must be at least 4 digits');
+      setError('Passcode must be at least 4 digits');
       return;
     }
     const hash = await createStoredPasscodeHash(pin);
@@ -39,27 +39,27 @@ export const LockNoteToggle: React.FC<LockNoteToggleProps> = ({ isLocked, onLock
       <button
         type="button"
         onClick={handleToggleClick}
-        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+        className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-cinzel font-semibold transition cursor-pointer ${
           isLocked
-            ? 'bg-rosewood-100/80 text-rosewood-700 border border-rosewood-200'
-            : 'bg-parchment-200 text-ink-500 hover:text-ink-900 border border-parchment-300'
+            ? 'bg-wax-crimson text-white border border-red-500/40 shadow-candle'
+            : 'bg-wood-950/80 text-amber-200/80 hover:text-amber-100 border border-amber-800/40'
         }`}
-        title={isLocked ? "Note is locked for your eyes only" : "Lock this note with a passcode"}
+        title={isLocked ? "Letter is sealed with a secret passcode" : "Seal this letter with a secret passcode"}
       >
-        {isLocked ? <Lock className="w-3.5 h-3.5" /> : <Unlock className="w-3.5 h-3.5" />}
-        <span>{isLocked ? 'Locked Note' : 'Lock Note'}</span>
+        {isLocked ? <Lock className="w-3.5 h-3.5 text-amber-300" /> : <Unlock className="w-3.5 h-3.5 text-amber-500" />}
+        <span>{isLocked ? 'Sealed Eyes-Only' : 'Seal with Passcode'}</span>
       </button>
 
       {showPinInput && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setShowPinInput(false)} />
-          <div className="absolute right-0 mt-2 w-64 p-4 bg-parchment-50 border border-parchment-300 rounded-xl shadow-xl z-50 text-left animate-fade-in">
-            <div className="flex items-center gap-2 mb-2 text-ink-900">
-              <KeyRound className="w-4 h-4 text-sage-600" />
-              <h4 className="text-xs font-serif font-medium">Set Eyes-Only Passcode</h4>
+          <div className="absolute right-0 mt-2 w-64 p-4 parchment-sheet border border-amber-900/40 rounded-xl shadow-2xl z-50 text-left animate-fade-in text-wood-950">
+            <div className="flex items-center gap-2 mb-2">
+              <KeyRound className="w-4 h-4 text-amber-800" />
+              <h4 className="text-xs font-cinzel font-bold text-wood-950">Set Secret Passcode</h4>
             </div>
-            <p className="text-[11px] text-ink-100 mb-3">
-              Create a secret PIN. You'll need this each time you view this note.
+            <p className="text-[11px] font-cormorant text-wood-800 mb-3 italic">
+              Create a secret numeric PIN. You'll need this each time you break the seal.
             </p>
 
             <form onSubmit={handleSetPin} className="space-y-2">
@@ -67,23 +67,23 @@ export const LockNoteToggle: React.FC<LockNoteToggleProps> = ({ isLocked, onLock
                 type="password"
                 maxLength={8}
                 autoFocus
-                placeholder="Enter 4-8 digit PIN"
+                placeholder="4-8 digits"
                 value={pin}
                 onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
-                className="w-full px-2.5 py-1.5 bg-white border border-parchment-300 rounded text-center tracking-widest text-sm font-mono focus:outline-none focus:ring-1 focus:ring-sage-600"
+                className="w-full px-2.5 py-1.5 bg-amber-50 border border-amber-900/30 rounded-lg text-center tracking-widest text-sm font-mono focus:outline-none focus:ring-1 focus:ring-amber-600 text-wood-950 shadow-inner"
               />
-              {error && <p className="text-[11px] text-rosewood-600">{error}</p>}
+              {error && <p className="text-[11px] font-cinzel text-red-800 font-semibold">{error}</p>}
               <div className="flex gap-2 pt-1">
                 <button
                   type="submit"
-                  className="flex-1 py-1 bg-ink-900 text-white text-xs rounded hover:bg-ink-800 transition"
+                  className="flex-1 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white text-xs font-cinzel font-bold rounded-lg transition cursor-pointer shadow-xs"
                 >
-                  Confirm & Lock
+                  Seal Letter
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowPinInput(false)}
-                  className="px-2 py-1 text-xs text-ink-100 hover:text-ink-900"
+                  className="px-2.5 py-1.5 text-xs font-cinzel text-wood-700 hover:text-wood-950 transition cursor-pointer"
                 >
                   Cancel
                 </button>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Mail, CheckCircle2, X, Feather } from 'lucide-react';
+import { Mail, CheckCircle2, X, KeyRound } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { WaxSeal } from '../library/WaxSeal';
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -38,64 +39,66 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-md bg-parchment-50 border border-parchment-300 rounded-2xl p-7 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-md parchment-sheet border border-amber-900/40 rounded-2xl p-7 shadow-2xl text-left text-wood-950">
+        <div className="scroll-roll-top -mx-4 -mt-5 mb-4" />
+
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-ink-100 hover:text-ink-900 transition-colors"
+          className="absolute top-4 right-4 text-wood-600 hover:text-wood-950 transition-colors p-1"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-sage-100 text-sage-700 flex items-center justify-center">
-            <Feather className="w-5 h-5" />
-          </div>
+        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
+          <WaxSeal color="crimson" size="md" icon="crest" />
           <div>
-            <h3 className="font-serif text-xl font-medium text-ink-900">Enter the Library</h3>
-            <p className="text-xs text-ink-100">Your quiet, anonymous sanctuary</p>
+            <h3 className="font-cinzel text-xl font-bold text-wood-950">Enter the Sanctuary</h3>
+            <p className="font-cormorant text-xs text-wood-800 italic">Your anonymous, locked library chamber</p>
           </div>
         </div>
 
         {sent ? (
           <div className="text-center py-6 space-y-3">
-            <CheckCircle2 className="w-12 h-12 text-sage-600 mx-auto" />
-            <h4 className="font-serif text-lg text-ink-900 font-medium">Link on its way</h4>
-            <p className="text-sm text-ink-500 leading-relaxed">
-              We sent a passwordless sign-in link to <span className="font-medium text-ink-900">{email}</span>. Click it to enter your private library.
+            <CheckCircle2 className="w-12 h-12 text-emerald-700 mx-auto" />
+            <h4 className="font-cinzel text-lg text-wood-950 font-bold">Courier Dispatched</h4>
+            <p className="font-cormorant text-sm text-wood-900 leading-relaxed italic">
+              We dispatched a passwordless sign-in key to <span className="font-cinzel font-bold text-wood-950 not-italic">{email}</span>. Click it to unlock your private shelves.
             </p>
             <button
               onClick={onClose}
-              className="mt-4 px-5 py-2 text-sm bg-parchment-200 text-ink-800 rounded-lg hover:bg-parchment-300 transition-colors"
+              className="mt-4 px-5 py-2 text-xs font-cinzel font-bold bg-wood-900 text-amber-100 rounded-full hover:bg-wood-800 transition-colors cursor-pointer"
             >
-              Close
+              Return to Hall
             </button>
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="text-sm text-ink-500 leading-relaxed">
-              Sign up with an email to keep your library safe. Nobody sees your identity—you will be known to the world solely by an anonymous pen name.
+            <p className="font-cormorant text-sm text-wood-900 leading-relaxed italic">
+              Sign in with an email to preserve your sanctuary across devices. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.
             </p>
 
             {errorMessage && (
-              <div className="p-3 text-xs bg-rosewood-50 text-rosewood-700 border border-rosewood-100 rounded-lg">
+              <div className="p-3 text-xs bg-red-900/10 text-red-900 border border-red-800/20 rounded-lg font-cinzel">
                 {errorMessage}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-ink-500 mb-1">Email Address</label>
+                <label className="block text-xs font-cinzel font-bold text-wood-800 mb-1">
+                  Email Address
+                </label>
                 <div className="relative">
-                  <Mail className="w-4 h-4 text-ink-100 absolute left-3 top-3" />
+                  <Mail className="w-4 h-4 text-amber-800 absolute left-3 top-3" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="you@example.com"
-                    className="w-full pl-9 pr-4 py-2.5 bg-white border border-parchment-300 rounded-lg text-sm text-ink-900 focus:outline-none focus:ring-2 focus:ring-sage-600 focus:border-transparent transition"
+                    placeholder="reader@example.com"
+                    className="w-full pl-9 pr-4 py-2.5 bg-amber-50/80 border border-amber-900/30 rounded-xl text-sm font-cinzel text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600 transition"
                   />
                 </div>
               </div>
@@ -103,30 +106,29 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 bg-ink-900 hover:bg-ink-800 text-parchment-50 rounded-lg text-sm font-medium transition shadow-sm disabled:opacity-50"
+                className="w-full py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-cinzel font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
               >
-                {loading ? 'Sending link...' : 'Send Magic Sign-In Link'}
+                {loading ? 'Dispatching Key...' : 'Send Magic Link via Email'}
               </button>
             </form>
 
-            <div className="relative my-4">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-parchment-200"></div>
-              </div>
-              <div className="relative flex justify-center text-xs">
-                <span className="px-3 bg-parchment-50 text-ink-100">or explore instantly</span>
-              </div>
+            <div className="relative flex py-2 items-center">
+              <div className="flex-grow border-t border-amber-900/20" />
+              <span className="flex-shrink mx-3 text-xs font-cinzel text-wood-600">or explore freely</span>
+              <div className="flex-grow border-t border-amber-900/20" />
             </div>
 
             <button
-              type="button"
               onClick={handleGuestEntry}
-              className="w-full py-2.5 bg-parchment-100 hover:bg-parchment-200 text-ink-800 border border-parchment-300 rounded-lg text-sm font-medium transition"
+              className="w-full py-2.5 bg-wood-900 hover:bg-wood-850 text-amber-200 border border-amber-700/50 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer flex items-center justify-center gap-2"
             >
-              Continue as Anonymous Guest
+              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
+              <span>Continue as Anonymous Guest</span>
             </button>
           </div>
         )}
+
+        <div className="scroll-roll-bottom -mx-4 -mb-5 mt-4" />
       </div>
     </div>
   );

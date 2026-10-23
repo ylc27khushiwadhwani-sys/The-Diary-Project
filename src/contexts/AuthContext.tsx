@@ -20,11 +20,29 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const DEMO_STORAGE_KEY = 'unsent_library_demo_profile';
 
+// Reads the local demo session during the initial render (lazy state
+// initializer) so demo mode needs no synchronous setState inside an effect.
+const readDemoSession = (): { user: User; profile: Profile } | null => {
+  const saved = localStorage.getItem(DEMO_STORAGE_KEY);
+  if (!saved) return null;
+  try {
+    const parsed = JSON.parse(saved) as Profile;
+    if (!parsed?.id) return null;
+    return {
+      user: { id: parsed.id, email: 'anonymous@unsentlibrary.local' } as User,
+      profile: parsed,
+    };
+  } catch {
+    return null;
+  }
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [initialDemo] = useState(readDemoSession);
+  const [user, setUser] = useState<User | null>(() => initialDemo?.user ?? null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState<Profile | null>(() => initialDemo?.profile ?? null);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
 
   // Load existing profile from Supabase or local demo session
   const fetchProfile = async (userId: string) => {
@@ -55,18 +73,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   useEffect(() => {
     if (!isSupabaseConfigured) {
-      // Local demo mode fallback
-      const saved = localStorage.getItem(DEMO_STORAGE_KEY);
-      if (saved) {
-        try {
-          const parsed = JSON.parse(saved);
-          setProfile(parsed);
-          setUser({ id: parsed.id, email: 'anonymous@unsentlibrary.local' } as User);
-        } catch {
-          // ignore
-        }
-      }
-      setLoading(false);
+      // Demo mode: the saved session already came in with the initial state and
+      // `loading` starts as false, so there is nothing to set synchronously.
       return;
     }
 

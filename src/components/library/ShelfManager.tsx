@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Bookmark, Plus, X, Folder, BookOpen, Heart, Cloud, Moon, Archive } from 'lucide-react';
+import { Bookmark, Plus, X, Folder, BookOpen, Heart, Cloud, Moon, Archive, Sparkles } from 'lucide-react';
 import { Shelf } from '../../types/database';
 
 interface ShelfManagerProps {
@@ -49,59 +49,63 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
   };
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-ink-100">
-          Your Shelves
-        </h3>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-center justify-between pb-2 border-b border-amber-900/40">
+        <div className="flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-amber-500" />
+          <h3 className="font-cinzel text-xs font-bold uppercase tracking-wider text-amber-200">
+            Library Shelves
+          </h3>
+        </div>
         <button
           onClick={() => setIsCreating(!isCreating)}
-          className="text-xs text-sage-700 hover:text-sage-800 flex items-center gap-1 font-medium transition"
+          className="text-xs font-cinzel text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold transition cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
-          <span>New Shelf</span>
+          <span>Carve Shelf</span>
         </button>
       </div>
 
       {isCreating && (
-        <form onSubmit={handleCreate} className="p-3 bg-white/90 border border-parchment-300 rounded-xl space-y-2 animate-fade-in shadow-xs">
+        <form onSubmit={handleCreate} className="p-3.5 bg-wood-950/90 border border-amber-800/40 rounded-xl space-y-2.5 animate-fade-in shadow-2xl text-left">
           <input
             type="text"
             required
             autoFocus
-            placeholder="Shelf name (e.g. For Someone Lost)"
+            placeholder="Shelf name (e.g. Unsaid Apologies)"
             value={newShelfName}
             onChange={(e) => setNewShelfName(e.target.value)}
-            className="w-full px-2.5 py-1.5 text-xs bg-parchment-50 border border-parchment-200 rounded focus:outline-none focus:ring-1 focus:ring-sage-600"
+            className="w-full px-3 py-1.5 text-xs font-cinzel bg-wood-900 text-amber-100 border border-amber-700/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 pt-1">
             {AVAILABLE_ICONS.map(({ name, Icon }) => (
               <button
                 key={name}
                 type="button"
                 onClick={() => setSelectedIcon(name)}
-                className={`p-1.5 rounded transition ${
+                className={`p-1.5 rounded-lg transition cursor-pointer ${
                   selectedIcon === name
-                    ? 'bg-sage-600 text-white'
-                    : 'text-ink-100 hover:bg-parchment-200'
+                    ? 'bg-amber-600 text-wood-950 shadow-xs'
+                    : 'text-amber-300/70 hover:bg-wood-800'
                 }`}
               >
-                <Icon className="w-3 h-3" />
+                <Icon className="w-3.5 h-3.5" />
               </button>
             ))}
           </div>
-          <div className="flex gap-2 pt-1">
+          <div className="flex gap-2 pt-1.5">
             <button
               type="submit"
               disabled={loading}
-              className="px-3 py-1 bg-ink-900 text-white text-xs rounded hover:bg-ink-800 transition"
+              className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-wood-950 text-xs font-cinzel font-bold rounded-lg transition cursor-pointer"
             >
-              {loading ? 'Adding...' : 'Create'}
+              {loading ? 'Carving...' : 'Add Shelf'}
             </button>
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-2 py-1 text-xs text-ink-100 hover:text-ink-900"
+              className="px-2.5 py-1 text-xs font-cinzel text-amber-300/60 hover:text-amber-200 transition cursor-pointer"
             >
               Cancel
             </button>
@@ -109,46 +113,58 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
         </form>
       )}
 
-      <div className="space-y-1">
+      {/* Shelves List */}
+      <div className="space-y-1.5">
+        {/* All Letters / Full Sanctuary Option */}
         <button
           onClick={() => onSelectShelf(null)}
-          className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition ${
+          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer ${
             selectedShelfId === null
-              ? 'bg-parchment-300/80 text-ink-900 font-semibold'
-              : 'text-ink-500 hover:bg-parchment-200/60'
+              ? 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-candle'
+              : 'text-amber-200/70 hover:bg-wood-800/60 hover:text-amber-100'
           }`}
         >
-          <div className="flex items-center gap-2">
-            <BookOpen className="w-3.5 h-3.5 text-sage-700" />
-            <span>All Unsent Notes</span>
+          <div className="flex items-center gap-2.5">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>All Unsent Letters</span>
           </div>
         </button>
 
-        {shelves.map((shelf) => (
-          <div
-            key={shelf.id}
-            className={`group w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition ${
-              selectedShelfId === shelf.id
-                ? 'bg-parchment-300/80 text-ink-900 font-semibold'
-                : 'text-ink-500 hover:bg-parchment-200/60'
-            }`}
-          >
-            <button
+        {shelves.map((shelf) => {
+          const isSelected = selectedShelfId === shelf.id;
+          return (
+            <div
+              key={shelf.id}
+              className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer ${
+                isSelected
+                  ? 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-candle'
+                  : 'text-amber-200/70 hover:bg-wood-800/60 hover:text-amber-100'
+              }`}
               onClick={() => onSelectShelf(shelf.id)}
-              className="flex-1 flex items-center gap-2 text-left truncate"
             >
-              <span className="text-sage-700">{getIconComponent(shelf.icon)}</span>
-              <span className="truncate">{shelf.name}</span>
-            </button>
-            <button
-              onClick={() => onDeleteShelf(shelf.id)}
-              className="opacity-0 group-hover:opacity-100 text-ink-100 hover:text-rosewood-500 p-0.5 transition"
-              title="Delete Shelf"
-            >
-              <X className="w-3 h-3" />
-            </button>
-          </div>
-        ))}
+              <div className="flex items-center gap-2.5 min-w-0">
+                <span className="text-amber-400 shrink-0">
+                  {getIconComponent(shelf.icon)}
+                </span>
+                <span className="truncate">{shelf.name}</span>
+              </div>
+
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (window.confirm(`Remove shelf "${shelf.name}"? Notes on it will become unsorted.`)) {
+                    onDeleteShelf(shelf.id);
+                  }
+                }}
+                className="opacity-0 group-hover:opacity-100 p-1 text-amber-400/60 hover:text-red-400 transition"
+                title="Remove Shelf"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

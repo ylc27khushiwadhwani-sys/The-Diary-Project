@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Save, Globe, EyeOff, Sparkles, Folder } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, Save, Globe, EyeOff, Sparkles, Folder, Type, Feather } from 'lucide-react';
 import { Note, Shelf } from '../../types/database';
 import { LockNoteToggle } from './LockNoteToggle';
 import { ShareModal } from '../library/ShareModal';
 import { HelplineModal } from '../safety/HelplineModal';
+import { WaxSeal } from '../library/WaxSeal';
 
 interface NoteEditorProps {
   note: Partial<Note> | null;
@@ -25,22 +26,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   const [passcodeHash, setPasscodeHash] = useState<string | null>(note?.passcode_hash || null);
   const [isPublic, setIsPublic] = useState(note?.is_public || false);
   const [allowResponses, setAllowResponses] = useState(note?.allow_responses ?? true);
+  const [handwritingFont, setHandwritingFont] = useState(false);
 
   const [saving, setSaving] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
-
-  useEffect(() => {
-    if (note) {
-      setTitle(note.title || '');
-      setContent(note.content || '');
-      setShelfId(note.shelf_id || null);
-      setIsLocked(note.is_locked || false);
-      setPasscodeHash(note.passcode_hash || null);
-      setIsPublic(note.is_public || false);
-      setAllowResponses(note.allow_responses ?? true);
-    }
-  }, [note]);
 
   const handleManualSave = async () => {
     if (!content.trim()) return;
@@ -67,7 +57,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       title: title.trim() || null,
       content,
       shelf_id: shelfId,
-      is_locked: false, // public notes cannot be locked
+      is_locked: false,
       passcode_hash: null,
       is_public: true,
       allow_responses: allowResponsesVal,
@@ -91,29 +81,29 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   };
 
   return (
-    <div className="bg-white border border-parchment-300 rounded-2xl shadow-sm overflow-hidden animate-fade-in flex flex-col min-h-[620px]">
-      {/* Editor Top Navigation Bar */}
-      <div className="px-5 py-3 border-b border-parchment-200 flex items-center justify-between bg-parchment-50/80">
+    <div className="max-w-4xl mx-auto py-4 px-2 sm:px-4 animate-fade-in">
+      {/* Desk Action Topbar */}
+      <div className="bg-wood-900/90 border border-amber-900/40 rounded-t-2xl p-4 flex flex-wrap items-center justify-between gap-3 backdrop-blur-md shadow-2xl">
         <button
           onClick={onClose}
-          className="flex items-center gap-1.5 text-xs font-medium text-ink-500 hover:text-ink-900 transition"
+          className="flex items-center gap-2 text-xs font-cinzel text-amber-200/80 hover:text-amber-100 transition cursor-pointer"
         >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back to Library</span>
+          <ArrowLeft className="w-4 h-4 text-amber-400" />
+          <span>Return to Shelves</span>
         </button>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex flex-wrap items-center gap-2.5">
           {/* Shelf Selector */}
-          <div className="flex items-center gap-1.5 bg-white border border-parchment-300 rounded-lg px-2.5 py-1">
-            <Folder className="w-3.5 h-3.5 text-sage-700" />
+          <div className="flex items-center gap-1.5 bg-wood-950/80 border border-amber-800/40 rounded-lg px-3 py-1.5 shadow-wood-inset">
+            <Folder className="w-3.5 h-3.5 text-amber-500" />
             <select
               value={shelfId || ''}
               onChange={(e) => setShelfId(e.target.value || null)}
-              className="text-xs bg-transparent text-ink-900 focus:outline-none cursor-pointer"
+              className="text-xs bg-transparent text-amber-100 font-cinzel focus:outline-none cursor-pointer"
             >
-              <option value="">No Shelf (Unsorted)</option>
+              <option value="" className="bg-wood-900 text-amber-100">Unsorted Shelf</option>
               {shelves.map((s) => (
-                <option key={s.id} value={s.id}>
+                <option key={s.id} value={s.id} className="bg-wood-900 text-amber-100">
                   {s.name}
                 </option>
               ))}
@@ -131,12 +121,12 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             />
           )}
 
-          {/* Public Sharing / Unpublishing Toggle */}
+          {/* Public Sharing Toggle */}
           {isPublic ? (
             <button
               onClick={handleUnpublish}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-sage-100 text-sage-800 hover:bg-sage-200 border border-sage-200 rounded-lg text-xs font-medium transition"
-              title="Click to remove note from the public library"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-900/40 text-amber-300 hover:bg-amber-900/60 border border-amber-700/50 rounded-lg text-xs font-cinzel transition cursor-pointer"
+              title="Remove letter from the public library"
             >
               <EyeOff className="w-3.5 h-3.5" />
               <span>Published (Make Private)</span>
@@ -145,49 +135,93 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             <button
               onClick={() => setIsShareModalOpen(true)}
               disabled={!content.trim() || isLocked}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-ink-900 hover:bg-ink-800 text-white rounded-lg text-xs font-medium transition disabled:opacity-40"
-              title={isLocked ? "Unlock note before sharing" : "Share this note to public feed"}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-800 hover:bg-wood-700 text-amber-200 border border-amber-600/40 rounded-lg text-xs font-cinzel transition disabled:opacity-40 cursor-pointer"
+              title={isLocked ? "Unlock before sharing" : "Publish to the Grand Library archive"}
             >
-              <Globe className="w-3.5 h-3.5" />
-              <span>Share to Library</span>
+              <Globe className="w-3.5 h-3.5 text-amber-400" />
+              <span>Release to Grand Library</span>
             </button>
           )}
 
-          {/* Save Button */}
+          {/* Font Toggle */}
+          <button
+            type="button"
+            onClick={() => setHandwritingFont(!handwritingFont)}
+            className="p-1.5 bg-wood-950/80 border border-amber-800/40 text-amber-300 hover:text-amber-100 rounded-lg text-xs transition cursor-pointer"
+            title={handwritingFont ? "Switch to Book Print" : "Switch to Quill Cursive"}
+          >
+            <Type className="w-4 h-4" />
+          </button>
+
+          {/* Save & Seal Button */}
           <button
             onClick={handleManualSave}
             disabled={saving || !content.trim()}
-            className="flex items-center gap-1.5 px-4 py-1.5 bg-sage-700 hover:bg-sage-800 text-white rounded-lg text-xs font-medium transition shadow-xs disabled:opacity-40"
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-lg text-xs font-cinzel font-bold shadow-candle border border-red-500/30 transition disabled:opacity-40 cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>{saving ? 'Saving...' : 'Save'}</span>
+            <span>{saving ? 'Sealing...' : 'Seal & Store'}</span>
           </button>
         </div>
       </div>
 
-      {/* Editor Canvas Area */}
-      <div className="flex-1 p-6 md:p-10 max-w-3xl mx-auto w-full flex flex-col">
-        {note?.prompt_id && (
-          <div className="flex items-center gap-1.5 mb-4 px-3 py-1.5 bg-sage-50 text-sage-700 text-xs rounded-lg border border-sage-100 self-start">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Prompt: {note.prompt_id}</span>
+      {/* The Scroll Parchment Writing Canvas */}
+      <div className="parchment-sheet rounded-b-2xl shadow-2xl p-6 sm:p-10 md:p-12 relative overflow-hidden min-h-[580px] flex flex-col justify-between">
+        {/* Top Scroll Roll */}
+        <div className="scroll-roll-top -mx-2 -mt-4 mb-6" />
+
+        <div className="flex-1 flex flex-col">
+          {/* Letterhead Header with Wax Seal */}
+          <div className="flex items-center justify-between pb-4 mb-6 border-b border-amber-900/25">
+            <div className="flex items-center gap-3">
+              <WaxSeal color={isLocked ? 'crimson' : isPublic ? 'gold' : 'crimson'} size="md" icon={isLocked ? 'lock' : 'quill'} />
+              <div>
+                <span className="font-cinzel text-[11px] tracking-widest uppercase text-wood-700 block font-bold">
+                  The Library of Unsent Things
+                </span>
+                <span className="font-cormorant text-xs italic text-wood-900">
+                  {isLocked ? "Eyes-Only Confidential Letter" : isPublic ? "Archived for the Sanctuary" : "Private Library Parchment"}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 text-wood-700 text-xs font-cinzel">
+              <Feather className="w-4 h-4 text-amber-900" />
+              <span>Quill in Hand</span>
+            </div>
           </div>
-        )}
 
-        <input
-          type="text"
-          placeholder="An unspoken title (optional)..."
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="w-full font-serif text-2xl md:text-3xl font-medium text-ink-900 placeholder:text-parchment-400 focus:outline-none mb-6 bg-transparent"
-        />
+          {note?.prompt_id && (
+            <div className="flex items-center gap-1.5 mb-5 px-3 py-1 bg-amber-900/10 text-wood-900 font-cinzel text-xs rounded-full border border-amber-900/20 self-start">
+              <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+              <span>Prompt: {note.prompt_id}</span>
+            </div>
+          )}
 
-        <textarea
-          placeholder="Pour out what you never said out loud..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          className="flex-1 w-full font-serif text-base md:text-lg text-ink-800 leading-relaxed placeholder:text-parchment-400 focus:outline-none resize-none bg-transparent"
-        />
+          {/* Title Input */}
+          <input
+            type="text"
+            placeholder="A title for what remained unspoken..."
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full font-cinzel text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"
+          />
+
+          {/* Content TextArea */}
+          <textarea
+            placeholder="Write what you have carried in silence. No judgment reaches this shelf..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className={`flex-1 w-full text-wood-950 placeholder:text-wood-600/50 focus:outline-none resize-none bg-transparent ${
+              handwritingFont
+                ? 'font-script text-2xl md:text-3xl leading-loose font-normal'
+                : 'font-cormorant text-xl md:text-2xl leading-relaxed font-medium'
+            }`}
+          />
+        </div>
+
+        {/* Bottom Scroll Roll */}
+        <div className="scroll-roll-bottom -mx-2 -mb-4 mt-8" />
       </div>
 
       {/* Sharing and Safety Modals */}

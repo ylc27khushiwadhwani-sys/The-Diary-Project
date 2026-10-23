@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Mail, Check, Pin, PinOff, Trash2, X, RefreshCw, MessageSquare } from 'lucide-react';
-import { ResponseLetter } from '../../types/database';
+import { Check, Pin, PinOff, Trash2, X, RefreshCw, MessageSquare } from 'lucide-react';
+import { Note, ResponseLetter } from '../../types/database';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
-import { PenNameBadge } from '../auth/PenNameBadge';
+import { WaxSeal } from './WaxSeal';
 
 interface AuthorInboxProps {
   isOpen: boolean;
@@ -17,72 +17,80 @@ interface EnrichedResponse extends ResponseLetter {
 const DEMO_RESPONSES_KEY = 'unsent_library_demo_responses';
 const DEMO_NOTES_KEY = 'unsent_library_demo_notes';
 
+const loadAuthorResponses = async (userId: string): Promise<EnrichedResponse[] | null> => {
+  if (!isSupabaseConfigured) {
+    const rawNotes = localStorage.getItem(DEMO_NOTES_KEY);
+    const parsedNotes: Note[] = rawNotes ? JSON.parse(rawNotes) : [];
+    const userNotes = parsedNotes.filter((n) => n.user_id === userId);
+    const userNoteIds = new Set(userNotes.map((n) => n.id));
+    const noteTitleMap = new Map(
+      userNotes.map((n): [string, string] => [n.id, n.title || 'Untitled Letter'])
+    );
+
+    const rawResp = localStorage.getItem(DEMO_RESPONSES_KEY);
+    const allResp: ResponseLetter[] = rawResp ? JSON.parse(rawResp) : [];
+    return allResp
+      .filter((r) => userNoteIds.has(r.note_id))
+      .map((r) => ({
+        ...r,
+        note_title: noteTitleMap.get(r.note_id) || 'Untitled Letter',
+      }));
+  }
+
+  const { data: userNotes } = await supabase
+    .from('notes')
+    .select('id, title')
+    .eq('user_id', userId);
+
+  if (!userNotes || userNotes.length === 0) return [];
+
+  const noteIds = userNotes.map((n: { id: string; title: string | null }) => n.id);
+  const noteMap = new Map(
+    userNotes.map((n: { id: string; title: string | null }): [string, string] => [
+      n.id,
+      n.title || 'Untitled Letter',
+    ])
+  );
+
+  const { data, error } = await supabase
+    .from('response_letters')
+    .select('*, profiles:author_id(id, pen_name, avatar_color)')
+    .in('note_id', noteIds)
+    .order('created_at', { ascending: false });
+
+  if (error || !data) return null;
+  return data.map((r: EnrichedResponse) => ({
+    ...r,
+    note_title: noteMap.get(r.note_id) || 'Untitled Letter',
+  }));
+};
+
 export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const [responses, setResponses] = useState<EnrichedResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  const fetchAuthorResponses = async () => {
+  useEffect(() => {
+    if (!isOpen || !user) return;
+    let cancelled = false;
+    loadAuthorResponses(user.id).then((rows) => {
+      if (cancelled) return;
+      if (rows) setResponses(rows);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, user]);
+
+  const handleRefresh = async () => {
     if (!user) return;
     setLoading(true);
-
-    if (!isSupabaseConfigured) {
-      const rawNotes = localStorage.getItem(DEMO_NOTES_KEY);
-      const userNotes = rawNotes ? JSON.parse(rawNotes).filter((n: any) => n.user_id === user.id) : [];
-      const userNoteIds = new Set(userNotes.map((n: any) => n.id));
-      const noteTitleMap = new Map(userNotes.map((n: any) => [n.id, n.title || 'Untitled Letter']));
-
-      const rawResp = localStorage.getItem(DEMO_RESPONSES_KEY);
-      const allResp: ResponseLetter[] = rawResp ? JSON.parse(rawResp) : [];
-      const incoming = allResp
-        .filter((r) => userNoteIds.has(r.note_id))
-        .map((r) => ({
-          ...r,
-          note_title: (noteTitleMap.get(r.note_id) as string) || 'Untitled Letter',
-        }));
-
-      setResponses(incoming);
-      setLoading(false);
-      return;
-    }
-
-    // Supabase query: response letters for all notes owned by current user
-    const { data: userNotes } = await supabase
-      .from('notes')
-      .select('id, title')
-      .eq('user_id', user.id);
-
-    if (!userNotes || userNotes.length === 0) {
-      setResponses([]);
-      setLoading(false);
-      return;
-    }
-
-    const noteIds = userNotes.map((n) => n.id);
-    const noteMap = new Map(userNotes.map((n) => [n.id, n.title || 'Untitled Letter']));
-
-    const { data, error } = await supabase
-      .from('response_letters')
-      .select('*, profiles:author_id(id, pen_name, avatar_color)')
-      .in('note_id', noteIds)
-      .order('created_at', { ascending: false });
-
-    if (!error && data) {
-      const enriched = data.map((r: any) => ({
-        ...r,
-        note_title: noteMap.get(r.note_id) || 'Untitled Letter',
-      }));
-      setResponses(enriched);
-    }
+    const rows = await loadAuthorResponses(user.id);
+    if (rows) setResponses(rows);
     setLoading(false);
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      fetchAuthorResponses();
-    }
-  }, [isOpen, user]);
 
   const togglePin = async (responseId: string, currentPinStatus: boolean) => {
     const nextStatus = !currentPinStatus;
@@ -97,7 +105,7 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
       setResponses((prev) =>
         prev.map((r) => (r.id === responseId ? { ...r, is_approved_by_note_owner: nextStatus } : r))
       );
-      setActionSuccess(nextStatus ? 'Letter pinned to public note' : 'Letter kept private');
+      setActionSuccess(nextStatus ? 'Letter pinned to public note' : 'Letter kept in private sanctuary');
       setTimeout(() => setActionSuccess(null), 3000);
       return;
     }
@@ -111,13 +119,13 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
       setResponses((prev) =>
         prev.map((r) => (r.id === responseId ? { ...r, is_approved_by_note_owner: nextStatus } : r))
       );
-      setActionSuccess(nextStatus ? 'Letter pinned to public note' : 'Letter kept private');
+      setActionSuccess(nextStatus ? 'Letter pinned to public note' : 'Letter kept in private sanctuary');
       setTimeout(() => setActionSuccess(null), 3000);
     }
   };
 
   const deleteResponse = async (responseId: string) => {
-    if (!confirm('Are you sure you want to dismiss this response?')) return;
+    if (!confirm('Discard this letter from your correspondence box?')) return;
 
     if (!isSupabaseConfigured) {
       const raw = localStorage.getItem(DEMO_RESPONSES_KEY);
@@ -137,34 +145,34 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-ink-900/60 backdrop-blur-sm animate-fade-in">
-      <div className="relative w-full max-w-2xl bg-parchment-50 border border-parchment-300 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-left">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-2xl parchment-sheet border border-amber-900/40 rounded-2xl shadow-2xl flex flex-col max-h-[85vh] overflow-hidden text-left text-wood-950">
+        <div className="scroll-roll-top -mx-2 -mt-4 mb-2" />
+
         {/* Header */}
-        <div className="p-6 border-b border-parchment-200 flex items-center justify-between bg-parchment-100/40">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-sage-100 border border-sage-300 flex items-center justify-center text-sage-700">
-              <Mail className="w-4 h-4" />
-            </div>
+        <div className="p-6 border-b border-amber-900/20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <WaxSeal color="gold" size="md" icon="crest" />
             <div>
-              <h2 className="font-serif text-lg font-medium text-ink-900">
+              <h2 className="font-cinzel text-xl font-bold text-wood-950">
                 Letters in Response
               </h2>
-              <p className="text-xs text-ink-100">
-                Replies from kind readers to your shared unsent notes
+              <p className="font-cormorant text-xs text-wood-800 italic">
+                Correspondence sent by readers to your shared unsent notes
               </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={fetchAuthorResponses}
-              className="p-2 text-ink-100 hover:text-ink-900 rounded-lg hover:bg-parchment-200 transition"
-              title="Refresh"
+              onClick={handleRefresh}
+              className="p-2 text-wood-700 hover:text-wood-950 rounded-lg hover:bg-amber-900/10 transition cursor-pointer"
+              title="Refresh inbox"
             >
               <RefreshCw className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-2 text-ink-100 hover:text-ink-900 rounded-lg hover:bg-parchment-200 transition"
+              className="p-2 text-wood-700 hover:text-wood-950 rounded-lg hover:bg-amber-900/10 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -173,8 +181,8 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
 
         {/* Banner Alert */}
         {actionSuccess && (
-          <div className="mx-6 mt-4 p-2.5 bg-sage-50 border border-sage-200 rounded-xl text-xs text-sage-700 flex items-center gap-2 animate-fade-in">
-            <Check className="w-4 h-4 text-sage-600" />
+          <div className="mx-6 mt-4 p-3 bg-emerald-900/10 border border-emerald-800/30 rounded-xl text-xs font-cinzel text-emerald-900 flex items-center gap-2 animate-fade-in font-bold">
+            <Check className="w-4 h-4 text-emerald-700" />
             <span>{actionSuccess}</span>
           </div>
         )}
@@ -182,36 +190,34 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {loading ? (
-            <div className="py-12 text-center text-xs text-ink-100 font-serif italic">
-              Loading letters in response...
+            <div className="py-12 text-center text-xs font-cinzel text-wood-700 italic">
+              Gathering correspondence...
             </div>
           ) : responses.length === 0 ? (
             <div className="py-16 text-center">
-              <MessageSquare className="w-8 h-8 mx-auto text-ink-100 mb-2 opacity-50" />
-              <p className="font-serif text-sm text-ink-800 font-medium">Your inbox is still quiet</p>
-              <p className="text-xs text-ink-100 max-w-sm mx-auto mt-1">
-                When readers write back to your publicly shared notes, their responses will appear here for you to read privately or pin publicly.
+              <MessageSquare className="w-10 h-10 mx-auto text-amber-800/40 mb-3" />
+              <p className="font-cinzel text-base text-wood-950 font-bold">Your letter box is quiet</p>
+              <p className="font-cormorant text-sm text-wood-800 max-w-sm mx-auto mt-1 italic">
+                When readers in the Grand Library send letters in response to your shared notes, they will arrive here for your eyes first.
               </p>
             </div>
           ) : (
             responses.map((resp) => (
               <div
                 key={resp.id}
-                className="p-5 bg-white border border-parchment-300 rounded-xl shadow-xs transition hover:border-parchment-400"
+                className="p-5 bg-amber-50/80 border border-amber-900/30 rounded-xl shadow-xs transition hover:border-amber-800/60"
               >
-                <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-parchment-200">
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-2 pb-2 border-b border-amber-900/15">
                   <div className="flex items-center gap-2">
-                    <PenNameBadge
-                      penName={resp.profiles?.pen_name || 'Kind Reader'}
-                      avatarColor={resp.profiles?.avatar_color}
-                      size="sm"
-                    />
-                    <span className="text-xs text-ink-100">on</span>
-                    <span className="text-xs font-serif italic text-ink-900">
+                    <span className="font-script text-lg text-wood-950 font-bold">
+                      {resp.profiles?.pen_name || 'Kind Reader'}
+                    </span>
+                    <span className="text-xs font-cinzel text-wood-600">on</span>
+                    <span className="text-xs font-cinzel font-bold text-wood-900">
                       "{resp.note_title}"
                     </span>
                   </div>
-                  <span className="text-[10px] text-ink-100">
+                  <span className="text-[10px] font-cinzel text-wood-600">
                     {new Date(resp.created_at).toLocaleDateString(undefined, {
                       month: 'short',
                       day: 'numeric',
@@ -220,20 +226,20 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                   </span>
                 </div>
 
-                <p className="text-sm font-serif text-ink-900 leading-relaxed whitespace-pre-wrap py-2">
+                <p className="text-base font-cormorant text-wood-950 leading-relaxed whitespace-pre-wrap py-2">
                   {resp.content}
                 </p>
 
-                <div className="flex items-center justify-between pt-3 border-t border-parchment-200 mt-2">
-                  <span className="text-[11px] text-ink-500">
+                <div className="flex items-center justify-between pt-3 border-t border-amber-900/15 mt-2">
+                  <span className="text-xs font-cinzel text-wood-700">
                     {resp.is_approved_by_note_owner ? (
-                      <span className="inline-flex items-center gap-1 text-sage-700 font-medium">
-                        <Pin className="w-3 h-3 text-sage-600" />
-                        Pinned to your public letter
+                      <span className="inline-flex items-center gap-1.5 text-emerald-800 font-bold">
+                        <Pin className="w-3.5 h-3.5 text-emerald-700" />
+                        Pinned beneath your public note
                       </span>
                     ) : (
-                      <span className="text-ink-100 italic">
-                        Private to your inbox only
+                      <span className="italic text-wood-600">
+                        Kept in your private sanctuary
                       </span>
                     )}
                   </span>
@@ -241,10 +247,10 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => togglePin(resp.id, resp.is_approved_by_note_owner)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-cinzel font-bold transition cursor-pointer ${
                         resp.is_approved_by_note_owner
-                          ? 'bg-parchment-200 hover:bg-parchment-300 text-ink-800'
-                          : 'bg-sage-600 hover:bg-sage-700 text-white shadow-2xs'
+                          ? 'bg-amber-900/15 hover:bg-amber-900/25 text-wood-900'
+                          : 'bg-wax-crimson hover:bg-wax-crimsonBright text-white shadow-candle'
                       }`}
                     >
                       {resp.is_approved_by_note_owner ? (
@@ -261,8 +267,8 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                     </button>
                     <button
                       onClick={() => deleteResponse(resp.id)}
-                      className="p-1.5 text-ink-100 hover:text-rosewood-600 hover:bg-rosewood-50 rounded-lg transition"
-                      title="Dismiss response"
+                      className="p-1.5 text-wood-500 hover:text-red-700 rounded-lg transition cursor-pointer"
+                      title="Discard response"
                     >
                       <Trash2 className="w-4 h-4" />
                     </button>
@@ -272,6 +278,8 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
             ))
           )}
         </div>
+
+        <div className="scroll-roll-bottom -mx-2 -mb-4 mt-2" />
       </div>
     </div>
   );

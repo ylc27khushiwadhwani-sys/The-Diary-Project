@@ -76,8 +76,9 @@ Every note submitted to the public library undergoes automated AI safety screeni
 │       └── 20261016_triggers.sql       # User creation & 3-report auto-hide trigger
 └── tests/                  # Vitest automated test suites
     ├── crypto.test.ts
-    ├── pseudonyms.test.ts
     ├── moderation.test.ts
+    ├── moderation-benchmark.test.ts
+    ├── pseudonyms.test.ts
     └── rls-security.test.ts
 ```
 
@@ -100,9 +101,13 @@ npm.cmd run dev
 ```
 Open `http://localhost:5173` in your browser. The application runs immediately in **Sanctuary Demo Mode** with pre-seeded public letters and offline persistence.
 
-### 3. Run Automated Tests
+### 3. Run Automated Tests & Quality Gates
 ```powershell
-npm.cmd test
+npm.cmd test                # Full Vitest suite (unit + RLS security + moderation benchmark)
+npm.cmd run test:security   # RLS policy verification suite (tests/rls-security.test.ts)
+npm.cmd run test:moderation # AI safety classifier benchmark (tests/moderation-benchmark.test.ts)
+npm.cmd run lint            # ESLint flat config with React Hooks v7 rules
+npm.cmd run typecheck       # TypeScript --noEmit
 ```
 
 ---
@@ -128,3 +133,14 @@ To connect the application to a live Supabase project:
    ```powershell
    supabase functions deploy screen-content
    ```
+
+---
+
+## ✦ Deployment
+
+Static SPA deployment is preconfigured for two common hosts; neither requires a server runtime:
+
+- **Vercel** — `vercel.json` sets the Vite build (`npm run build` → `dist/`) and a catch-all rewrite to `index.html` so client-side routes resolve on refresh.
+- **Netlify** — `netlify.toml` sets the same build/publish paths plus an SPA fallback redirect.
+
+Both hosts only need the optional `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` environment variables. Without them the deployed site runs in Sanctuary Demo Mode.
