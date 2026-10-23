@@ -37,11 +37,47 @@ const readDemoSession = (): { user: User; profile: Profile } | null => {
   }
 };
 
+// Gated demo seeding (KTD3): a configured deployment must never seed
+// user/profile from a leftover demo profile, however the browser's localStorage
+// was previously used. Exported for unit tests.
+export const initialAuthState = (
+  configured: boolean
+): { user: User | null; profile: Profile | null } => {
+  const demo = configured ? null : readDemoSession();
+  return { user: demo?.user ?? null, profile: demo?.profile ?? null };
+};
+
+type InitialSessionHandlers = {
+  setSession: (session: Session | null) => void;
+  setUser: (user: User | null) => void;
+  setProfile: (profile: Profile | null) => void;
+  setLoading: (loading: boolean) => void;
+  fetchProfile: (userId: string) => void;
+};
+
+// Applies the initial getSession() result: a no-session resolution clears any
+// stale (demo-seeded) profile, mirroring the onAuthStateChange logout reset
+// below. Exported for unit tests.
+export const applyInitialSessionResult = (
+  result: { data: { session: Session | null } },
+  handlers: InitialSessionHandlers
+): void => {
+  const session = result.data.session;
+  handlers.setSession(session);
+  handlers.setUser(session?.user ?? null);
+  if (session?.user) {
+    handlers.fetchProfile(session.user.id);
+  } else {
+    handlers.setProfile(null);
+  }
+  handlers.setLoading(false);
+};
+
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [initialDemo] = useState(readDemoSession);
-  const [user, setUser] = useState<User | null>(() => initialDemo?.user ?? null);
+  const [initialAuth] = useState(() => initialAuthState(isSupabaseConfigured));
+  const [user, setUser] = useState<User | null>(() => initialAuth.user);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(() => initialDemo?.profile ?? null);
+  const [profile, setProfile] = useState<Profile | null>(() => initialAuth.profile);
   const [loading, setLoading] = useState(isSupabaseConfigured);
 
   // Load existing profile from Supabase or local demo session
@@ -78,14 +114,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-      }
-      setLoading(false);
-    });
+    supabase.auth.getSession().then((result) =>
+      applyInitialSessionResult(result, {
+        setSession,
+        setUser,
+        setProfile,
+        setLoading,
+        fetchProfile,
+      })
+    );
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
