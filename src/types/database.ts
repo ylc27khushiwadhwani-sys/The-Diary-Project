@@ -30,6 +30,7 @@ export interface Note {
   report_count: number;
   published_at: string | null;
   created_at: string;
+  tags?: string[] | null;
   profiles?: Profile;
   shelves?: Shelf;
 }

@@ -27,10 +27,43 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   const [isPublic, setIsPublic] = useState(note?.is_public || false);
   const [allowResponses, setAllowResponses] = useState(note?.allow_responses ?? true);
   const [handwritingFont, setHandwritingFont] = useState(false);
+  const [tags, setTags] = useState<string[]>(
+    (note?.tags ?? []).map((tag) => tag.toLowerCase())
+  );
+  const [tagDraft, setTagDraft] = useState('');
 
   const [saving, setSaving] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
+
+  // Tag chips: comma or Enter commits the draft, Backspace on an empty input
+  // pops the last chip. Storage is normalized lowercase so dedup and matching
+  // are case-insensitive; re-adding an existing tag is a no-op.
+  const addTag = (raw: string) => {
+    const tag = raw.trim().toLowerCase();
+    if (!tag) return;
+    setTags((prev) => (prev.includes(tag) ? prev : [...prev, tag]));
+  };
+
+  const handleTagInput = (value: string) => {
+    if (!value.includes(',')) {
+      setTagDraft(value);
+      return;
+    }
+    const segments = value.split(',');
+    segments.slice(0, -1).forEach((segment) => addTag(segment));
+    setTagDraft(segments[segments.length - 1]);
+  };
+
+  const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addTag(tagDraft);
+      setTagDraft('');
+    } else if (e.key === 'Backspace' && tagDraft === '' && tags.length > 0) {
+      setTags((prev) => prev.slice(0, -1));
+    }
+  };
 
   const handleManualSave = async () => {
     if (!content.trim()) return;
@@ -45,6 +78,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       is_public: isPublic,
       allow_responses: allowResponses,
       prompt_id: note?.prompt_id || null,
+      tags,
     });
     setSaving(false);
   };
@@ -62,6 +96,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       is_public: true,
       allow_responses: allowResponsesVal,
       prompt_id: note?.prompt_id || null,
+      tags,
       published_at: new Date().toISOString(),
     });
   };
@@ -77,6 +112,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       passcode_hash: passcodeHash,
       is_public: false,
       allow_responses: allowResponses,
+      tags,
     });
   };
 
@@ -206,6 +242,35 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             onChange={(e) => setTitle(e.target.value)}
             className="w-full font-cinzel text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"
           />
+
+          {/* Tag Chips */}
+          <div className="flex flex-wrap items-center gap-2 mb-6">
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className="flex items-center gap-1 px-2.5 py-1 bg-amber-900/15 border border-amber-800/30 rounded-full text-[11px] font-cinzel text-wood-800"
+              >
+                {tag}
+                <button
+                  type="button"
+                  aria-label={`Remove tag ${tag}`}
+                  onClick={() => setTags((prev) => prev.filter((t) => t !== tag))}
+                  className="text-wood-600 hover:text-wax-crimson cursor-pointer"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+            <input
+              type="text"
+              placeholder="Add tags, comma or Enter to seal..."
+              value={tagDraft}
+              onChange={(e) => handleTagInput(e.target.value)}
+              onKeyDown={handleTagKeyDown}
+              aria-label="Add tags"
+              className="flex-1 min-w-[10rem] bg-transparent text-xs font-cinzel text-wood-950 placeholder:text-wood-600/60 focus:outline-none"
+            />
+          </div>
 
           {/* Content TextArea */}
           <textarea

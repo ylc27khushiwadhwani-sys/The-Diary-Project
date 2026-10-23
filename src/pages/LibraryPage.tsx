@@ -10,8 +10,8 @@ import { NoteEditor } from '../components/editor/NoteEditor';
 import { AuthorInbox } from '../components/library/AuthorInbox';
 import { WaxSeal } from '../components/library/WaxSeal';
 import { useCancellableLoad } from '../hooks/useCancellableLoad';
+import { DEMO_NOTES_KEY, loadNotes, searchNotes } from '../services/notes';
 
-const DEMO_NOTES_KEY = 'unsent_library_demo_notes';
 const DEMO_SHELVES_KEY = 'unsent_library_demo_shelves';
 
 const loadShelves = async (userId: string): Promise<Shelf[] | null> => {
@@ -36,46 +36,12 @@ const loadShelves = async (userId: string): Promise<Shelf[] | null> => {
   return data ? (data as Shelf[]) : null;
 };
 
-const loadNotes = async (userId: string): Promise<Note[] | null> => {
-  if (!isSupabaseConfigured) {
-    const saved = localStorage.getItem(DEMO_NOTES_KEY);
-    if (saved) return JSON.parse(saved) as Note[];
-    const sampleNotes: Note[] = [
-      {
-        id: 'sample-1',
-        user_id: userId,
-        shelf_id: 'shelf-1',
-        title: 'The words left on the platform',
-        content: 'I watched the train pull away, and my hands stayed in my pockets. Everything I planned to say felt too heavy to carry through the station air. I hope the quiet didn\'t sound like I didn\'t care.',
-        prompt_id: 'prompt-1',
-        is_locked: false,
-        passcode_hash: null,
-        is_public: false,
-        allow_responses: true,
-        moderation_status: 'clean',
-        report_count: 0,
-        published_at: null,
-        created_at: new Date(Date.now() - 86400000 * 2).toISOString(),
-      },
-    ];
-    localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(sampleNotes));
-    return sampleNotes;
-  }
-
-  const { data } = await supabase
-    .from('notes')
-    .select('*, shelves(*)')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false });
-
-  return data ? (data as Note[]) : null;
-};
-
 export const LibraryPage: React.FC = () => {
   const { user, profile, loginAsGuestDemo } = useAuth();
   const [shelves, setShelves] = useState<Shelf[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedShelfId, setSelectedShelfId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
   const [activeEditingNote, setActiveEditingNote] = useState<Partial<Note> | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
@@ -149,6 +115,7 @@ export const LibraryPage: React.FC = () => {
           report_count: 0,
           published_at: noteData.is_public ? now : null,
           created_at: now,
+          tags: noteData.tags ?? [],
           profiles: profile || undefined,
         };
         updatedList = [newNote, ...notes];
@@ -251,9 +218,10 @@ export const LibraryPage: React.FC = () => {
     );
   }
 
-  const filteredNotes = selectedShelfId
+  const shelfNotes = selectedShelfId
     ? notes.filter((n) => n.shelf_id === selectedShelfId)
     : notes;
+  const filteredNotes = searchNotes(shelfNotes, searchQuery);
 
   return (
     <div className="max-w-6xl mx-auto py-6 px-4">
@@ -324,14 +292,34 @@ export const LibraryPage: React.FC = () => {
                   : 'All Preserved Letters'}
               </span>
             </div>
-            <span className="text-amber-400/80 text-[11px]">
-              {filteredNotes.length} Documents
-            </span>
+            <div className="flex items-center gap-3">
+              <input
+                type="search"
+                placeholder="Search titles, words, or tags..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                aria-label="Search notes"
+                className="w-40 sm:w-56 bg-wood-950/70 border border-amber-800/40 rounded-lg px-3 py-1.5 text-[11px] text-amber-100 placeholder:text-amber-500/70 focus:outline-none focus:border-amber-600/60"
+              />
+              <span className="text-amber-400/80 text-[11px] whitespace-nowrap">
+                {filteredNotes.length} Documents
+              </span>
+            </div>
           </div>
 
           {loading ? (
             <div className="py-16 text-center text-xs font-cinzel text-amber-300/70 italic">
               Unlocking your private shelves...
+            </div>
+          ) : filteredNotes.length === 0 && searchQuery.trim() ? (
+            <div className="text-center py-16 bg-wood-950/60 border border-dashed border-amber-800/40 rounded-2xl p-8 backdrop-blur-sm">
+              <p className="font-cinzel text-base font-bold text-amber-200 mb-1">
+                No letters match your search
+              </p>
+              <p className="font-cormorant text-sm text-amber-300/70 max-w-sm mx-auto">
+                Nothing on these shelves answers "{searchQuery.trim()}". Try a
+                different word or tag.
+              </p>
             </div>
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-16 bg-wood-950/60 border border-dashed border-amber-800/40 rounded-2xl p-8 backdrop-blur-sm">
