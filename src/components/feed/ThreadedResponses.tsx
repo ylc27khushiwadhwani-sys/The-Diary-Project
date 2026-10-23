@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { MessageSquare, Heart } from 'lucide-react';
 import { ResponseLetter } from '../../types/database';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { WaxSeal } from '../library/WaxSeal';
+import { useCancellableLoad } from '../../hooks/useCancellableLoad';
 
 interface ThreadedResponsesProps {
   noteId: string;
@@ -33,19 +34,12 @@ const loadApprovedResponses = async (noteId: string): Promise<ResponseLetter[] |
 
 export const ThreadedResponses: React.FC<ThreadedResponsesProps> = ({ noteId }) => {
   const [responses, setResponses] = useState<ResponseLetter[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
-    loadApprovedResponses(noteId).then((rows) => {
-      if (cancelled) return;
-      if (rows) setResponses(rows);
-      setLoading(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [noteId]);
+  const { loading } = useCancellableLoad(
+    () => loadApprovedResponses(noteId),
+    [noteId],
+    setResponses
+  );
 
   if (loading) {
     return (

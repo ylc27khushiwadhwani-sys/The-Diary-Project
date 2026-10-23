@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Check, Pin, PinOff, Trash2, X, RefreshCw, MessageSquare } from 'lucide-react';
 import { Note, ResponseLetter } from '../../types/database';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { WaxSeal } from './WaxSeal';
+import { useCancellableLoad } from '../../hooks/useCancellableLoad';
 
 interface AuthorInboxProps {
   isOpen: boolean;
@@ -68,29 +69,15 @@ const loadAuthorResponses = async (userId: string): Promise<EnrichedResponse[] |
 export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => {
   const { user } = useAuth();
   const [responses, setResponses] = useState<EnrichedResponse[]>([]);
-  const [loading, setLoading] = useState(true);
   const [actionSuccess, setActionSuccess] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isOpen || !user) return;
-    let cancelled = false;
-    loadAuthorResponses(user.id).then((rows) => {
-      if (cancelled) return;
-      if (rows) setResponses(rows);
-      setLoading(false);
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [isOpen, user]);
-
-  const handleRefresh = async () => {
-    if (!user) return;
-    setLoading(true);
-    const rows = await loadAuthorResponses(user.id);
-    if (rows) setResponses(rows);
-    setLoading(false);
-  };
+  // Re-arms loading on reopen (deps change) and gives the refresh button a
+  // refetch that participates in the same cancellation guard.
+  const { loading, refetch } = useCancellableLoad(
+    () => (isOpen && user ? loadAuthorResponses(user.id) : Promise.resolve(null)),
+    [isOpen, user],
+    setResponses
+  );
 
   const togglePin = async (responseId: string, currentPinStatus: boolean) => {
     const nextStatus = !currentPinStatus;
@@ -164,7 +151,7 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={handleRefresh}
+              onClick={refetch}
               className="p-2 text-wood-700 hover:text-wood-950 rounded-lg hover:bg-amber-900/10 transition cursor-pointer"
               title="Refresh inbox"
             >

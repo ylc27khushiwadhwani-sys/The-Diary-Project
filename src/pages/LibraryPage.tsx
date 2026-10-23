@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Plus, BookOpen, Feather, Mail, KeyRound } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
@@ -9,6 +9,7 @@ import { NoteCard } from '../components/library/NoteCard';
 import { NoteEditor } from '../components/editor/NoteEditor';
 import { AuthorInbox } from '../components/library/AuthorInbox';
 import { WaxSeal } from '../components/library/WaxSeal';
+import { useCancellableLoad } from '../hooks/useCancellableLoad';
 
 const DEMO_NOTES_KEY = 'unsent_library_demo_notes';
 const DEMO_SHELVES_KEY = 'unsent_library_demo_shelves';
@@ -78,23 +79,17 @@ export const LibraryPage: React.FC = () => {
   const [activeEditingNote, setActiveEditingNote] = useState<Partial<Note> | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (!user) return;
-    let cancelled = false;
-    Promise.all([loadShelves(user.id), loadNotes(user.id)]).then(
-      ([loadedShelves, loadedNotes]) => {
-        if (cancelled) return;
-        if (loadedShelves) setShelves(loadedShelves);
-        if (loadedNotes) setNotes(loadedNotes);
-        setLoading(false);
-      }
-    );
-    return () => {
-      cancelled = true;
-    };
-  }, [user]);
+  const { loading } = useCancellableLoad(
+    () =>
+      user
+        ? Promise.all([loadShelves(user.id), loadNotes(user.id)])
+        : Promise.resolve(null),
+    [user],
+    ([loadedShelves, loadedNotes]) => {
+      if (loadedShelves) setShelves(loadedShelves);
+      if (loadedNotes) setNotes(loadedNotes);
+    }
+  );
 
   const handleCreateShelf = async (name: string, icon: string) => {
     if (!user) return;

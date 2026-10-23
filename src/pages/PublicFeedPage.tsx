@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Feather } from 'lucide-react';
 import { Note } from '../types/database';
@@ -11,6 +11,7 @@ import { ResponseComposer } from '../components/feed/ResponseComposer';
 import { ReportModal } from '../components/feed/ReportModal';
 import { SignInModal } from '../components/auth/SignInModal';
 import { NoteEditor } from '../components/editor/NoteEditor';
+import { useCancellableLoad } from '../hooks/useCancellableLoad';
 
 const DEMO_NOTES_KEY = 'unsent_library_demo_notes_v2';
 
@@ -591,7 +592,7 @@ export const PublicFeedPage: React.FC = () => {
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
-  const fetchPublicNotes = async () => {
+  const loadPublicNotes = async (): Promise<Note[] | null> => {
     if (!isSupabaseConfigured) {
       const raw = localStorage.getItem(DEMO_NOTES_KEY);
       let localNotes: Note[] = raw ? JSON.parse(raw) : [];
@@ -601,11 +602,9 @@ export const PublicFeedPage: React.FC = () => {
         localNotes = INITIAL_PUBLIC_NOTES;
       }
 
-      const publicOnly = localNotes.filter(
+      return localNotes.filter(
         (n) => n.is_public && n.moderation_status === 'clean'
       );
-      setNotes(publicOnly);
-      return;
     }
 
     const { data, error } = await supabase
@@ -615,19 +614,13 @@ export const PublicFeedPage: React.FC = () => {
       .eq('moderation_status', 'clean')
       .order('published_at', { ascending: false });
 
-    if (!error && data) {
-      setNotes(data as Note[]);
-    }
+    if (error || !data) return null;
+    return data as Note[];
   };
 
-  useEffect(() => {
-    // Defer to a microtask so no setState runs synchronously inside the effect
-    // (react-hooks/set-state-in-effect). U5's useCancellableLoad restructures
-    // this loader wholesale.
-    queueMicrotask(() => {
-      void fetchPublicNotes();
-    });
-  }, []);
+  // Initial load runs under the shared cancellation guard; every refresh below
+  // goes through refetch() so it shares the same guard.
+  const { refetch } = useCancellableLoad(loadPublicNotes, [], setNotes);
 
   const handleStartResponse = (note: Note) => {
     if (!user) {
@@ -662,7 +655,7 @@ export const PublicFeedPage: React.FC = () => {
       existing.unshift(created);
       localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(existing));
       setIsEditorOpen(false);
-      fetchPublicNotes();
+      refetch();
       return;
     }
 
@@ -674,7 +667,7 @@ export const PublicFeedPage: React.FC = () => {
         .single();
       if (data) {
         setIsEditorOpen(false);
-        fetchPublicNotes();
+        refetch();
       }
     }
   };
@@ -830,7 +823,7 @@ export const PublicFeedPage: React.FC = () => {
           onClose={() => setRespondingNote(null)}
           onResponseSent={() => {
             setRespondingNote(null);
-            fetchPublicNotes();
+            refetch();
           }}
         />
       )}
@@ -842,7 +835,7 @@ export const PublicFeedPage: React.FC = () => {
           noteId={reportingNote.id}
           onClose={() => setReportingNote(null)}
           onReportSubmitted={() => {
-            fetchPublicNotes();
+            refetch();
             setReportingNote(null);
           }}
         />
