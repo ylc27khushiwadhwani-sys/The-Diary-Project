@@ -54,14 +54,15 @@ Every note submitted to the public library undergoes automated AI safety screeni
 │   ├── components/
 │   │   ├── auth/           # PenNameBadge, SignInModal
 │   │   ├── editor/         # NoteEditor, LockNoteToggle
-│   │   ├── feed/           # PublicNoteCard, FeedFilter, ResponseComposer, ThreadedResponses, ReportModal
+│   │   ├── feed/           # ResponseComposer, ThreadedResponses, ReportModal
 │   │   ├── library/        # ShelfManager, PromptSelector, NoteCard, PasscodeModal, ShareModal, AuthorInbox
 │   │   └── safety/         # HelplineModal
 │   ├── contexts/           # AuthContext (Supabase Auth & Guest Demo session state)
 │   ├── data/               # prompts.json, helplines.json
+│   ├── hooks/              # useCancellableLoad (unified note-loading lifecycle)
 │   ├── lib/                # supabase.ts (client & environment detection)
 │   ├── pages/              # PublicFeedPage, LibraryPage
-│   ├── services/           # moderation.ts, reporting.ts
+│   ├── services/           # moderation.ts, reporting.ts, notes.ts, export.ts
 │   ├── types/              # database.ts
 │   ├── utils/              # crypto.ts, pseudonyms.ts
 │   ├── App.tsx             # Root layout and tab routing
@@ -75,10 +76,12 @@ Every note submitted to the public library undergoes automated AI safety screeni
 │       ├── 20261016_rls_policies.sql   # Strict Row Level Security policies
 │       └── 20261016_triggers.sql       # User creation & 3-report auto-hide trigger
 └── tests/                  # Vitest automated test suites
+    ├── auth-context.test.ts
     ├── crypto.test.ts
     ├── moderation.test.ts
     ├── moderation-benchmark.test.ts
     ├── pseudonyms.test.ts
+    ├── rls-security.test.ts
     └── rls-security.test.ts
 ```
 
