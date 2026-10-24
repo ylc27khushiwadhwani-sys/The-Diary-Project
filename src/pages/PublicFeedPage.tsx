@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Feather } from 'lucide-react';
+import { Feather, Search, SlidersHorizontal } from 'lucide-react';
 import { Note } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
@@ -592,6 +592,12 @@ export const PublicFeedPage: React.FC = () => {
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
+  // Discovery control (KTD8): free-text search over title/content/pen name
+  // plus a latest/oldest sort, applied to the same list InteractiveBookshelf
+  // renders so it narrows (never conflicts with) its shelf-section browsing.
+  const [feedSearch, setFeedSearch] = useState('');
+  const [feedSort, setFeedSort] = useState<'latest' | 'oldest'>('latest');
+
   const loadPublicNotes = async (): Promise<Note[] | null> => {
     if (!isSupabaseConfigured) {
       const raw = localStorage.getItem(DEMO_NOTES_KEY);
@@ -620,7 +626,24 @@ export const PublicFeedPage: React.FC = () => {
 
   // Initial load runs under the shared cancellation guard; every refresh below
   // goes through refetch() so it shares the same guard.
-  const { refetch } = useCancellableLoad(loadPublicNotes, [], setNotes);
+  const { loading, refetch } = useCancellableLoad(loadPublicNotes, [], setNotes);
+
+  const visibleNotes = useMemo(() => {
+    const query = feedSearch.trim().toLowerCase();
+    const filtered = query
+      ? notes.filter((n) =>
+          [n.title ?? '', n.content ?? '', n.profiles?.pen_name ?? ''].some((field) =>
+            field.toLowerCase().includes(query)
+          )
+        )
+      : notes;
+    const byDate = (n: Note) => n.published_at || n.created_at || '';
+    return [...filtered].sort((a, b) =>
+      feedSort === 'latest'
+        ? byDate(b).localeCompare(byDate(a))
+        : byDate(a).localeCompare(byDate(b))
+    );
+  }, [notes, feedSearch, feedSort]);
 
   const handleStartResponse = (note: Note) => {
     if (!user) {
@@ -769,11 +792,57 @@ export const PublicFeedPage: React.FC = () => {
 
       {/* 3. The Interactive Bookshelf (Letters are opened by touching a book) */}
       <div id="bookshelf" className="scroll-mt-16 py-16">
-        <InteractiveBookshelf
-          notes={notes}
-          onWriteClick={() => setIsEditorOpen(true)}
-          onRespondLetter={handleStartResponse}
-        />
+        {/* Search + sort control: lives above the bookshelf and narrows what it renders */}
+        <div className="mx-auto max-w-5xl px-4 mb-8 flex flex-col sm:flex-row items-center gap-3">
+          <div className="relative flex-1 w-full">
+            <Search className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={feedSearch}
+              onChange={(e) => setFeedSearch(e.target.value)}
+              placeholder="Search letters by title, words, or pen name..."
+              aria-label="Search letters"
+              className="w-full pl-10 pr-4 py-2.5 bg-card/80 border border-hairline rounded-xl text-sm text-amber-100 placeholder:text-[#9e9488]/70 font-serif focus:outline-none focus:ring-1 focus:ring-gold transition"
+            />
+          </div>
+          <div className="flex items-center gap-2 text-xs text-amber-200 bg-card/80 border border-hairline rounded-xl px-3 py-2.5 shrink-0">
+            <SlidersHorizontal className="w-3.5 h-3.5 text-gold" />
+            <select
+              value={feedSort}
+              onChange={(e) => setFeedSort(e.target.value as 'latest' | 'oldest')}
+              aria-label="Sort letters by date"
+              className="bg-transparent text-xs font-serif text-amber-100 focus:outline-none cursor-pointer"
+            >
+              <option value="latest" className="bg-wood-900 text-amber-100">Latest archived</option>
+              <option value="oldest" className="bg-wood-900 text-amber-100">Earliest archived</option>
+            </select>
+          </div>
+        </div>
+
+        {loading ? (
+          <div role="status" className="text-center py-20 px-4">
+            <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
+            <p className="font-body text-sm text-[#9e9488] italic">
+              Unshelving the letters...
+            </p>
+          </div>
+        ) : feedSearch.trim() && visibleNotes.length === 0 ? (
+          <div role="status" className="text-center py-20 px-4">
+            <Feather className="w-8 h-8 text-gold/50 mx-auto mb-3" />
+            <h3 className="font-serif text-2xl text-amber-100 mb-2">
+              No letters match your search
+            </h3>
+            <p className="font-body text-sm text-[#9e9488] italic max-w-sm mx-auto">
+              Try a different phrase, or search by pen name.
+            </p>
+          </div>
+        ) : (
+          <InteractiveBookshelf
+            notes={visibleNotes}
+            onWriteClick={() => setIsEditorOpen(true)}
+            onRespondLetter={handleStartResponse}
+          />
+        )}
       </div>
 
       {/* 4. Library Card & Sample Letter Quote Section (Clean and focused, four rooms removed) */}
