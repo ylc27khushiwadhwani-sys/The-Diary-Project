@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, BookOpen, Feather, Mail, KeyRound } from 'lucide-react';
+import { Plus, BookOpen, Feather, Mail, KeyRound, Download } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { Note, Shelf, Prompt } from '../types/database';
@@ -11,6 +11,7 @@ import { AuthorInbox } from '../components/library/AuthorInbox';
 import { WaxSeal } from '../components/library/WaxSeal';
 import { useCancellableLoad } from '../hooks/useCancellableLoad';
 import { DEMO_NOTES_KEY, loadNotes, searchNotes } from '../services/notes';
+import { downloadNotesExport } from '../services/export';
 
 const DEMO_SHELVES_KEY = 'unsent_library_demo_shelves';
 
@@ -45,6 +46,10 @@ export const LibraryPage: React.FC = () => {
   const [activeEditingNote, setActiveEditingNote] = useState<Partial<Note> | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
+  // Notes unlocked via passcode earlier in this session (U8 export reads this).
+  const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
+  const [exportSummary, setExportSummary] = useState<string | null>(null);
+  const [exportError, setExportError] = useState<string | null>(null);
   const { loading } = useCancellableLoad(
     () =>
       user
@@ -176,6 +181,31 @@ export const LibraryPage: React.FC = () => {
     setIsEditorOpen(true);
   };
 
+  const handleUnlockNote = (noteId: string) => {
+    setUnlockedIds((prev) => new Set(prev).add(noteId));
+  };
+
+  const handleExport = () => {
+    try {
+      const result = downloadNotesExport(notes, unlockedIds, shelves);
+      const noun = result.exportedCount === 1 ? 'note' : 'notes';
+      const summary = `Exported ${result.exportedCount} ${noun}`;
+      setExportSummary(
+        result.skippedCount > 0
+          ? `${summary}; ${result.skippedCount} locked ${
+              result.skippedCount === 1 ? 'note was' : 'notes were'
+            } skipped`
+          : summary
+      );
+      setExportError(null);
+    } catch (err) {
+      setExportSummary(null);
+      setExportError(
+        err instanceof Error ? err.message : 'Export failed. Please try again.'
+      );
+    }
+  };
+
   if (!user) {
     return (
       <div className="max-w-xl mx-auto py-16 px-4 text-center">
@@ -246,6 +276,14 @@ export const LibraryPage: React.FC = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           <button
+            onClick={handleExport}
+            className="flex items-center gap-2 px-4 py-2.5 bg-wood-850 hover:bg-wood-800 text-amber-200 border border-amber-700/40 rounded-xl font-cinzel text-xs font-semibold transition cursor-pointer shadow-xs"
+          >
+            <Download className="w-4 h-4 text-amber-400" />
+            <span>Export my notes</span>
+          </button>
+
+          <button
             onClick={() => setIsInboxOpen(true)}
             className="flex items-center gap-2 px-4 py-2.5 bg-wood-850 hover:bg-wood-800 text-amber-200 border border-amber-700/40 rounded-xl font-cinzel text-xs font-semibold transition cursor-pointer shadow-xs"
           >
@@ -262,6 +300,18 @@ export const LibraryPage: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Export summary / error (always shown after an export attempt) */}
+      {(exportSummary || exportError) && (
+        <p
+          role="status"
+          className={`-mt-6 mb-8 text-xs font-cinzel ${
+            exportError ? 'text-red-400' : 'text-amber-300'
+          }`}
+        >
+          {exportError ?? exportSummary}
+        </p>
+      )}
 
       {/* Bookshelf Columns */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -342,6 +392,8 @@ export const LibraryPage: React.FC = () => {
                   key={note.id}
                   note={note}
                   shelves={shelves}
+                  unlocked={unlockedIds.has(note.id)}
+                  onUnlock={handleUnlockNote}
                   onOpen={(selected) => {
                     setActiveEditingNote(selected);
                     setIsEditorOpen(true);

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { AuthProvider } from '../contexts/AuthContext';
 import { LibraryPage } from './LibraryPage';
@@ -185,5 +185,133 @@ describe('LibraryPage tag entry persistence in demo mode (R6)', () => {
     renderLibrary();
     await typeSearch('hope');
     expect(await screen.findByText('1 Documents')).toBeInTheDocument();
+  });
+});
+
+describe('LibraryPage private note export (U8)', () => {
+  const lockedNote = makeNote({
+    id: 'n4',
+    title: 'Secret Vow',
+    content: 'The vow I never said aloud.',
+    is_locked: true,
+    passcode_hash: null,
+    shelf_id: 'shelf-b',
+  });
+
+  let capturedBlob: Blob | null = null;
+  const originalCreateObjectURL = URL.createObjectURL;
+  const originalRevokeObjectURL = URL.revokeObjectURL;
+
+  const readBlob = (blob: Blob): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(String(reader.result));
+      reader.onerror = () => reject(reader.error);
+      reader.readAsText(blob);
+    });
+
+  const clickExport = async () => {
+    fireEvent.click(await screen.findByRole('button', { name: /export my notes/i }));
+  };
+
+  beforeEach(() => {
+    localStorage.clear();
+    seed(seededNotes);
+    capturedBlob = null;
+    URL.createObjectURL = vi.fn((blob: Blob) => {
+      capturedBlob = blob;
+      return 'blob:mock-url';
+    });
+    URL.revokeObjectURL = vi.fn();
+    vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    localStorage.clear();
+    vi.restoreAllMocks();
+    if (originalCreateObjectURL) URL.createObjectURL = originalCreateObjectURL;
+    else delete (URL as unknown as Record<string, unknown>).createObjectURL;
+    if (originalRevokeObjectURL) URL.revokeObjectURL = originalRevokeObjectURL;
+    else delete (URL as unknown as Record<string, unknown>).revokeObjectURL;
+  });
+
+  it('exports the demo library with a one-line summary showing no skips', async () => {
+    renderLibrary();
+    await clickExport();
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Exported 3 notes');
+    expect(screen.getByRole('status')).not.toHaveTextContent('skipped');
+
+    // Demo-mode parity: the JSON mirrors the notes seeded in localStorage.
+    const parsed = JSON.parse(await readBlob(capturedBlob!));
+    expect(parsed.map((n: { title: string | null }) => n.title)).toEqual([
+      'The Subway Window',
+      'Morning Coffee',
+      'Quiet Room',
+    ]);
+    expect(parsed[0]).toMatchObject({
+      content: 'I watched the train pull away.',
+      tags: ['grief', 'letters'],
+      shelf: 'Shelf A',
+      created_at: '2026-10-01T00:00:00.000Z',
+      published_at: null,
+    });
+  });
+
+  it('skips a locked note that was never unlocked and reports the skip count', async () => {
+    seed([...seededNotes, lockedNote]);
+    renderLibrary();
+    await clickExport();
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Exported 3 notes; 1 locked note was skipped'
+    );
+
+    const parsed = JSON.parse(await readBlob(capturedBlob!));
+    expect(parsed).toHaveLength(3);
+    expect(parsed.map((n: { title: string | null }) => n.title)).not.toContain('Secret Vow');
+  });
+
+  it('includes a note that was unlocked through the passcode modal in this session', async () => {
+    seed([...seededNotes, lockedNote]);
+    renderLibrary();
+
+    // Break the seal on the locked card (hash-less demo note accepts any 4 digits).
+    fireEvent.click(await screen.findByText('Secret Vow'));
+    const pin = await screen.findByPlaceholderText('••••');
+    fireEvent.change(pin, { target: { value: '1234' } });
+    fireEvent.click(screen.getByText('Break Seal'));
+
+    // Unlock success opens the editor; return to the shelf and export.
+    fireEvent.click(await screen.findByText('Return to Shelves'));
+    await clickExport();
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Exported 4 notes');
+    expect(screen.getByRole('status')).not.toHaveTextContent('skipped');
+
+    const parsed = JSON.parse(await readBlob(capturedBlob!));
+    expect(parsed.map((n: { title: string | null }) => n.title)).toContain('Secret Vow');
+  });
+
+  it('shows an inline error instead of failing silently when the download step fails', async () => {
+    URL.createObjectURL = vi.fn(() => {
+      throw new Error('blocked');
+    });
+    renderLibrary();
+    await clickExport();
+
+    expect(await screen.findByRole('status')).toHaveTextContent(
+      'Your browser blocked the export download. Please try again.'
+    );
+    expect(screen.queryByText(/^Exported/)).not.toBeInTheDocument();
+  });
+
+  it('exports an empty library as a valid empty JSON array', async () => {
+    seed([]);
+    renderLibrary();
+    await clickExport();
+
+    expect(await screen.findByRole('status')).toHaveTextContent('Exported 0 notes');
+    expect(JSON.parse(await readBlob(capturedBlob!))).toEqual([]);
   });
 });
