@@ -124,10 +124,9 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
           </div>
 
           {isLockedNote ? (
-            // Locked keepsake scroll
-            <div className="relative">
-              <div className="scroll-rod scroll-rod-top"><span className="scroll-rod-crest" /></div>
-              <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 pt-14 text-center text-wood-950 relative">
+            // Locked parchment letter
+            <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 text-center text-wood-950 relative">
+              <div className="letter-ribbon" />
               <div className="letter-stamps">
                 <span className="letter-stamp" />
               </div>
@@ -147,22 +146,16 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
               >
                 <span>Break Wax Seal with Passcode</span>
               </button>
-              </div>
-              <div className="scroll-rod scroll-rod-bottom"><span className="scroll-rod-crest" /></div>
             </div>
           ) : (
-            // Paginated keepsake scroll, turned page by page
-            <div className="relative">
-              <div className="scroll-rod scroll-rod-top"><span className="scroll-rod-crest" /></div>
-              <article className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 pl-9 sm:pl-12 pt-14 pb-12 text-wood-950 relative max-h-[85vh] flex flex-col">
-                <div className="letter-stamps">
-                  <span className="letter-stamp" />
-                  <span className="letter-stamp stamp-green" />
-                </div>
-                <span className="filigree-corner fc-tl" />
-                <span className="filigree-corner fc-tr" />
-                <span className="filigree-corner fc-bl" />
-                <span className="filigree-corner fc-br" />
+            // Paginated parchment letter, turned page by page
+            <article className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-12 text-wood-950 relative max-h-[85vh] flex flex-col">
+              <div className="letter-ribbon" />
+              <div className="letter-stamps">
+                <span className="letter-stamp" />
+                <span className="letter-stamp stamp-green" />
+              </div>
+              <div className="letter-botanical" />
               {/* Header bar */}
               <div className="flex items-center justify-between pb-4 mb-5 border-b border-amber-900/20">
                 <div className="flex items-center gap-3">
@@ -280,9 +273,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                   </div>
                 )}
               </div>
-              </article>
-              <div className="scroll-rod scroll-rod-bottom"><span className="scroll-rod-crest" /></div>
-            </div>
+            </article>
           )}
 
           {/* Passcode Modal for breaking the seal */}

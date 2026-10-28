@@ -74,19 +74,25 @@
 
 /* Antique Parchment Paper Texture - cream laid paper with fiber flecks */
 .parchment-sheet {
-  background-color: #f3e4c0;
+  background-color: #ecdcb4;
   background-image:
-    radial-gradient(ellipse at 85% 88%, rgba(186, 148, 84, 0.22) 0%, transparent 55%),
-    radial-gradient(ellipse at 12% 8%, rgba(186, 148, 84, 0.16) 0%, transparent 50%),
-    radial-gradient(ellipse at 30% 20%, rgba(255, 250, 234, 0.85) 0%, rgba(241, 226, 192, 0.45) 55%, rgba(224, 200, 152, 0.6) 100%),
-    repeating-radial-gradient(circle at 18% 32%, rgba(150, 122, 74, 0.05) 0px, rgba(150, 122, 74, 0.05) 1px, transparent 1px, transparent 7px),
-    repeating-radial-gradient(circle at 74% 68%, rgba(120, 96, 56, 0.045) 0px, rgba(120, 96, 56, 0.045) 1px, transparent 1px, transparent 9px),
-    linear-gradient(to right, rgba(165, 141, 85, 0.14) 0%, transparent 8%, transparent 92%, rgba(165, 141, 85, 0.14) 100%),
-    linear-gradient(to bottom, rgba(165, 141, 85, 0.16) 0%, transparent 6%, transparent 94%, rgba(165, 141, 85, 0.2) 100%);
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.33 0 0 0 0 0.18 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009 0.012' numOctaves='4' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 0.52 0 0 0 0 0.4 0 0 0 0 0.2 0 0 0 0.17 0'/%3E%3C/filter%3E%3Crect width='480' height='480' filter='url(%23m)'/%3E%3C/svg%3E"),
+    radial-gradient(circle 46px at 24% 34%, rgba(140, 95, 40, 0.09) 0%, transparent 70%),
+    radial-gradient(circle 30px at 68% 58%, rgba(140, 95, 40, 0.08) 0%, transparent 70%),
+    radial-gradient(circle 60px at 84% 78%, rgba(140, 95, 40, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 220px 140px at 78% 12%, rgba(150, 108, 48, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 200px at 12% 84%, rgba(150, 108, 48, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 140px 70px at 97% 99%, rgba(96, 66, 24, 0.16) 0%, transparent 70%),
+    repeating-radial-gradient(circle at 18% 32%, rgba(150, 122, 74, 0.03) 0px, rgba(150, 122, 74, 0.03) 1px, transparent 1px, transparent 7px),
+    repeating-radial-gradient(circle at 74% 68%, rgba(120, 96, 56, 0.028) 0px, rgba(120, 96, 56, 0.028) 1px, transparent 1px, transparent 9px),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 250, 234, 0.7) 0%, rgba(240, 224, 186, 0.38) 55%, rgba(214, 188, 140, 0.55) 100%),
+    linear-gradient(to right, rgba(120, 88, 40, 0.2) 0%, transparent 7%, transparent 93%, rgba(120, 88, 40, 0.22) 100%),
+    linear-gradient(to bottom, rgba(120, 88, 40, 0.22) 0%, transparent 8%, transparent 92%, rgba(120, 88, 40, 0.26) 100%);
   box-shadow:
     0 15px 40px -10px rgba(0, 0, 0, 0.75),
     0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 0 40px rgba(189, 162, 104, 0.28);
+    inset 0 0 60px rgba(140, 105, 50, 0.35);
   position: relative;
 }
 
@@ -98,8 +104,8 @@
 }
 .letter-deckle {
   box-shadow: inset 0 0 40px rgba(189, 162, 104, 0.28);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.055' numOctaves='4' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.055' numOctaves='4' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.028 0.035' numOctaves='3' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='13'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.028 0.035' numOctaves='3' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='13'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
   -webkit-mask-size: 100% 100%;
   mask-size: 100% 100%;
 }
@@ -176,62 +182,6 @@
   pointer-events: none;
   z-index: 1;
 }
-
-/* Antique scroll rods - turned wooden-gold bars with finial knobs and a
-   centered ornamental crest, like a ceremonial hanging scroll */
-.scroll-rod {
-  position: absolute;
-  left: -14px;
-  right: -14px;
-  height: 22px;
-  z-index: 40;
-  background: linear-gradient(to bottom, #5f451f 0%, #96762f 18%, #d9b96a 42%, #f2e0ac 50%, #d9b96a 58%, #96762f 82%, #5f451f 100%);
-  border-radius: 11px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.55), inset 0 -2px 3px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-}
-.scroll-rod::before,
-.scroll-rod::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  width: 28px;
-  height: 28px;
-  transform: translateY(-50%);
-  border-radius: 50%;
-  background: radial-gradient(circle at 34% 30%, #f6e5b4 0%, #d9b96a 38%, #96762f 72%, #5f451f 100%);
-  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.55), inset 0 -2px 3px rgba(0, 0, 0, 0.35), inset 1px 1px 2px rgba(255, 255, 255, 0.4);
-}
-.scroll-rod::before { left: -18px; }
-.scroll-rod::after { right: -18px; }
-.scroll-rod-top { top: -11px; }
-.scroll-rod-bottom { bottom: -11px; }
-
-/* Small symmetric flourish centered on each rod */
-.scroll-rod-crest {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 110px;
-  height: 22px;
-  opacity: 0.85;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='24' viewBox='0 0 120 24'%3E%3Cg fill='none' stroke='%23543c18' stroke-width='1.8' stroke-linecap='round'%3E%3Cpath d='M6 12 C22 3 40 21 60 12 C80 3 98 21 114 12'/%3E%3Cpath d='M30 12 C38 7 46 17 54 12'/%3E%3Cpath d='M66 12 C74 7 82 17 90 12'/%3E%3Ccircle cx='60' cy='12' r='2.4' fill='%23543c18' stroke='none'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
-}
-
-/* Gold filigree corner flourishes (top-left master, mirrored per corner) */
-.filigree-corner {
-  position: absolute;
-  width: 88px;
-  height: 88px;
-  opacity: 0.55;
-  pointer-events: none;
-  z-index: 5;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90' viewBox='0 0 90 90'%3E%3Cg fill='none' stroke='%237a5a26' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M4 86 C4 46 14 22 40 14 C58 9 74 15 76 27 C78 39 68 46 58 42 C49 38 50 27 59 25'/%3E%3Cpath d='M4 86 C16 80 26 82 31 71 C35 62 29 55 22 58 C16 61 17 70 24 70'/%3E%3Cpath d='M4 86 C7 64 12 52 24 45'/%3E%3Cpath d='M14 30 C20 24 28 22 34 24'/%3E%3Ccircle cx='42' cy='12' r='2.2' fill='%237a5a26' stroke='none'/%3E%3Ccircle cx='10' cy='52' r='2' fill='%237a5a26' stroke='none'/%3E%3Ccircle cx='30' cy='40' r='1.6' fill='%237a5a26' stroke='none'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
-}
-.fc-tl { top: 14px; left: 14px; }
-.fc-tr { top: 14px; right: 14px; transform: scaleX(-1); }
-.fc-bl { bottom: 14px; left: 14px; transform: scaleY(-1); }
-.fc-br { bottom: 14px; right: 14px; transform: scale(-1, -1); }
 
 /* Wax Seal 3D Stamped Effect */
 .wax-seal-badge {
