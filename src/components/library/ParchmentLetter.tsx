@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { Note, Shelf } from "../../types/database";
 import { WaxSeal } from "./WaxSeal";
-import { HeartSeal } from "./HeartSeal";
 import { maskText } from "../../utils/crypto";
 import promptsData from "../../data/prompts.json";
 
@@ -71,15 +70,8 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
           <div className="absolute inset-x-6 top-0 border-b border-dashed border-amber-800/25" />
 
           {/* Central Wax Seal with Lock */}
-          <div className="twine" style={{ top: "34%" }} />
-          <div className="sprig" />
-          <div className="seal-ribbon-band" />
-          <div className="envelope-seal-wrap relative mb-6 transform transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3">
-            <HeartSeal size={64} locked />
-            <span className="seal-ribbon-tails" aria-hidden="true">
-              <i className="tail-l" />
-              <i className="tail-r" />
-            </span>
+          <div className="relative mb-3 transform transition-transform group-hover:scale-110">
+            <WaxSeal color="crimson" size="lg" icon="lock" />
           </div>
 
           <div className="space-y-1">

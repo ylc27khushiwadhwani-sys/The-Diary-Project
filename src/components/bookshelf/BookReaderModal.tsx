@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { Note } from "../../types/database";
 import { WaxSeal } from "../library/WaxSeal";
-import { HeartSeal } from "../library/HeartSeal";
 import { paginate } from "../../utils/paginate";
 import { PasscodeModal } from "../library/PasscodeModal";
 import { ThreadedResponses } from "../feed/ThreadedResponses";
@@ -116,7 +115,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                 <span className="letter-stamp" />
               </div>
               <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-4">
-                <HeartSeal size={44} locked />
+                <WaxSeal color="crimson" size="lg" icon="lock" />
               </div>
               <span className="label-caps block mb-2 text-wood-700">
                 Confidential Volume
