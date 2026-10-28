@@ -31,7 +31,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
 }) => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
-  const [handwritingFont, setHandwritingFont] = useState(false);
+  const [handwritingFont, setHandwritingFont] = useState(true);
   const [showResponses, setShowResponses] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
 
@@ -138,7 +138,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
             // Paginated parchment letter, turned page by page
             <article
               key={note.id}
-              className="letter-frame parchment-sheet letter-deckle letter-unfold text-wood-950 relative flex flex-col max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
+              className="letter-frame parchment-sheet letter-deckle letter-unfold reader-ivory text-wood-950 relative flex flex-col max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
             >
               <div
                 className="letter-liner"
@@ -147,18 +147,11 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
               />
               <div
                 ref={scrollRef}
-                className="reader-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain overflow-x-hidden p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-6"
+                className="reader-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain overflow-x-hidden px-7 sm:px-16 pt-10 sm:pt-14 pb-6"
               >
-                <div className="letter-ribbon" />
-                <div className="letter-stamps">
-                  <span className="letter-stamp" />
-                  <span className="letter-stamp stamp-green" />
-                </div>
-                <div className="letter-botanical" />
                 {/* Header bar */}
                 <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-amber-900/20">
                   <div className="flex items-center gap-3">
-                    <WaxSeal color="crimson" size="md" icon="crest" />
                     <div>
                       <span className="label-caps block text-[10px] text-wood-700">
                         The Paper Vault
@@ -219,12 +212,15 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                       <div
                         className={`text-wood-950 whitespace-pre-wrap break-words select-text mb-6 ${
                           handwritingFont
-                            ? "font-serif text-xl sm:text-2xl font-normal leading-relaxed"
+                            ? "font-serif text-[1.05rem] sm:text-xl font-normal leading-[1.85] text-[#2a2118]"
                             : "font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]"
                         }`}
                       >
                         {pages[pageIndex]}
                       </div>
+                      {pageIndex === totalPages - 1 && (
+                        <p className="reader-signature">{authorPenName}</p>
+                      )}
                     </motion.div>
                   </AnimatePresence>
                 </div>
@@ -232,8 +228,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                 {/* Bottom actions */}
                 <div className="pt-6 border-t border-amber-900/20">
                   <div className="flex flex-wrap items-center justify-between gap-3">
-                    <span className="font-serif italic text-sm text-wood-700">
-                      — Preserved in the archive by {authorPenName}
+                    <span className="reader-footer-caps">
+                      Preserved in the archive · {authorPenName}
                     </span>
                     <div className="flex items-center gap-3">
                       <button

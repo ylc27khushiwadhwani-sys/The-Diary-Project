@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { BookOpen, Feather } from "lucide-react";
 import { Note } from "../../types/database";
 import { BookItem } from "./BookItem";
@@ -74,6 +74,12 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [view, setView] = useState<"shelves" | "box">("shelves");
 
+  useEffect(() => {
+    const open = () => setView("box");
+    window.addEventListener("paper-vault:open-box", open);
+    return () => window.removeEventListener("paper-vault:open-box", open);
+  }, []);
+
   // One filter pass: only the active section's notes are rendered, once
   const sectionNotes = useMemo(
     () => notes.filter((n) => matchesSection(n, activeSectionId)),
@@ -100,6 +106,29 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
         <h2 className="font-serif text-2xl sm:text-3xl text-amber-100 font-normal tracking-tight">
           Touch any book to unroll its letter
         </h2>
+      </div>
+
+      {/* View switch: library shelves or the keepsake box */}
+      <div
+        className="flex items-center justify-center gap-2 mb-5"
+        role="group"
+        aria-label="Collection view"
+      >
+        {(["shelves", "box"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => setView(v)}
+            aria-pressed={view === v}
+            className={`px-4 py-1.5 rounded-full text-xs font-serif tracking-wide cursor-pointer border transition-all duration-200 ${
+              view === v
+                ? "bg-wax-crimson text-amber-50 border-red-400/40 shadow-candle"
+                : "bg-card/70 text-amber-200 border-hairline hover:border-gold/60"
+            }`}
+          >
+            {v === "shelves" ? "On the shelves" : "In the keepsake box"}
+          </button>
+        ))}
       </div>
 
       {/* Section filter tabs — short labels, interactive */}
@@ -131,29 +160,6 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
             </button>
           );
         })}
-      </div>
-
-      {/* View switch: library shelves or the keepsake box */}
-      <div
-        className="flex items-center justify-center gap-2 mb-5"
-        role="group"
-        aria-label="Collection view"
-      >
-        {(["shelves", "box"] as const).map((v) => (
-          <button
-            key={v}
-            type="button"
-            onClick={() => setView(v)}
-            aria-pressed={view === v}
-            className={`px-4 py-1.5 rounded-full text-xs font-serif tracking-wide cursor-pointer border transition-all duration-200 ${
-              view === v
-                ? "bg-wax-crimson text-amber-50 border-red-400/40 shadow-candle"
-                : "bg-card/70 text-amber-200 border-hairline hover:border-gold/60"
-            }`}
-          >
-            {v === "shelves" ? "On the shelves" : "In the keepsake box"}
-          </button>
-        ))}
       </div>
 
       {/* Condensed packed shelves */}
