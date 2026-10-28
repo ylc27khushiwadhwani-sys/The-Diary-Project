@@ -14,6 +14,7 @@ import { SignInModal } from '../components/auth/SignInModal';
 import { NoteEditor } from '../components/editor/NoteEditor';
 import { useCancellableLoad } from '../hooks/useCancellableLoad';
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from '../data/seedNotes';
+import { isSampleNote, publicNotesOrSamples } from '../services/publicFeed';
 
 const DEMO_NOTES_KEY = PUBLIC_FEED_DEMO_KEY;
 
@@ -56,7 +57,7 @@ export const PublicFeedPage: React.FC = () => {
       .order('published_at', { ascending: false });
 
     if (error || !data) return null;
-    return data as Note[];
+    return publicNotesOrSamples(data as Note[]);
   };
 
   // Initial load runs under the shared cancellation guard; every refresh below
@@ -81,6 +82,7 @@ export const PublicFeedPage: React.FC = () => {
   }, [notes, feedSearch, feedSort]);
 
   const handleStartResponse = (note: Note) => {
+    if (isSupabaseConfigured && isSampleNote(note.id)) return;
     if (!user) {
       setIsSignInModalOpen(true);
       return;
@@ -241,7 +243,9 @@ export const PublicFeedPage: React.FC = () => {
       <div id="bookshelf" className="scroll-mt-16 py-10">
         {!loading && visibleNotes.length > 0 && (
           <p className="text-center font-body text-xs text-[#9e9488] italic mb-4">
-            {visibleNotes.length} {visibleNotes.length === 1 ? 'letter rests' : 'letters rest'} on these shelves, each left by an anonymous pen name.
+            {isSupabaseConfigured && notes.length > 0 && notes.every((note) => isSampleNote(note.id))
+              ? `${visibleNotes.length} sample letters rest on these shelves. Explore them while the community begins writing.`
+              : `${visibleNotes.length} ${visibleNotes.length === 1 ? 'letter rests' : 'letters rest'} on these shelves, each left by an anonymous pen name.`}
           </p>
         )}
         {/* Search + sort control: lives above the bookshelf and narrows what it renders */}

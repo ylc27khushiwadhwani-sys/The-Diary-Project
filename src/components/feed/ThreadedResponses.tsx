@@ -4,6 +4,7 @@ import { ResponseLetter } from '../../types/database';
 import { supabase, isSupabaseConfigured } from '../../lib/supabase';
 import { WaxSeal } from '../library/WaxSeal';
 import { useCancellableLoad } from '../../hooks/useCancellableLoad';
+import { isSampleNote } from '../../services/publicFeed';
 
 interface ThreadedResponsesProps {
   noteId: string;
@@ -12,6 +13,7 @@ interface ThreadedResponsesProps {
 const DEMO_RESPONSES_KEY = 'unsent_library_demo_responses';
 
 const loadApprovedResponses = async (noteId: string): Promise<ResponseLetter[] | null> => {
+  if (isSupabaseConfigured && isSampleNote(noteId)) return [];
   if (!isSupabaseConfigured) {
     const raw = localStorage.getItem(DEMO_RESPONSES_KEY);
     const all: ResponseLetter[] = raw ? JSON.parse(raw) : [];
