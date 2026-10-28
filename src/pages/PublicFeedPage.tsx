@@ -5,6 +5,7 @@ import { Note } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { InteractiveBookshelf } from '../components/bookshelf/InteractiveBookshelf';
+import { InkText } from '../components/cinematic/InkText';
 import { GrandHallBackdrop } from '../components/library/GrandHallBackdrop';
 import { CandleLanternIcon } from '../components/common/CandleLanternIcon';
 import { LibraryCard } from '../components/library/LibraryCard';
@@ -180,7 +181,7 @@ export const PublicFeedPage: React.FC = () => {
             transition={{ delay: 0.4, duration: 0.8 }}
             className="mt-4 text-5xl sm:text-7xl font-serif tracking-tight text-[#f3ece0] [text-shadow:0_0_38px_rgba(212,163,115,0.35)]"
           >
-            Say what you couldn't say.
+            <InkText text="Say what you couldn't say." startDelay={0.6} perLetter={0.05} />
           </motion.h1>
 
           {/* Description */}

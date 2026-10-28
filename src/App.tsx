@@ -6,18 +6,26 @@ import { SignInModal } from './components/auth/SignInModal';
 import { HelplineModal } from './components/safety/HelplineModal';
 import { PublicFeedPage } from './pages/PublicFeedPage';
 import { LibraryPage } from './pages/LibraryPage';
-import { AmbientEmbers } from './components/library/AmbientEmbers';
+import { DustCanvas } from './components/cinematic/DustCanvas';
+import { EntrySequence } from './components/cinematic/EntrySequence';
+import { InkText } from './components/cinematic/InkText';
+import { burstEmbers } from './lib/motion';
 
 export const App: React.FC = () => {
   const { user, profile, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<'public' | 'sanctuary'>('public');
+  const [activeTab, setActiveTabState] = useState<'public' | 'sanctuary'>('public');
+  const setActiveTab = (tab: 'public' | 'sanctuary') => {
+    if (tab !== activeTab) burstEmbers();
+    setActiveTabState(tab);
+  };
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
 
   return (
     <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0a0705]">
-      {/* Ambient Floating Candlelit Embers / Motes */}
-      <AmbientEmbers />
+      <EntrySequence />
+      {/* Drifting dust that glows in the light shafts, plus ember bursts */}
+      <DustCanvas />
 
       {/* Top Header Matching thediaryproject.lovable.app */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">
@@ -29,7 +37,7 @@ export const App: React.FC = () => {
           >
             <div>
               <span className="font-serif text-xl sm:text-2xl italic tracking-wide text-[#f3ece0] block leading-tight group-hover:text-gold transition">
-                The Paper Vault
+                <InkText text="The Paper Vault" startDelay={0.2} perLetter={0.06} />
               </span>
               <span className="label-caps text-[9px] block text-gold/70">
                 Anonymous Literary Sanctuary
@@ -95,7 +103,7 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-1 relative z-10">
+      <main key={activeTab} className="flex-1 relative z-10 room-enter">
         {activeTab === 'public' ? (
           <PublicFeedPage />
         ) : (

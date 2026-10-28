@@ -40,8 +40,19 @@ export const NoteCard: React.FC<NoteCardProps> = ({
     onOpen(note);
   };
 
+  // Deterministic little tilt + stagger per letter so each one settles onto
+  // the desk slightly differently, without re-randomising on re-render.
+  const seed = Array.from(note.id).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 997, 7);
+  const tilt = ((seed % 9) - 4) * 0.35;
+  const landStyle = {
+    ['--land-rot' as string]: `${tilt}deg`,
+    ['--land-from' as string]: `${tilt - 3}deg`,
+    ['--land-delay' as string]: `${(seed % 5) * 0.08}s`,
+  } as React.CSSProperties;
+
   return (
     <>
+      <div className="letter-stack letter-land" style={landStyle}>
       <ParchmentLetter
         note={note}
         shelf={shelf}
@@ -51,6 +62,7 @@ export const NoteCard: React.FC<NoteCardProps> = ({
         mode="shelf"
         showActions={false}
       />
+      </div>
 
       <PasscodeModal
         isOpen={isPasscodeModalOpen}

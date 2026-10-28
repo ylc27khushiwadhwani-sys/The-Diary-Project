@@ -1,8 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, MessageSquare, BookOpen, Type, Sparkles } from 'lucide-react';
 import { Note } from '../../types/database';
 import { WaxSeal } from '../library/WaxSeal';
+import { HeartSeal } from '../library/HeartSeal';
+import { paginate } from '../../utils/paginate';
 import { PasscodeModal } from '../library/PasscodeModal';
 import { ThreadedResponses } from '../feed/ThreadedResponses';
 import promptsData from '../../data/prompts.json';
@@ -14,7 +16,7 @@ interface BookReaderModalProps {
   onRespond?: (note: Note) => void;
 }
 
-export const BookReaderModal: React.FC<BookReaderModalProps> = ({
+const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   note,
   isOpen,
   onClose,
@@ -26,42 +28,13 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
   const [showResponses, setShowResponses] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
 
-  // Split the note content into book pages. Paragraphs stay together when
-  // they fit; anything longer is broken at sentence (then word) boundaries
-  // so a long letter always turns into turnable pages.
-  // Hooks must run unconditionally, so this precedes the early return below.
-  const mainPages = useMemo(() => {
-    const PAGE_TARGET = 620;
-    const paras = (note?.content ?? '').split(/\r?\n\r?\n/).filter((p) => p.trim().length > 0);
-    const pages: string[] = [];
-    let current = '';
-    for (const para of paras) {
-      if (current && (current + '\n\n' + para).length > PAGE_TARGET) {
-        pages.push(current.trim());
-        current = '';
-      } else if (current) {
-        current += '\n\n';
-      }
-      const sentences = para.match(/[^.!?]+[.!?]*(?:\s+|$)/g) || [para];
-      for (const sentence of sentences) {
-        if (current && (current + sentence).length > PAGE_TARGET) {
-          pages.push(current.trim());
-          current = '';
-        }
-        let rest = sentence;
-        while ((current + rest).length > PAGE_TARGET) {
-          let cut = rest.lastIndexOf(' ', PAGE_TARGET - current.length);
-          if (cut < 80) cut = PAGE_TARGET - current.length;
-          pages.push((current + rest.slice(0, cut)).trim());
-          current = '';
-          rest = rest.slice(cut);
-        }
-        current += rest;
-      }
-    }
-    if (current.trim()) pages.push(current.trim());
-    return pages.length > 0 ? pages : [''];
-  }, [note?.content]);
+  const mainPages = useMemo(() => paginate(note?.content ?? ''), [note?.content]);
+  const articleRef = useRef<HTMLElement>(null);
+
+  // Turning a page returns the sheet to its top so the first line is visible.
+  useEffect(() => {
+    if (articleRef.current) articleRef.current.scrollTop = 0;
+  }, [pageIndex, note?.id]);
 
   if (!isOpen || !note) return null;
 
@@ -105,11 +78,11 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.9, y: 25 }}
           transition={{ type: 'spring', damping: 26, stiffness: 280 }}
-          className="relative z-10 w-full max-w-2xl my-auto text-left perspective-1000"
+          className="relative z-10 w-full min-w-0 max-w-2xl my-auto text-left perspective-1000"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
-          <div className="flex justify-between items-center mb-3 px-2">
+          <div className="flex flex-wrap justify-between items-center gap-2 mb-3 px-2">
             <span className="font-serif italic text-gold/80 text-sm flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-gold" />
               <span>Volume retrieved from the shelf</span>
@@ -131,7 +104,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                 <span className="letter-stamp" />
               </div>
               <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-4">
-                <WaxSeal color="crimson" size="lg" icon="lock" />
+                <HeartSeal size={44} locked />
               </div>
               <span className="label-caps block mb-2 text-wood-700">Confidential Volume</span>
               <h2 className="font-serif text-3xl font-bold text-wood-950 mb-3">
@@ -149,7 +122,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
             </div>
           ) : (
             // Paginated parchment letter, turned page by page
-            <article className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-12 text-wood-950 relative max-h-[85vh] flex flex-col">
+            <article ref={articleRef} key={note.id} className="letter-frame parchment-sheet letter-deckle letter-unfold p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-12 text-wood-950 relative max-h-[calc(100vh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain overflow-x-hidden flex flex-col">
               <div className="letter-ribbon" />
               <div className="letter-stamps">
                 <span className="letter-stamp" />
@@ -157,7 +130,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
               </div>
               <div className="letter-botanical" />
               {/* Header bar */}
-              <div className="flex items-center justify-between pb-4 mb-5 border-b border-amber-900/20">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-amber-900/20">
                 <div className="flex items-center gap-3">
                   <WaxSeal color="crimson" size="md" icon="crest" />
                   <div>
@@ -198,7 +171,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
               )}
 
               {/* Page content with flip animation */}
-              <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden min-h-[200px]">
+              <div className="flex-1 flex flex-col relative min-h-[200px]">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={pageIndex}
@@ -210,7 +183,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                     style={{ backfaceVisibility: 'hidden' }}
                   >
                     <div
-                      className={`text-wood-950 whitespace-pre-wrap select-text mb-6 ${
+                      className={`text-wood-950 whitespace-pre-wrap break-words select-text mb-6 ${
                         handwritingFont
                           ? 'font-serif text-xl sm:text-2xl font-normal leading-relaxed'
                           : 'font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]'
@@ -222,7 +195,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                 </AnimatePresence>
 
                 {/* Navigation controls */}
-                <div className="flex items-center justify-between mt-4 w-full">
+                <div className="reader-nav sticky bottom-0 z-10 flex items-center justify-between mt-4 w-full py-2">
                   <button
                     onClick={goPrev}
                     disabled={pageIndex === 0}
@@ -291,3 +264,9 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
     </AnimatePresence>
   );
 };
+
+// Keyed by letter + open state so every opening starts on page 1, sealed
+// state fresh, never inheriting the previous letter's page or unlock.
+export const BookReaderModal: React.FC<BookReaderModalProps> = (props) => (
+  <BookReaderModalInner key={`${props.note?.id ?? 'none'}:${props.isOpen}`} {...props} />
+);
