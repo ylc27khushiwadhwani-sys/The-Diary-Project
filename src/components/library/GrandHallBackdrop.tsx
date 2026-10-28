@@ -2,13 +2,112 @@ import React, { useEffect, useRef } from "react";
 import { CandleFlame } from "../cinematic/CandleFlame";
 import { prefersReducedMotion } from "../../lib/motion";
 
-// Gothic lancet windows with tracery, volumetric light beams and drifting
+// A warm wall of library bookshelves, volumetric light beams and drifting
 // dust motes - the grand-hall atmosphere that sits behind the reading room
 // and the private study. Pure SVG + CSS, painted once, no image assets.
+const SPINES = [
+  "#5b2a22",
+  "#3f4a3a",
+  "#6b4a2a",
+  "#2f3a4f",
+  "#7a3b2e",
+  "#4a3326",
+  "#8a6a3a",
+  "#33262b",
+  "#55623f",
+  "#6a2f3a",
+];
+const rand = (n: number) => {
+  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+// Rows of book spines on dark wooden shelves, generated once (deterministic, crisp at any size).
+const BookWall: React.FC = () => {
+  const rows = 6;
+  const rowH = 136;
+  const items: React.ReactNode[] = [];
+  for (let r = 0; r < rows; r++) {
+    const baseY = 40 + (r + 1) * rowH;
+    let x = 0;
+    let i = 0;
+    while (x < 1200) {
+      const k = r * 100 + i++;
+      const w = 15 + Math.floor(rand(k) * 22);
+      const h = 78 + Math.floor(rand(k + 0.5) * 40);
+      const lean = rand(k + 0.9) > 0.97;
+      items.push(
+        <g
+          key={k}
+          transform={
+            lean ? "rotate(-6 " + (x + w) + " " + baseY + ")" : undefined
+          }
+        >
+          <rect
+            x={x}
+            y={baseY - h}
+            width={w}
+            height={h}
+            fill={SPINES[Math.floor(rand(k + 0.2) * SPINES.length)]}
+          />
+          <rect
+            x={x}
+            y={baseY - h + 10}
+            width={w}
+            height="3"
+            fill="#d9b66a"
+            opacity="0.55"
+          />
+          <rect
+            x={x}
+            y={baseY - 14}
+            width={w}
+            height="3"
+            fill="#d9b66a"
+            opacity="0.4"
+          />
+          <rect
+            x={x + w - 2}
+            y={baseY - h}
+            width="2"
+            height={h}
+            fill="#000"
+            opacity="0.28"
+          />
+        </g>,
+      );
+      x += w + 1;
+    }
+    items.push(
+      <rect
+        key={"s" + r}
+        x="0"
+        y={baseY}
+        width="1200"
+        height="14"
+        fill="#2a1810"
+      />,
+    );
+  }
+  return (
+    <svg
+      className="grand-hall-windows hall-parallax-far"
+      viewBox="0 0 1200 900"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <rect width="1200" height="900" fill="#1a0f0a" />
+      {items}
+      {[0, 400, 800, 1186].map((x) => (
+        <rect key={x} x={x} y="0" width="14" height="900" fill="#24140d" />
+      ))}
+    </svg>
+  );
+};
+
 export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
   variant = "hall",
 }) => {
-  const windows = [300, 600, 900];
   const ref = useRef<HTMLDivElement>(null);
 
   // Pointer parallax across three depths (windows far, rays mid, candles near).
@@ -44,66 +143,7 @@ export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
       className={`grand-hall-backdrop hall-pushin ${variant === "study" ? "grand-hall-study" : ""}`}
       aria-hidden="true"
     >
-      <svg
-        className="grand-hall-windows hall-parallax-far"
-        viewBox="0 0 1200 640"
-        preserveAspectRatio="xMidYMin slice"
-      >
-        <defs>
-          <linearGradient id="paneGlow" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stopColor="#f6dfa4" stopOpacity="0.55" />
-            <stop offset="1" stopColor="#c99a52" stopOpacity="0.1" />
-          </linearGradient>
-          <linearGradient id="hallFade" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0.5" stopColor="#ffffff" />
-            <stop offset="1" stopColor="#000000" />
-          </linearGradient>
-          <mask id="hallFadeMask">
-            <rect width="1200" height="640" fill="url(#hallFade)" />
-          </mask>
-        </defs>
-        <g mask="url(#hallFadeMask)">
-          {windows.map((cx) => (
-            <g key={cx}>
-              <path
-                d={`M ${cx - 70} 640 L ${cx - 70} 230 Q ${cx - 70} 130 ${cx} 92 Q ${cx + 70} 130 ${cx + 70} 230 L ${cx + 70} 640 Z`}
-                fill="url(#paneGlow)"
-                stroke="#0a0705"
-                strokeWidth="12"
-              />
-              <line
-                x1={cx}
-                y1="118"
-                x2={cx}
-                y2="640"
-                stroke="#0a0705"
-                strokeWidth="9"
-              />
-              <line
-                x1={cx - 70}
-                y1="330"
-                x2={cx + 70}
-                y2="330"
-                stroke="#0a0705"
-                strokeWidth="9"
-              />
-              <circle
-                cx={cx}
-                cy="160"
-                r="27"
-                fill="none"
-                stroke="#0a0705"
-                strokeWidth="8"
-              />
-              <path
-                d={`M ${cx - 27} 160 L ${cx + 27} 160 M ${cx} 133 L ${cx} 187`}
-                stroke="#0a0705"
-                strokeWidth="6"
-              />
-            </g>
-          ))}
-        </g>
-      </svg>
+      <BookWall />
       <div className="grand-hall-beams" />
       <div className="hall-rays">
         <span className="hall-ray r1" />
