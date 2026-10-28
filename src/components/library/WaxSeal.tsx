@@ -39,7 +39,7 @@ export const WaxSeal: React.FC<WaxSealProps> = ({
     <div className={`relative inline-flex items-center justify-center select-none ${className}`}>
       {/* Wax drip irregular contours */}
       <div
-        className={`${sizeMap[size]} ${colorStyles[color]} flex items-center justify-center font-cinzel font-bold border border-white/20 transition-transform duration-300 hover:scale-105 ${
+        className={`${sizeMap[size]} ${colorStyles[color]} flex items-center justify-center font-serif font-bold border border-white/20 transition-transform duration-300 hover:scale-105 ${
           isBroken ? 'opacity-80 rotate-12 scale-95' : ''
         }`}
       >
@@ -50,7 +50,7 @@ export const WaxSeal: React.FC<WaxSealProps> = ({
           ) : icon === 'flame' ? (
             <Flame className={`${iconSizeMap[size]} drop-shadow`} />
           ) : icon === 'crest' ? (
-            <span className="font-cinzelDec font-black drop-shadow tracking-tighter">L</span>
+            <span className="font-serifDec font-black drop-shadow tracking-tighter">L</span>
           ) : (
             <Feather className={`${iconSizeMap[size]} drop-shadow`} />
           )}

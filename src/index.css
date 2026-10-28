@@ -4,13 +4,15 @@
 
 @layer base {
   body {
-    background-color: #0d0b09;
+    background-color: #0a0705;
     color: #f3ece0;
     font-family: 'Lora', Georgia, serif;
-    background-image: 
-      radial-gradient(ellipse at 50% 15%, rgba(212, 163, 115, 0.14) 0%, transparent 65%),
-      radial-gradient(ellipse at 20% 50%, rgba(139, 74, 82, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(212, 163, 115, 0.08) 0%, transparent 60%);
+    background-image:
+      linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, transparent 9%, transparent 91%, rgba(0, 0, 0, 0.5) 100%),
+      radial-gradient(ellipse at 50% 12%, rgba(212, 163, 115, 0.17) 0%, transparent 62%),
+      radial-gradient(ellipse at 14% 45%, rgba(74, 48, 26, 0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 86% 72%, rgba(58, 36, 19, 0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 105%, rgba(139, 74, 82, 0.1) 0%, transparent 60%);
     background-attachment: fixed;
   }
 
@@ -71,32 +73,115 @@
   animation: fadeUpAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Antique Parchment Paper Texture */
+/* Antique Parchment Paper Texture - cream laid paper with fiber flecks */
 .parchment-sheet {
-  background-color: #fbf5e8;
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(237, 226, 204, 0.7) 100%),
-    linear-gradient(to right, rgba(165, 141, 85, 0.12) 0%, transparent 8%, transparent 92%, rgba(165, 141, 85, 0.12) 100%),
-    linear-gradient(to bottom, rgba(165, 141, 85, 0.15) 0%, transparent 6%, transparent 94%, rgba(165, 141, 85, 0.18) 100%);
-  box-shadow: 
+  background-color: #ecdcb4;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0.42 0 0 0 0 0.33 0 0 0 0 0.18 0 0 0 0.075 0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23g)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='480' height='480'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.009 0.012' numOctaves='4' seed='9'/%3E%3CfeColorMatrix values='0 0 0 0 0.52 0 0 0 0 0.4 0 0 0 0 0.2 0 0 0 0.17 0'/%3E%3C/filter%3E%3Crect width='480' height='480' filter='url(%23m)'/%3E%3C/svg%3E"),
+    radial-gradient(circle 46px at 24% 34%, rgba(140, 95, 40, 0.09) 0%, transparent 70%),
+    radial-gradient(circle 30px at 68% 58%, rgba(140, 95, 40, 0.08) 0%, transparent 70%),
+    radial-gradient(circle 60px at 84% 78%, rgba(140, 95, 40, 0.07) 0%, transparent 70%),
+    radial-gradient(ellipse 220px 140px at 78% 12%, rgba(150, 108, 48, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 300px 200px at 12% 84%, rgba(150, 108, 48, 0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 140px 70px at 97% 99%, rgba(96, 66, 24, 0.16) 0%, transparent 70%),
+    repeating-radial-gradient(circle at 18% 32%, rgba(150, 122, 74, 0.03) 0px, rgba(150, 122, 74, 0.03) 1px, transparent 1px, transparent 7px),
+    repeating-radial-gradient(circle at 74% 68%, rgba(120, 96, 56, 0.028) 0px, rgba(120, 96, 56, 0.028) 1px, transparent 1px, transparent 9px),
+    radial-gradient(ellipse at 30% 20%, rgba(255, 250, 234, 0.7) 0%, rgba(240, 224, 186, 0.38) 55%, rgba(214, 188, 140, 0.55) 100%),
+    linear-gradient(to right, rgba(120, 88, 40, 0.2) 0%, transparent 7%, transparent 93%, rgba(120, 88, 40, 0.22) 100%),
+    linear-gradient(to bottom, rgba(120, 88, 40, 0.22) 0%, transparent 8%, transparent 92%, rgba(120, 88, 40, 0.26) 100%);
+  box-shadow:
     0 15px 40px -10px rgba(0, 0, 0, 0.75),
     0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 0 40px rgba(189, 162, 104, 0.25);
+    inset 0 0 60px rgba(140, 105, 50, 0.35);
   position: relative;
 }
 
-.scroll-roll-top {
-  height: 16px;
-  background: linear-gradient(to bottom, #d4be8a 0%, #eee2c4 40%, #bda268 85%, #8e723e 100%);
-  border-radius: 8px 8px 3px 3px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+/* Deckled / hand-torn paper edge. The mask erodes the paper rim with
+   turbulence noise; pair with .letter-frame so the shadow follows the
+   torn silhouette instead of the clipped box. */
+.letter-frame {
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+.letter-deckle {
+  box-shadow: inset 0 0 40px rgba(189, 162, 104, 0.28);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.028 0.035' numOctaves='3' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='13'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.028 0.035' numOctaves='3' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='13'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
 }
 
-.scroll-roll-bottom {
-  height: 16px;
-  background: linear-gradient(to top, #d4be8a 0%, #eee2c4 40%, #bda268 85%, #8e723e 100%);
-  border-radius: 3px 3px 8px 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.45), inset 0 -1px 2px rgba(255, 255, 255, 0.4);
+/* Deep burgundy velvet ribbon hugging the left edge of the sheet */
+.letter-ribbon {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: 5px;
+  width: 20px;
+  background: linear-gradient(90deg,
+    #3f0a15 0%, #6d1626 22%, #8f2233 50%, #671223 78%, #3a0913 100%);
+  box-shadow:
+    2px 0 5px rgba(0, 0, 0, 0.35),
+    inset 1px 0 2px rgba(255, 255, 255, 0.18),
+    inset -1px 0 2px rgba(0, 0, 0, 0.5);
+  opacity: 0.94;
+  transform: rotate(0.35deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vintage postage stamp with perforated rim and a pressed-leaf emblem */
+.letter-stamps {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: flex;
+  gap: 7px;
+  transform: rotate(2.5deg);
+  pointer-events: none;
+  z-index: 1;
+}
+.letter-stamp {
+  width: 38px;
+  height: 46px;
+  background: #f3ead2;
+  padding: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-mask-image: radial-gradient(circle 2.4px at 2.4px 2.4px, transparent 94%, #000 100%);
+  mask-image: radial-gradient(circle 2.4px at 2.4px 2.4px, transparent 94%, #000 100%);
+  -webkit-mask-size: 7px 7px;
+  mask-size: 7px 7px;
+  -webkit-mask-position: -3.5px -3.5px;
+  mask-position: -3.5px -3.5px;
+}
+.letter-stamp::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(140, 70, 60, 0.45);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='%239c4a35'%3E%3Cpath d='M60 8 L70 28 L92 20 L80 40 L102 46 L82 58 L96 76 L72 70 L70 94 L60 76 L50 94 L48 70 L24 76 L38 58 L18 46 L40 40 L28 20 L50 28 Z'/%3E%3C/g%3E%3Cpath d='M60 76 L58 106' stroke='%237a5a3a' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 70% 70% no-repeat;
+  opacity: 0.85;
+}
+.letter-stamp.stamp-green::before {
+  border-color: rgba(90, 105, 70, 0.5);
+  filter: hue-rotate(52deg) saturate(0.8);
+}
+
+/* Pressed botanical accent resting on the bottom corner of the sheet */
+.letter-botanical {
+  position: absolute;
+  right: 2px;
+  bottom: 4px;
+  width: 128px;
+  height: 128px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg opacity='0.9'%3E%3Cpath d='M60 8 L70 28 L92 20 L80 40 L102 46 L82 58 L96 76 L72 70 L70 94 L60 76 L50 94 L48 70 L24 76 L38 58 L18 46 L40 40 L28 20 L50 28 Z' fill='%239c4a35'/%3E%3Cpath d='M60 76 L56 112' stroke='%237a5a3a' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M14 116 Q30 84 44 78 M22 104 l-8 -8 M27 96 l-9 -6 M33 88 l-8 -7' stroke='%236b7048' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.42;
+  transform: rotate(-14deg);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Wax Seal 3D Stamped Effect */
@@ -124,8 +209,10 @@
 
 /* Wooden Bookshelf Shelf Ledge */
 .wood-shelf-ledge {
-  background: linear-gradient(to bottom, #2b221b 0%, #1c1612 40%, #110d0a 85%, #080605 100%);
-  border-top: 2px solid #5a4537;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.008 0.09' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.28 0 0 0 0 0.18 0 0 0 0 0.09 0 0 0 0.35 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom, #332617 0%, #1c1612 45%, #110d0a 85%, #080605 100%);
+  border-top: 2px solid #6b5340;
   border-bottom: 3px solid #080605;
   box-shadow: 
     0 12px 24px -2px rgba(0, 0, 0, 0.85),
@@ -156,4 +243,69 @@
 
 ::-webkit-scrollbar-thumb:hover {
   background: #45372c;
+}
+
+/* Grand hall atmosphere - gothic windows, light beams, drifting dust */
+.grand-hall-backdrop {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.grand-hall-windows {
+  position: absolute;
+  top: -3%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 125%;
+  min-width: 900px;
+  opacity: 0.45;
+}
+.grand-hall-study .grand-hall-windows {
+  opacity: 0.2;
+}
+.grand-hall-study .grand-hall-beams {
+  opacity: 0.6;
+}
+.grand-hall-beams {
+  position: absolute;
+  inset: -10% -20%;
+  background:
+    linear-gradient(115deg, transparent 40%, rgba(246, 223, 164, 0.055) 50%, transparent 60%),
+    linear-gradient(63deg, transparent 44%, rgba(246, 223, 164, 0.045) 52%, transparent 62%);
+  filter: blur(5px);
+}
+@keyframes dustDrift {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(26px, -90px, 0); }
+}
+.grand-hall-dust {
+  position: absolute;
+  inset: -12% 0;
+  opacity: 0.55;
+  background-image:
+    radial-gradient(circle 1.6px at 18% 30%, rgba(253, 230, 166, 0.55), transparent 100%),
+    radial-gradient(circle 1.2px at 36% 62%, rgba(253, 230, 166, 0.4), transparent 100%),
+    radial-gradient(circle 1.8px at 54% 22%, rgba(253, 230, 166, 0.5), transparent 100%),
+    radial-gradient(circle 1.1px at 68% 48%, rgba(253, 230, 166, 0.35), transparent 100%),
+    radial-gradient(circle 1.5px at 82% 28%, rgba(253, 230, 166, 0.45), transparent 100%),
+    radial-gradient(circle 1.3px at 90% 66%, rgba(253, 230, 166, 0.3), transparent 100%),
+    radial-gradient(circle 1.4px at 8% 74%, rgba(253, 230, 166, 0.35), transparent 100%),
+    radial-gradient(circle 1.2px at 46% 84%, rgba(253, 230, 166, 0.3), transparent 100%);
+  animation: dustDrift 24s ease-in-out infinite alternate;
+}
+.grand-hall-dust.dust-slow {
+  opacity: 0.3;
+  animation-duration: 38s;
+  animation-direction: alternate-reverse;
+  scale: 1.4;
+}
+
+/* Wood grain panel - shelf carcass, reading desks */
+.wood-panel {
+  background-color: #120b05;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.008 0.09' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 0 0.07 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom, rgba(255, 214, 150, 0.04) 0%, transparent 30%),
+    linear-gradient(to bottom, #150d05 0%, #0c0703 100%);
 }

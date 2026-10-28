@@ -111,21 +111,21 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
           <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
             <WaxSeal color="gold" size="md" icon="quill" />
             <div>
-              <span className="text-[10px] uppercase font-cinzel font-bold tracking-widest text-wood-700 block">
+              <span className="text-[10px] uppercase font-serif font-bold tracking-widest text-wood-700 block">
                 Letter in Response
               </span>
-              <h3 className="font-cinzel text-lg font-bold text-wood-950">
+              <h3 className="font-serif text-lg font-bold text-wood-950">
                 To {targetPenName}
               </h3>
-              <p className="font-cormorant text-xs text-wood-800 italic truncate max-w-[280px]">
+              <p className="font-body text-xs text-wood-800 italic truncate max-w-[280px]">
                 Regarding: "{targetNoteTitle || 'Untitled Letter'}"
               </p>
             </div>
           </div>
 
-          <p className="font-cormorant text-xs text-wood-800 leading-relaxed mb-4 italic">
+          <p className="font-body text-xs text-wood-800 leading-relaxed mb-4 italic">
             Your words will arrive privately in the author's sanctuary under your pen name (
-            <span className="font-cinzel font-bold text-wood-950 not-italic">{profile?.pen_name}</span>). The author may keep it close to their heart or pin it publicly beneath their letter.
+            <span className="font-serif font-bold text-wood-950 not-italic">{profile?.pen_name}</span>). The author may keep it close to their heart or pin it publicly beneath their letter.
           </p>
 
           {errorWarning && (
@@ -142,10 +142,10 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
               placeholder="Write with gentle kindness and truth..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="w-full p-4 bg-amber-50/70 border border-amber-800/30 rounded-xl text-base font-cormorant text-wood-950 leading-relaxed focus:outline-none focus:ring-1 focus:ring-amber-600 resize-none"
+              className="w-full p-4 bg-amber-50/70 border border-amber-800/30 rounded-xl text-base font-body text-wood-950 leading-relaxed focus:outline-none focus:ring-1 focus:ring-amber-600 resize-none"
             />
 
-            <div className="flex items-center justify-between text-[11px] font-cinzel text-wood-700 pt-1">
+            <div className="flex items-center justify-between text-[11px] font-serif text-wood-700 pt-1">
               <span className="flex items-center gap-1.5 text-emerald-800">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Screened by AI moderation</span>
@@ -157,7 +157,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
               <button
                 type="submit"
                 disabled={submitting || !content.trim()}
-                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-cinzel font-bold transition shadow-candle border border-red-500/30 disabled:opacity-40 cursor-pointer"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-40 cursor-pointer"
               >
                 <Feather className="w-3.5 h-3.5 text-amber-300" />
                 <span>{submitting ? 'Sealing & Dispatching...' : 'Seal & Send Response'}</span>
@@ -165,7 +165,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2.5 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer"
+                className="px-4 py-2.5 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 rounded-xl text-xs font-serif font-semibold transition cursor-pointer"
               >
                 Cancel
               </button>

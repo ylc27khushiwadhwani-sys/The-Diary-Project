@@ -141,10 +141,10 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
           <div className="flex items-center gap-3">
             <WaxSeal color="gold" size="md" icon="crest" />
             <div>
-              <h2 className="font-cinzel text-xl font-bold text-wood-950">
+              <h2 className="font-serif text-xl font-bold text-wood-950">
                 Letters in Response
               </h2>
-              <p className="font-cormorant text-xs text-wood-800 italic">
+              <p className="font-body text-xs text-wood-800 italic">
                 Correspondence sent by readers to your shared unsent notes
               </p>
             </div>
@@ -168,7 +168,7 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
 
         {/* Banner Alert */}
         {actionSuccess && (
-          <div className="mx-6 mt-4 p-3 bg-emerald-900/10 border border-emerald-800/30 rounded-xl text-xs font-cinzel text-emerald-900 flex items-center gap-2 animate-fade-in font-bold">
+          <div className="mx-6 mt-4 p-3 bg-emerald-900/10 border border-emerald-800/30 rounded-xl text-xs font-serif text-emerald-900 flex items-center gap-2 animate-fade-in font-bold">
             <Check className="w-4 h-4 text-emerald-700" />
             <span>{actionSuccess}</span>
           </div>
@@ -177,14 +177,14 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
         {/* Content Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
           {loading ? (
-            <div className="py-12 text-center text-xs font-cinzel text-wood-700 italic">
+            <div className="py-12 text-center text-xs font-serif text-wood-700 italic">
               Gathering correspondence...
             </div>
           ) : responses.length === 0 ? (
             <div className="py-16 text-center">
               <MessageSquare className="w-10 h-10 mx-auto text-amber-800/40 mb-3" />
-              <p className="font-cinzel text-base text-wood-950 font-bold">Your letter box is quiet</p>
-              <p className="font-cormorant text-sm text-wood-800 max-w-sm mx-auto mt-1 italic">
+              <p className="font-serif text-base text-wood-950 font-bold">Your letter box is quiet</p>
+              <p className="font-body text-sm text-wood-800 max-w-sm mx-auto mt-1 italic">
                 When readers in the Grand Library send letters in response to your shared notes, they will arrive here for your eyes first.
               </p>
             </div>
@@ -199,12 +199,12 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                     <span className="font-script text-lg text-wood-950 font-bold">
                       {resp.profiles?.pen_name || 'Kind Reader'}
                     </span>
-                    <span className="text-xs font-cinzel text-wood-600">on</span>
-                    <span className="text-xs font-cinzel font-bold text-wood-900">
+                    <span className="text-xs font-serif text-wood-600">on</span>
+                    <span className="text-xs font-serif font-bold text-wood-900">
                       "{resp.note_title}"
                     </span>
                   </div>
-                  <span className="text-[10px] font-cinzel text-wood-600">
+                  <span className="text-[10px] font-serif text-wood-600">
                     {new Date(resp.created_at).toLocaleDateString(undefined, {
                       month: 'short',
                       day: 'numeric',
@@ -213,12 +213,12 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                   </span>
                 </div>
 
-                <p className="text-base font-cormorant text-wood-950 leading-relaxed whitespace-pre-wrap py-2">
+                <p className="text-base font-body text-wood-950 leading-relaxed whitespace-pre-wrap py-2">
                   {resp.content}
                 </p>
 
                 <div className="flex items-center justify-between pt-3 border-t border-amber-900/15 mt-2">
-                  <span className="text-xs font-cinzel text-wood-700">
+                  <span className="text-xs font-serif text-wood-700">
                     {resp.is_approved_by_note_owner ? (
                       <span className="inline-flex items-center gap-1.5 text-emerald-800 font-bold">
                         <Pin className="w-3.5 h-3.5 text-emerald-700" />
@@ -234,7 +234,7 @@ export const AuthorInbox: React.FC<AuthorInboxProps> = ({ isOpen, onClose }) => 
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => togglePin(resp.id, resp.is_approved_by_note_owner)}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-cinzel font-bold transition cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-serif font-bold transition cursor-pointer ${
                         resp.is_approved_by_note_owner
                           ? 'bg-amber-900/15 hover:bg-amber-900/25 text-wood-900'
                           : 'bg-wax-crimson hover:bg-wax-crimsonBright text-white shadow-candle'

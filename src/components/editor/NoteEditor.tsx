@@ -122,7 +122,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       <div className="bg-wood-900/90 border border-amber-900/40 rounded-t-2xl p-4 flex flex-wrap items-center justify-between gap-3 backdrop-blur-md shadow-2xl">
         <button
           onClick={onClose}
-          className="flex items-center gap-2 text-xs font-cinzel text-amber-200/80 hover:text-amber-100 transition cursor-pointer"
+          className="flex items-center gap-2 text-xs font-serif text-amber-200/80 hover:text-amber-100 transition cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4 text-amber-400" />
           <span>Return to Shelves</span>
@@ -135,7 +135,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             <select
               value={shelfId || ''}
               onChange={(e) => setShelfId(e.target.value || null)}
-              className="text-xs bg-transparent text-amber-100 font-cinzel focus:outline-none cursor-pointer"
+              className="text-xs bg-transparent text-amber-100 font-serif focus:outline-none cursor-pointer"
             >
               <option value="" className="bg-wood-900 text-amber-100">Unsorted Shelf</option>
               {shelves.map((s) => (
@@ -161,7 +161,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           {isPublic ? (
             <button
               onClick={handleUnpublish}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-900/40 text-amber-300 hover:bg-amber-900/60 border border-amber-700/50 rounded-lg text-xs font-cinzel transition cursor-pointer"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-900/40 text-amber-300 hover:bg-amber-900/60 border border-amber-700/50 rounded-lg text-xs font-serif transition cursor-pointer"
               title="Remove letter from the public library"
             >
               <EyeOff className="w-3.5 h-3.5" />
@@ -171,7 +171,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             <button
               onClick={() => setIsShareModalOpen(true)}
               disabled={!content.trim() || isLocked}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-800 hover:bg-wood-700 text-amber-200 border border-amber-600/40 rounded-lg text-xs font-cinzel transition disabled:opacity-40 cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-800 hover:bg-wood-700 text-amber-200 border border-amber-600/40 rounded-lg text-xs font-serif transition disabled:opacity-40 cursor-pointer"
               title={isLocked ? "Unlock before sharing" : "Publish to the Grand Library archive"}
             >
               <Globe className="w-3.5 h-3.5 text-amber-400" />
@@ -184,7 +184,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             type="button"
             onClick={() => setHandwritingFont(!handwritingFont)}
             className="p-1.5 bg-wood-950/80 border border-amber-800/40 text-amber-300 hover:text-amber-100 rounded-lg text-xs transition cursor-pointer"
-            title={handwritingFont ? "Switch to Book Print" : "Switch to Quill Cursive"}
+            title={handwritingFont ? "Switch to Quill Cursive" : "Switch to Book Print"}
           >
             <Type className="w-4 h-4" />
           </button>
@@ -193,7 +193,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           <button
             onClick={handleManualSave}
             disabled={saving || !content.trim()}
-            className="flex items-center gap-1.5 px-4 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-lg text-xs font-cinzel font-bold shadow-candle border border-red-500/30 transition disabled:opacity-40 cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-lg text-xs font-serif font-bold shadow-candle border border-red-500/30 transition disabled:opacity-40 cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
             <span>{saving ? 'Sealing...' : 'Seal & Store'}</span>
@@ -202,9 +202,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       </div>
 
       {/* The Scroll Parchment Writing Canvas */}
-      <div className="parchment-sheet rounded-b-2xl shadow-2xl p-6 sm:p-10 md:p-12 relative overflow-hidden min-h-[580px] flex flex-col justify-between">
-        {/* Top Scroll Roll */}
-        <div className="scroll-roll-top -mx-2 -mt-4 mb-6" />
+      <div className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 md:p-12 pl-9 sm:pl-12 relative min-h-[580px] flex flex-col justify-between">
+        <div className="letter-ribbon" />
+        <div className="letter-stamps">
+          <span className="letter-stamp" />
+          <span className="letter-stamp stamp-green" />
+        </div>
+        <div className="letter-botanical" />
 
         <div className="flex-1 flex flex-col">
           {/* Letterhead Header with Wax Seal */}
@@ -212,23 +216,23 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             <div className="flex items-center gap-3">
               <WaxSeal color={isLocked ? 'crimson' : isPublic ? 'gold' : 'crimson'} size="md" icon={isLocked ? 'lock' : 'quill'} />
               <div>
-                <span className="font-cinzel text-[11px] tracking-widest uppercase text-wood-700 block font-bold">
-                  The Library of Unsent Things
+                <span className="font-serif text-[11px] tracking-widest uppercase text-wood-700 block font-bold">
+                  The Paper Vault
                 </span>
-                <span className="font-cormorant text-xs italic text-wood-900">
+                <span className="font-body text-xs italic text-wood-900">
                   {isLocked ? "Eyes-Only Confidential Letter" : isPublic ? "Archived for the Sanctuary" : "Private Library Parchment"}
                 </span>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 text-wood-700 text-xs font-cinzel">
+            <div className="flex items-center gap-2 text-wood-700 text-xs font-serif">
               <Feather className="w-4 h-4 text-amber-900" />
               <span>Quill in Hand</span>
             </div>
           </div>
 
           {note?.prompt_id && (
-            <div className="flex items-center gap-1.5 mb-5 px-3 py-1 bg-amber-900/10 text-wood-900 font-cinzel text-xs rounded-full border border-amber-900/20 self-start">
+            <div className="flex items-center gap-1.5 mb-5 px-3 py-1 bg-amber-900/10 text-wood-900 font-serif text-xs rounded-full border border-amber-900/20 self-start">
               <Sparkles className="w-3.5 h-3.5 text-amber-800" />
               <span>Prompt: {note.prompt_id}</span>
             </div>
@@ -240,7 +244,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             placeholder="A title for what remained unspoken..."
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full font-cinzel text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"
+            className="w-full font-serif text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"
           />
 
           {/* Tag Chips */}
@@ -248,7 +252,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             {tags.map((tag) => (
               <span
                 key={tag}
-                className="flex items-center gap-1 px-2.5 py-1 bg-amber-900/15 border border-amber-800/30 rounded-full text-[11px] font-cinzel text-wood-800"
+                className="flex items-center gap-1 px-2.5 py-1 bg-amber-900/15 border border-amber-800/30 rounded-full text-[11px] font-serif text-wood-800"
               >
                 {tag}
                 <button
@@ -268,7 +272,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
               onChange={(e) => handleTagInput(e.target.value)}
               onKeyDown={handleTagKeyDown}
               aria-label="Add tags"
-              className="flex-1 min-w-[10rem] bg-transparent text-xs font-cinzel text-wood-950 placeholder:text-wood-600/60 focus:outline-none"
+              className="flex-1 min-w-[10rem] bg-transparent text-xs font-serif text-wood-950 placeholder:text-wood-600/60 focus:outline-none"
             />
           </div>
 
@@ -279,14 +283,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             onChange={(e) => setContent(e.target.value)}
             className={`flex-1 w-full text-wood-950 placeholder:text-wood-600/50 focus:outline-none resize-none bg-transparent ${
               handwritingFont
-                ? 'font-script text-2xl md:text-3xl leading-loose font-normal'
-                : 'font-cormorant text-xl md:text-2xl leading-relaxed font-medium'
+                ? 'font-body text-xl md:text-2xl leading-relaxed font-medium'
+                : 'font-hand text-2xl md:text-3xl leading-[1.8] font-normal'
             }`}
           />
         </div>
 
         {/* Bottom Scroll Roll */}
-        <div className="scroll-roll-bottom -mx-2 -mb-4 mt-8" />
       </div>
 
       {/* Sharing and Safety Modals */}

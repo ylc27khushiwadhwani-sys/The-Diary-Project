@@ -114,6 +114,10 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
         whileTap={{ scale: 0.97 }}
         className="cursor-pointer relative rounded-t-[2px] border-x border-t shadow-[0_8px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between select-none transition-shadow group-hover:shadow-[0_12px_30px_rgba(212,163,115,0.35)]"
       >
+        {/* Physical sheen: shaded edges, light catch at the top */}
+        <div className="absolute inset-0 rounded-t-[2px] bg-gradient-to-r from-black/45 via-transparent to-black/55 pointer-events-none" />
+        <div className="absolute inset-x-0 top-0 h-2 bg-gradient-to-b from-white/15 to-transparent pointer-events-none" />
+
         {/* Embossed gold spine lines at top */}
         <div className="space-y-0.5 pt-1 opacity-75">
           <div className="h-px bg-gold/50 mx-1" />

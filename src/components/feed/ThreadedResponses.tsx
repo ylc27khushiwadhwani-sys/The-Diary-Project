@@ -43,7 +43,7 @@ export const ThreadedResponses: React.FC<ThreadedResponsesProps> = ({ noteId }) 
 
   if (loading) {
     return (
-      <div className="py-4 text-center text-xs text-wood-700 font-cinzel italic">
+      <div className="py-4 text-center text-xs text-wood-700 font-serif italic">
         Gathering letters in response...
       </div>
     );
@@ -62,7 +62,7 @@ export const ThreadedResponses: React.FC<ThreadedResponsesProps> = ({ noteId }) 
 
   return (
     <div className="space-y-3 pt-2">
-      <div className="flex items-center gap-2 text-xs font-cinzel text-wood-800 pb-1.5 border-b border-amber-900/20 font-bold uppercase tracking-wider">
+      <div className="flex items-center gap-2 text-xs font-serif text-wood-800 pb-1.5 border-b border-amber-900/20 font-bold uppercase tracking-wider">
         <Heart className="w-3.5 h-3.5 text-red-700" />
         <span>Letters in Response ({responses.length})</span>
       </div>
@@ -80,7 +80,7 @@ export const ThreadedResponses: React.FC<ThreadedResponsesProps> = ({ noteId }) 
                   {resp.profiles?.pen_name || 'Kind Stranger'}
                 </span>
               </div>
-              <span className="text-[10px] font-cinzel text-wood-600">
+              <span className="text-[10px] font-serif text-wood-600">
                 {new Date(resp.created_at).toLocaleDateString(undefined, {
                   month: 'short',
                   day: 'numeric',
@@ -89,7 +89,7 @@ export const ThreadedResponses: React.FC<ThreadedResponsesProps> = ({ noteId }) 
               </span>
             </div>
 
-            <p className="text-sm font-cormorant text-wood-950 leading-relaxed whitespace-pre-wrap pl-4 border-l-2 border-amber-700/40">
+            <p className="text-sm font-body text-wood-950 leading-relaxed whitespace-pre-wrap pl-4 border-l-2 border-amber-700/40">
               {resp.content}
             </p>
           </div>
