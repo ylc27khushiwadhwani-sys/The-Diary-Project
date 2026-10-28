@@ -12,6 +12,8 @@ import {
   loadAuthorResponses,
   getSeenResponseIds,
 } from "../components/library/AuthorInbox";
+import { PaywallModal } from "../components/payments/PaywallModal";
+import { fetchQuota, isLimitError, FREE_LETTER_LIMIT } from "../lib/payments";
 import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
 import { PasscodeModal } from "../components/library/PasscodeModal";
 import { WaxSeal } from "../components/library/WaxSeal";
@@ -75,6 +77,7 @@ export const LibraryPage: React.FC = () => {
   const [studyView, setStudyView] = useState<"box" | "list">("box");
   const [passcodeNote, setPasscodeNote] = useState<Note | null>(null);
   const [unreadReplies, setUnreadReplies] = useState(0);
+  const [paywallOpen, setPaywallOpen] = useState(false);
   // Notes unlocked via passcode earlier in this session (U8 export reads this).
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
   const [exportSummary, setExportSummary] = useState<string | null>(null);
@@ -189,11 +192,16 @@ export const LibraryPage: React.FC = () => {
     }
 
     if (isNew) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("notes")
         .insert([{ ...noteData, user_id: user.id }])
         .select()
         .single();
+      if (isLimitError(error)) {
+        setIsEditorOpen(false);
+        setPaywallOpen(true);
+        return;
+      }
       if (data) setNotes((prev) => [data, ...prev]);
     } else {
       const { data } = await supabase
@@ -219,7 +227,19 @@ export const LibraryPage: React.FC = () => {
     setNotes((prev) => prev.filter((n) => n.id !== noteId));
   };
 
-  const handleStartFromPrompt = (prompt: Prompt) => {
+  // True once the writer holds all of their free letters (checked in the database for signed-in
+  // accounts; guests keep letters on this device, so their count is the local one).
+  const reachedLimit = async (): Promise<boolean> => {
+    if (isSupabaseConfigured && user)
+      return (await fetchQuota(user.id)).atLimit;
+    return notes.length >= FREE_LETTER_LIMIT;
+  };
+
+  const handleStartFromPrompt = async (prompt: Prompt) => {
+    if (await reachedLimit()) {
+      setPaywallOpen(true);
+      return;
+    }
     setActiveEditingNote({
       title: prompt.title,
       prompt_id: prompt.id,
@@ -229,7 +249,11 @@ export const LibraryPage: React.FC = () => {
     setIsEditorOpen(true);
   };
 
-  const handleCreateNewBlank = () => {
+  const handleCreateNewBlank = async () => {
+    if (await reachedLimit()) {
+      setPaywallOpen(true);
+      return;
+    }
     setActiveEditingNote({
       shelf_id: selectedShelfId,
       content: "",
@@ -528,6 +552,11 @@ export const LibraryPage: React.FC = () => {
           )}
         </div>
       </div>
+
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+      />
 
       <PasscodeModal
         isOpen={!!passcodeNote}

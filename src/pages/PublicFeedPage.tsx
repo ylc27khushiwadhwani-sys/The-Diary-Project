@@ -4,7 +4,11 @@ import { Feather, Search, SlidersHorizontal } from "lucide-react";
 import { Note } from "../types/database";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
-import { RoomMemory } from '../components/cinematic/RoomMemory';
+import { CoffeeButton } from "../components/payments/CoffeeButton";
+import { CommunityJoin } from "../components/payments/CommunityJoin";
+import { PaywallModal } from "../components/payments/PaywallModal";
+import { fetchQuota, isLimitError } from "../lib/payments";
+import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { InteractiveBookshelf } from "../components/bookshelf/InteractiveBookshelf";
 import { InkText } from "../components/cinematic/InkText";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
@@ -24,6 +28,19 @@ export const PublicFeedPage: React.FC = () => {
   const { user, profile } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+
+  // Free writers hold a fixed number of letters; the ask only appears once it is reached.
+  const openWriter = async () => {
+    if (isSupabaseConfigured && user) {
+      const quota = await fetchQuota(user.id);
+      if (quota.atLimit) {
+        setPaywallOpen(true);
+        return;
+      }
+    }
+    setIsEditorOpen(true);
+  };
 
   // Modals
   const [respondingNote, setRespondingNote] = useState<Note | null>(null);
@@ -129,11 +146,16 @@ export const PublicFeedPage: React.FC = () => {
     }
 
     if (user) {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("notes")
         .insert([{ ...newNoteData, user_id: user.id }])
         .select()
         .single();
+      if (isLimitError(error)) {
+        setIsEditorOpen(false);
+        setPaywallOpen(true);
+        return;
+      }
       if (data) {
         setIsEditorOpen(false);
         refetch();
@@ -158,6 +180,7 @@ export const PublicFeedPage: React.FC = () => {
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
       {/* 1. Hero Section (Design & Aesthetic from thediaryproject.lovable.app) */}
       <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden px-6 py-20 text-center">
+        <CoffeeButton />
         {/* Candle Glow Ambient Gradient */}
         <div className="candle-glow absolute inset-0" />
         <GrandHallBackdrop />
@@ -215,7 +238,7 @@ export const PublicFeedPage: React.FC = () => {
             className="mt-10 flex flex-wrap items-center justify-center gap-4"
           >
             <button
-              onClick={() => setIsEditorOpen(true)}
+              onClick={openWriter}
               className="rounded-full bg-gold hover:bg-gold-light px-8 py-3.5 font-serif text-lg text-wood-950 font-semibold shadow-candle transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex items-center gap-2"
             >
               <Feather className="w-5 h-5" />
@@ -335,7 +358,7 @@ export const PublicFeedPage: React.FC = () => {
         ) : (
           <InteractiveBookshelf
             notes={visibleNotes}
-            onWriteClick={() => setIsEditorOpen(true)}
+            onWriteClick={openWriter}
             onRespondLetter={handleStartResponse}
           />
         )}
@@ -414,6 +437,13 @@ export const PublicFeedPage: React.FC = () => {
           }}
         />
       )}
+
+      <CommunityJoin />
+
+      <PaywallModal
+        isOpen={paywallOpen}
+        onClose={() => setPaywallOpen(false)}
+      />
 
       {/* Sign In Modal if guest tries to respond */}
       <SignInModal

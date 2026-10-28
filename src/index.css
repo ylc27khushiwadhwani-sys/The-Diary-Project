@@ -919,3 +919,11 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 .visit-badge-mark { width: 6px; height: 6px; border-radius: 50%; background: #ffb347; box-shadow: 0 0 8px 2px rgba(255, 170, 70, 0.6); }
 .visit-badge-count { min-width: 20px; padding: 2px 7px; border-radius: 9999px; background: #8a1426; color: #fff4e0; font-size: 11px; letter-spacing: 0; text-align: center; }
 @media (max-width: 480px) { .visit-badge-label { display: none; } .visit-badge { padding-left: 8px; } }
+
+/* --- Coffee button (top left of the Reading Room) ---------------------- */
+.coffee-wrap { position: absolute; left: 14px; top: 14px; z-index: 6; text-align: left; }
+.coffee-btn { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px 6px 9px; border-radius: 9999px; border: 1px solid rgba(201, 154, 82, 0.4); background: rgba(14, 9, 6, 0.72); color: #e8dab2; font: italic 400 0.85rem 'Cormorant Garamond', Georgia, serif; cursor: pointer; transition: border-color 0.2s, transform 0.2s; backdrop-filter: blur(6px); }
+.coffee-btn b { font-weight: 700; color: #f3d9a4; }
+.coffee-btn:hover { border-color: rgba(243, 217, 164, 0.8); transform: translateY(-1px); }
+.coffee-note { margin-top: 6px; max-width: 240px; padding: 8px 10px; border-radius: 8px; background: rgba(14, 9, 6, 0.9); border: 1px solid rgba(201, 154, 82, 0.3); font: italic 0.8rem 'Cormorant Garamond', serif; color: #e8dab2; }
+@media (max-width: 480px) { .coffee-btn { font-size: 0.75rem; padding: 5px 10px 5px 8px; } }
