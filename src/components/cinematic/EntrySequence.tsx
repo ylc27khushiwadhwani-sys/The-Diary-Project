@@ -14,7 +14,7 @@ const TOTAL_MS = 8600;
  * Opening sequence, played once per visitor: heavy library doors swing open on candlelight, a single candle in the dark, the
  * room blooms outward from its light, a wax seal presses in, cracks, and the
  * veil lifts into a slow push-in on the hall. Click, tap or any key skips it.
- * Return visits and prefers-reduced-motion never see it.
+ * It plays on every page load; prefers-reduced-motion skips it.
  */
 export const EntrySequence: React.FC = () => {
   const [active, setActive] = useState(

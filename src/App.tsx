@@ -10,7 +10,6 @@ import { DustCanvas } from "./components/cinematic/DustCanvas";
 import { EntrySequence } from "./components/cinematic/EntrySequence";
 import { InkText } from "./components/cinematic/InkText";
 import { VisitBadge } from "./components/cinematic/VisitBadge";
-import { QuillCursor } from "./components/cinematic/QuillCursor";
 import { burstEmbers } from "./lib/motion";
 import { currentHallHour } from "./lib/timeOfDay";
 
@@ -40,7 +39,6 @@ export const App: React.FC = () => {
       <EntrySequence />
       {/* Drifting dust that glows in the light shafts, plus ember bursts */}
       <DustCanvas />
-      <QuillCursor />
 
       {/* Top Header Matching thediaryproject.lovable.app */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">

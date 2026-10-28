@@ -873,11 +873,6 @@ html:not([data-entry]) .hall-pushin { animation: pushIn 14s cubic-bezier(0.2, 0.
 
 .date-seal-box { padding: 10px 12px; border: 1px dashed rgba(201,154,82,0.35); border-radius: 10px; background: rgba(40,24,12,0.35); }
 
-/* --- Quill cursor + ink trail ------------------------------------------ */
-html.quill-cursor, html.quill-cursor body { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M29 2 C19 3 9 10 6 22 L3 29 L10 26 C22 23 28 12 29 2 Z' fill='%23e8dab2' stroke='%238a5a2b' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M26 6 L6 26' stroke='%238a5a2b' stroke-width='1' fill='none'/%3E%3Cpath d='M3 29 L6 25' stroke='%23201208' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 3 29, auto; }
-html.quill-cursor a, html.quill-cursor button, html.quill-cursor [role='button'], html.quill-cursor .cursor-pointer, html.quill-cursor select, html.quill-cursor label { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M29 2 C19 3 9 10 6 22 L3 29 L10 26 C22 23 28 12 29 2 Z' fill='%23e8dab2' stroke='%238a5a2b' stroke-width='1.2' stroke-linejoin='round'/%3E%3Cpath d='M26 6 L6 26' stroke='%238a5a2b' stroke-width='1' fill='none'/%3E%3Cpath d='M3 29 L6 25' stroke='%23201208' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 3 29, pointer; }
-html.quill-cursor input, html.quill-cursor textarea { cursor: text; }
-.quill-trail { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; }
 
 /* --- The room remembers you (landing) ---------------------------------- */
 .room-memory { margin: 1.6rem auto 0; max-width: 30rem; text-align: center; }
