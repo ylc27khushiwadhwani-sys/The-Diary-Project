@@ -59,24 +59,24 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
           <WaxSeal color="crimson" size="sm" icon="lock" />
           <div>
-            <h3 className="font-cinzel text-base font-bold text-wood-950">
+            <h3 className="font-serif text-base font-bold text-wood-950">
               Flag Letter for Review
             </h3>
-            <p className="font-cormorant text-xs text-wood-800 italic">Preserving community safety in the archive</p>
+            <p className="font-body text-xs text-wood-800 italic">Preserving community safety in the archive</p>
           </div>
         </div>
 
         {submitted ? (
           <div className="text-center py-6 space-y-2">
             <CheckCircle2 className="w-10 h-10 text-emerald-700 mx-auto" />
-            <h4 className="font-cinzel text-base font-bold text-wood-950">Report Logged</h4>
-            <p className="font-cormorant text-xs text-wood-800 italic">
+            <h4 className="font-serif text-base font-bold text-wood-950">Report Logged</h4>
+            <p className="font-body text-xs text-wood-800 italic">
               Thank you for keeping our sanctuary safe. Notes receiving 3 flags are automatically retired from the public reading room.
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
-            <p className="font-cormorant text-xs text-wood-900 leading-relaxed italic">
+            <p className="font-body text-xs text-wood-900 leading-relaxed italic">
               Please specify the concern. Flagged notes are reviewed by automated moderation:
             </p>
 
@@ -84,7 +84,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
               {REPORT_REASONS.map((reason) => (
                 <label
                   key={reason}
-                  className="flex items-center gap-2.5 p-2.5 rounded-lg bg-amber-50/70 border border-amber-900/20 hover:border-amber-900/40 transition cursor-pointer text-xs font-cinzel text-wood-900"
+                  className="flex items-center gap-2.5 p-2.5 rounded-lg bg-amber-50/70 border border-amber-900/20 hover:border-amber-900/40 transition cursor-pointer text-xs font-serif text-wood-900"
                 >
                   <input
                     type="radio"
@@ -103,14 +103,14 @@ export const ReportModal: React.FC<ReportModalProps> = ({
               <button
                 type="submit"
                 disabled={loading}
-                className="flex-1 py-2 bg-wax-crimson hover:bg-wax-crimsonBright text-white text-xs font-cinzel font-bold rounded-xl transition shadow-candle disabled:opacity-50 cursor-pointer"
+                className="flex-1 py-2 bg-wax-crimson hover:bg-wax-crimsonBright text-white text-xs font-serif font-bold rounded-xl transition shadow-candle disabled:opacity-50 cursor-pointer"
               >
                 {loading ? 'Submitting Flag...' : 'Submit Report'}
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 text-xs font-cinzel font-semibold rounded-xl transition cursor-pointer"
+                className="px-4 py-2 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 text-xs font-serif font-semibold rounded-xl transition cursor-pointer"
               >
                 Cancel
               </button>

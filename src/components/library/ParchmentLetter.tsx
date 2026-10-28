@@ -56,7 +56,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
           </div>
 
           <div className="space-y-1">
-            <span className="font-cinzel text-xs font-bold tracking-widest uppercase text-wood-700">
+            <span className="font-serif text-xs font-bold tracking-widest uppercase text-wood-700">
               Sealed Letter
             </span>
             <h4 className="font-serif font-medium text-base text-wood-950 line-clamp-1 max-w-[240px]">
@@ -67,14 +67,14 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
             </p>
           </div>
 
-          <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-wood-900/80 hover:bg-wood-900 text-amber-200 border border-amber-600/40 rounded-full text-xs font-cinzel transition">
+          <div className="mt-4 inline-flex items-center gap-1.5 px-3 py-1 bg-wood-900/80 hover:bg-wood-900 text-amber-200 border border-amber-600/40 rounded-full text-xs font-serif transition">
             <Lock className="w-3 h-3 text-amber-400" />
             <span>Break Seal with Passcode</span>
           </div>
 
           {/* Shelf or Date Badge */}
           {shelf && (
-            <span className="absolute bottom-3 left-4 text-[10px] font-cinzel text-wood-600">
+            <span className="absolute bottom-3 left-4 text-[10px] font-serif text-wood-600">
               Shelf: {shelf.name}
             </span>
           )}
@@ -104,8 +104,8 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
             <div className="flex items-center gap-3">
               <WaxSeal color={note.is_public ? 'gold' : 'crimson'} size="md" icon={note.is_public ? 'crest' : 'quill'} />
               <div>
-                <span className="font-cinzel text-[10px] tracking-widest uppercase text-wood-600 block">
-                  The Library of Unsent Things
+                <span className="font-serif text-[10px] tracking-widest uppercase text-wood-600 block">
+                  The Paper Vault
                 </span>
                 <span className="font-script text-lg text-wood-900 leading-none">
                   {authorPenName}
@@ -114,7 +114,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
             </div>
 
             <div className="flex items-center gap-2 text-xs">
-              <span className="font-cinzel text-[11px] text-wood-700/80 tracking-wide">
+              <span className="font-serif text-[11px] text-wood-700/80 tracking-wide">
                 {formattedDate}
               </span>
 
@@ -152,14 +152,14 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
           {/* Badges / Shelf / Prompt Info */}
           <div className="flex flex-wrap items-center gap-2 mb-3">
             {shelf && (
-              <span className="inline-flex items-center gap-1 text-[11px] font-cinzel font-medium text-wood-800 bg-amber-900/10 px-2.5 py-0.5 rounded-full border border-amber-900/20">
+              <span className="inline-flex items-center gap-1 text-[11px] font-serif font-medium text-wood-800 bg-amber-900/10 px-2.5 py-0.5 rounded-full border border-amber-900/20">
                 <Folder className="w-3 h-3 text-wood-700" />
                 <span>{shelf.name}</span>
               </span>
             )}
 
             {note.is_public && (
-              <span className="inline-flex items-center gap-1 text-[11px] font-cinzel font-medium text-emerald-900 bg-emerald-700/10 px-2.5 py-0.5 rounded-full border border-emerald-800/20">
+              <span className="inline-flex items-center gap-1 text-[11px] font-serif font-medium text-emerald-900 bg-emerald-700/10 px-2.5 py-0.5 rounded-full border border-emerald-800/20">
                 <Globe className="w-3 h-3 text-emerald-700" />
                 <span>In Public Library</span>
               </span>
@@ -175,7 +175,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
 
           {/* Letter Title */}
           {note.title && (
-            <h3 className="font-cinzel text-xl sm:text-2xl font-bold text-wood-950 mb-3 tracking-tight leading-snug">
+            <h3 className="font-serif text-xl sm:text-2xl font-bold text-wood-950 mb-3 tracking-tight leading-snug">
               {note.title}
             </h3>
           )}
@@ -185,7 +185,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
             className={`text-wood-900 leading-relaxed whitespace-pre-wrap select-text ${
               handwritingFont
                 ? 'font-script text-2xl md:text-3xl font-normal leading-loose'
-                : 'font-cormorant text-lg md:text-xl font-medium'
+                : 'font-body text-lg md:text-xl font-medium'
             }`}
           >
             {note.content}
@@ -194,7 +194,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
 
         {/* Bottom Flourish & Signature */}
         <div className="pt-6 mt-6 border-t border-amber-900/20 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2 text-wood-700 font-cinzel text-[11px]">
+          <div className="flex items-center gap-2 text-wood-700 font-serif text-[11px]">
             <Feather className="w-3.5 h-3.5 text-amber-800" />
             <span className="italic">
               ~ Penned in solitude by {authorPenName} ~
@@ -211,7 +211,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
                     e.stopPropagation();
                     onRespond();
                   }}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full font-cinzel text-xs font-semibold shadow-xs border border-amber-600/30 transition cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full font-serif text-xs font-semibold shadow-xs border border-amber-600/30 transition cursor-pointer"
                 >
                   <Heart className="w-3 h-3 text-red-400" />
                   <span>Send Response Letter</span>

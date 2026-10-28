@@ -75,40 +75,40 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
           <WaxSeal color="crimson" size="md" icon="crest" />
           <div>
-            <h3 className="font-cinzel text-xl font-bold text-wood-950">Enter the Sanctuary</h3>
-            <p className="font-cormorant text-xs text-wood-800 italic">Your anonymous, locked library chamber</p>
+            <h3 className="font-serif text-xl font-bold text-wood-950">Enter the Sanctuary</h3>
+            <p className="font-body text-xs text-wood-800 italic">Your anonymous, locked library chamber</p>
           </div>
         </div>
 
         {sent ? (
           <div className="text-center py-6 space-y-3">
             <CheckCircle2 className="w-12 h-12 text-emerald-700 mx-auto" />
-            <h4 className="font-cinzel text-lg text-wood-950 font-bold">Courier Dispatched</h4>
-            <p className="font-cormorant text-sm text-wood-900 leading-relaxed italic">
-              We dispatched a passwordless sign-in key to <span className="font-cinzel font-bold text-wood-950 not-italic">{email}</span>. Click it to unlock your private shelves.
+            <h4 className="font-serif text-lg text-wood-950 font-bold">Courier Dispatched</h4>
+            <p className="font-body text-sm text-wood-900 leading-relaxed italic">
+              We dispatched a passwordless sign-in key to <span className="font-serif font-bold text-wood-950 not-italic">{email}</span>. Click it to unlock your private shelves.
             </p>
             <button
               onClick={onClose}
-              className="mt-4 px-5 py-2 text-xs font-cinzel font-bold bg-wood-900 text-amber-100 rounded-full hover:bg-wood-800 transition-colors cursor-pointer"
+              className="mt-4 px-5 py-2 text-xs font-serif font-bold bg-wood-900 text-amber-100 rounded-full hover:bg-wood-800 transition-colors cursor-pointer"
             >
               Return to Hall
             </button>
           </div>
         ) : (
           <div className="space-y-4">
-            <p className="font-cormorant text-sm text-wood-900 leading-relaxed italic">
+            <p className="font-body text-sm text-wood-900 leading-relaxed italic">
               Sign in with an email to preserve your sanctuary across devices. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.
             </p>
 
             {errorMessage && (
-              <div className="p-3 text-xs bg-red-900/10 text-red-900 border border-red-800/20 rounded-lg font-cinzel">
+              <div className="p-3 text-xs bg-red-900/10 text-red-900 border border-red-800/20 rounded-lg font-serif">
                 {errorMessage}
               </div>
             )}
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-cinzel font-bold text-wood-800 mb-1">
+                <label className="block text-xs font-serif font-bold text-wood-800 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -119,7 +119,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="reader@example.com"
-                    className="w-full pl-9 pr-4 py-2.5 bg-amber-50/80 border border-amber-900/30 rounded-xl text-sm font-cinzel text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600 transition"
+                    className="w-full pl-9 pr-4 py-2.5 bg-amber-50/80 border border-amber-900/30 rounded-xl text-sm font-serif text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600 transition"
                   />
                 </div>
                 {/* Name selection for guest */}
@@ -129,7 +129,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
                       key={name}
                       type="button"
                       onClick={() => handleNameSelect(name)}
-                      className={`px-3 py-1 rounded ${chosenName === name ? 'bg-amber-600 text-white' : 'bg-wood-800 text-amber-200'} text-xs font-cinzel`}
+                      className={`px-3 py-1 rounded ${chosenName === name ? 'bg-amber-600 text-white' : 'bg-wood-800 text-amber-200'} text-xs font-serif`}
                     >
                       {name}
                     </button>
@@ -140,7 +140,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-cinzel font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
+                className="w-full py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
               >
                 {loading ? 'Dispatching Key...' : 'Send Magic Link via Email'}
               </button>
@@ -148,13 +148,13 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
 
             <div className="relative flex py-2 items-center">
               <div className="flex-grow border-t border-amber-900/20" />
-              <span className="flex-shrink mx-3 text-xs font-cinzel text-wood-600">or explore freely</span>
+              <span className="flex-shrink mx-3 text-xs font-serif text-wood-600">or explore freely</span>
               <div className="flex-grow border-t border-amber-900/20" />
             </div>
 
             <button
               onClick={handleGuestEntry}
-              className="w-full py-2.5 bg-wood-900 hover:bg-wood-850 text-amber-200 border border-amber-700/50 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer flex items-center justify-center gap-2"
+              className="w-full py-2.5 bg-wood-900 hover:bg-wood-850 text-amber-200 border border-amber-700/50 rounded-xl text-xs font-serif font-semibold transition cursor-pointer flex items-center justify-center gap-2"
             >
               <KeyRound className="w-3.5 h-3.5 text-amber-400" />
               <span>Continue as Anonymous Guest</span>

@@ -29,7 +29,7 @@ export const App: React.FC = () => {
           >
             <div>
               <span className="font-serif text-xl sm:text-2xl italic tracking-wide text-[#f3ece0] block leading-tight group-hover:text-gold transition">
-                The Library of Unsent Things
+                The Paper Vault
               </span>
               <span className="label-caps text-[9px] block text-gold/70">
                 Anonymous Literary Sanctuary

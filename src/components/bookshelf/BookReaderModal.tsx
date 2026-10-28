@@ -122,7 +122,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                 <div className="flex items-center gap-3">
                   <WaxSeal color="crimson" size="md" icon="crest" />
                   <div>
-                    <span className="label-caps block text-[10px] text-wood-700">The Library of Unsent Things</span>
+                    <span className="label-caps block text-[10px] text-wood-700">The Paper Vault</span>
                     <span className="font-serif text-2xl font-normal text-wood-950 italic leading-none">
                       {authorPenName}
                     </span>

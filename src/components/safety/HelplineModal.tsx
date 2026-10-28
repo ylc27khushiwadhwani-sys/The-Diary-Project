@@ -34,25 +34,25 @@ export const HelplineModal: React.FC<HelplineModalProps> = ({ isOpen, onClose })
         <div className="flex items-center gap-3.5 mb-4 pb-3 border-b border-amber-900/20">
           <WaxSeal color="crimson" size="md" icon="flame" />
           <div>
-            <h3 className="font-cinzel text-lg font-bold text-wood-950">
+            <h3 className="font-serif text-lg font-bold text-wood-950">
               You are heard, and you are not alone
             </h3>
-            <p className="font-cormorant text-xs text-wood-800 italic">Your letter rests safe in your private sanctuary</p>
+            <p className="font-body text-xs text-wood-800 italic">Your letter rests safe in your private sanctuary</p>
           </div>
         </div>
 
-        <div className="bg-amber-50/80 border border-amber-900/20 rounded-xl p-4 mb-4 text-xs text-wood-900 leading-relaxed space-y-1.5 font-cormorant text-sm">
+        <div className="bg-amber-50/80 border border-amber-900/20 rounded-xl p-4 mb-4 text-xs text-wood-900 leading-relaxed space-y-1.5 font-body text-sm">
           <p className="italic">
-            Writing down raw, painful thoughts takes immense courage. Because your letter touches on deep distress or self-harm, we have placed it <strong className="font-cinzel font-bold text-wood-950 not-italic">safely upon your private shelf</strong> rather than releasing it to the open reading hall.
+            Writing down raw, painful thoughts takes immense courage. Because your letter touches on deep distress or self-harm, we have placed it <strong className="font-serif font-bold text-wood-950 not-italic">safely upon your private shelf</strong> rather than releasing it to the open reading hall.
           </p>
-          <p className="text-emerald-900 font-cinzel text-xs font-semibold flex items-center gap-1.5 pt-1.5 border-t border-amber-900/10">
+          <p className="text-emerald-900 font-serif text-xs font-semibold flex items-center gap-1.5 pt-1.5 border-t border-amber-900/10">
             <Shield className="w-3.5 h-3.5 text-emerald-700" />
             <span>Nothing was erased. Your words remain yours alone.</span>
           </p>
         </div>
 
         <div className="mb-3">
-          <label className="block text-[10px] font-cinzel uppercase tracking-widest text-wood-700 font-bold mb-1.5">
+          <label className="block text-[10px] font-serif uppercase tracking-widest text-wood-700 font-bold mb-1.5">
             Free & Confidential Crisis Support
           </label>
           <div className="flex gap-1.5 flex-wrap">
@@ -60,7 +60,7 @@ export const HelplineModal: React.FC<HelplineModalProps> = ({ isOpen, onClose })
               <button
                 key={c}
                 onClick={() => setSelectedCountry(c)}
-                className={`px-3 py-1 rounded-full text-xs font-cinzel transition cursor-pointer ${
+                className={`px-3 py-1 rounded-full text-xs font-serif transition cursor-pointer ${
                   selectedCountry === c
                     ? 'bg-wood-900 text-amber-100 font-bold shadow-xs'
                     : 'bg-amber-900/10 text-wood-800 hover:bg-amber-900/20'
@@ -78,9 +78,9 @@ export const HelplineModal: React.FC<HelplineModalProps> = ({ isOpen, onClose })
               key={idx}
               className="p-3 bg-amber-50/90 border border-amber-900/20 rounded-xl space-y-1 text-xs"
             >
-              <div className="flex items-center justify-between font-cinzel font-bold text-wood-950">
+              <div className="flex items-center justify-between font-serif font-bold text-wood-950">
                 <span>{item.name}</span>
-                <span className="text-[10px] text-amber-800 font-normal italic font-cormorant">{item.hours}</span>
+                <span className="text-[10px] text-amber-800 font-normal italic font-body">{item.hours}</span>
               </div>
               <div className="flex items-center gap-3 text-wood-800 font-mono text-[11px] pt-0.5">
                 <a
@@ -113,7 +113,7 @@ export const HelplineModal: React.FC<HelplineModalProps> = ({ isOpen, onClose })
         <div className="mt-4 pt-3 border-t border-amber-900/20 text-right">
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full text-xs font-cinzel font-bold transition cursor-pointer"
+            className="px-5 py-2 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full text-xs font-serif font-bold transition cursor-pointer"
           >
             I Understand
           </button>
