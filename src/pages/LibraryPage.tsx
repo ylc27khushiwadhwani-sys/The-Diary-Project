@@ -235,8 +235,8 @@ export const LibraryPage: React.FC = () => {
           </p>
 
           <button
-            onClick={loginAsGuestDemo}
             className="px-6 py-3 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full font-serif text-sm font-semibold transition shadow-candle border border-amber-600/40 cursor-pointer inline-flex items-center gap-2"
+            onClick={() => loginAsGuestDemo()}
           >
             <KeyRound className="w-4 h-4 text-gold" />
             <span>Enter Sanctuary as Anonymous Guest</span>
