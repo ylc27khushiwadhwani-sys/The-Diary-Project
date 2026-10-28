@@ -224,7 +224,7 @@ export const LibraryPage: React.FC = () => {
           </p>
 
           <button
-            onClick={loginAsGuestDemo}
+            onClick={() => loginAsGuestDemo()}
             className="px-6 py-3 bg-wood-900 hover:bg-wood-800 text-amber-100 rounded-full font-cinzel text-xs font-bold transition shadow-candle border border-amber-600/40 cursor-pointer inline-flex items-center gap-2"
           >
             <KeyRound className="w-4 h-4 text-amber-400" />

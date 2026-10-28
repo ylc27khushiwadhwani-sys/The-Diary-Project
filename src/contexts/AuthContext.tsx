@@ -13,7 +13,7 @@ interface AuthContextType {
   signInWithMagicLink: (email: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   updatePenName: (name: string) => Promise<{ error: Error | null }>;
-  loginAsGuestDemo: () => void;
+  loginAsGuestDemo: (penName?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -141,7 +141,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signInWithMagicLink = async (email: string) => {
     if (!isSupabaseConfigured) {
       // Local simulated login
-      loginAsGuestDemo();
+      await loginAsGuestDemo();
       return { error: null };
     }
     const { error } = await supabase.auth.signInWithOtp({
@@ -191,17 +191,53 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
-  const loginAsGuestDemo = () => {
-    const demoId = 'demo-' + Math.random().toString(36).substring(2, 9);
-    const demoProfile: Profile = {
-      id: demoId,
-      pen_name: generatePseudonym(),
-      avatar_color: getRandomAvatarColor(),
-      created_at: new Date().toISOString(),
-    };
-    setUser({ id: demoId, email: 'writer@unsent.local' } as User);
-    setProfile(demoProfile);
-    localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(demoProfile));
+  // Guest entry. Demo mode fabricates a local-only id (never sent to the
+  // database). A configured deployment instead uses Supabase's own anonymous
+  // auth, so the resulting user.id is a real UUID that RLS and foreign keys
+  // accept -- guests can actually save notes, not just preview the UI.
+  const loginAsGuestDemo = async (penName?: string) => {
+    if (!isSupabaseConfigured) {
+      const demoId = 'demo-' + Math.random().toString(36).substring(2, 9);
+      const demoProfile: Profile = {
+        id: demoId,
+        pen_name: penName?.trim() || generatePseudonym(),
+        avatar_color: getRandomAvatarColor(),
+        created_at: new Date().toISOString(),
+      };
+      setUser({ id: demoId, email: 'writer@unsent.local' } as User);
+      setProfile(demoProfile);
+      localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(demoProfile));
+      return;
+    }
+
+    const { data, error } = await supabase.auth.signInAnonymously();
+    if (error || !data.user) {
+      console.error('Anonymous sign-in failed:', error);
+      return;
+    }
+    setSession(data.session);
+    setUser(data.user);
+
+    // The on_auth_user_created trigger provisions the profile synchronously
+    // within the same transaction as the auth.users insert, so it is already
+    // committed by the time this select runs.
+    const { data: profileRow } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', data.user.id)
+      .single();
+
+    let finalProfile = profileRow;
+    if (finalProfile && penName?.trim()) {
+      const { data: renamed } = await supabase
+        .from('profiles')
+        .update({ pen_name: penName.trim() })
+        .eq('id', data.user.id)
+        .select()
+        .single();
+      if (renamed) finalProfile = renamed;
+    }
+    if (finalProfile) setProfile(finalProfile);
   };
 
   return (

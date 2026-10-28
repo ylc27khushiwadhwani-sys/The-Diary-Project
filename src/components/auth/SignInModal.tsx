@@ -9,7 +9,7 @@ interface SignInModalProps {
 }
 
 export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
-  const { signInWithMagicLink, loginAsGuestDemo, updatePenName } = useAuth();
+  const { signInWithMagicLink, loginAsGuestDemo } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -29,8 +29,6 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
   const [chosenName, setChosenName] = useState('');
   const handleNameSelect = (name: string) => {
     setChosenName(name);
-    // In a real app this would persist to user profile; for demo we store in localStorage
-    localStorage.setItem('demo_pen_name', name);
   };
 
   if (!isOpen) return null;
@@ -52,10 +50,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
   };
 
   const handleGuestEntry = async () => {
-    if (chosenName) {
-      await updatePenName(chosenName);
-    }
-    loginAsGuestDemo();
+    await loginAsGuestDemo(chosenName || undefined);
     onClose();
   };
 
