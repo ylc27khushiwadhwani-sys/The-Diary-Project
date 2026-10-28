@@ -445,7 +445,7 @@ export const LibraryPage: React.FC = () => {
                   : "All Preserved Letters"}
               </span>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
               <input
                 type="search"
                 placeholder="Search titles, words, or tags..."

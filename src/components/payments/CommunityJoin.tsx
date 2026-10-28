@@ -38,7 +38,7 @@ export const CommunityJoin: React.FC = () => {
         {open && (
           <form
             onSubmit={join}
-            className="mt-6 text-left parchment-sheet reader-ivory letter-deckle p-6 text-wood-950"
+            className="mt-6 text-left parchment-sheet reader-ivory letter-deckle !p-8 text-wood-950"
           >
             <p className="font-body text-sm italic text-wood-800 leading-relaxed mb-4">
               Letters from the library in your inbox, and a place among the

@@ -45,57 +45,63 @@ export const App: React.FC = () => {
       {/* Top Header Matching thediaryproject.lovable.app */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">
         <VisitBadge />
-        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 sm:px-5 py-3.5">
           {/* Brand */}
           <div
             onClick={() => setActiveTab("public")}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div>
-              <span className="font-serif text-xl sm:text-2xl italic tracking-wide text-[#f3ece0] block leading-tight group-hover:text-gold transition">
+              <span className="font-serif text-lg sm:text-2xl italic tracking-wide whitespace-nowrap text-[#f3ece0] block leading-tight group-hover:text-gold transition">
                 <InkText
                   text="The Paper Vault"
                   startDelay={0.2}
                   perLetter={0.06}
                 />
               </span>
-              <span className="label-caps text-[9px] block text-gold/70">
+              <span className="label-caps text-[9px] hidden sm:block text-gold/70">
                 Anonymous Literary Sanctuary
               </span>
             </div>
           </div>
 
           {/* Navigation Rooms */}
-          <nav className="flex items-center gap-2 sm:gap-3">
+          <nav className="flex items-center gap-1 sm:gap-3">
             <button
               onClick={() => setActiveTab("public")}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-serif transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "public"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
                   : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
               }`}
             >
-              <BookOpen className="w-3.5 h-3.5 text-gold" />
-              <span>The Reading Room</span>
+              <BookOpen className="hidden sm:block w-3.5 h-3.5 text-gold" />
+              <span>
+                <span className="sm:hidden">Reading</span>
+                <span className="hidden sm:inline">The Reading Room</span>
+              </span>
             </button>
 
             <button
               onClick={() => setActiveTab("sanctuary")}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-serif transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "sanctuary"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
                   : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
               }`}
             >
-              <Feather className="w-3.5 h-3.5 text-gold" />
-              <span>Your Study</span>
+              <Feather className="hidden sm:block w-3.5 h-3.5 text-gold" />
+              <span>
+                <span className="sm:hidden">Study</span>
+                <span className="hidden sm:inline">Your Study</span>
+              </span>
             </button>
           </nav>
 
           {/* User Profile or Sign In */}
           <div className="flex items-center gap-2">
             {user && profile ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 sm:gap-2 shrink-0 [&_.truncate]:max-w-[44px] sm:[&_.truncate]:max-w-none">
                 <PenNameBadge
                   penName={profile.pen_name}
                   avatarColor={profile.avatar_color}
