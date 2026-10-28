@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, MessageSquare, BookOpen, Type, Sparkles } from 'lucide-react';
 import { Note } from '../../types/database';
@@ -24,6 +24,44 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
   const [handwritingFont, setHandwritingFont] = useState(false);
   const [showResponses, setShowResponses] = useState(false);
+  const [pageIndex, setPageIndex] = useState(0);
+
+  // Split the note content into book pages. Paragraphs stay together when
+  // they fit; anything longer is broken at sentence (then word) boundaries
+  // so a long letter always turns into turnable pages.
+  // Hooks must run unconditionally, so this precedes the early return below.
+  const mainPages = useMemo(() => {
+    const PAGE_TARGET = 620;
+    const paras = (note?.content ?? '').split(/\r?\n\r?\n/).filter((p) => p.trim().length > 0);
+    const pages: string[] = [];
+    let current = '';
+    for (const para of paras) {
+      if (current && (current + '\n\n' + para).length > PAGE_TARGET) {
+        pages.push(current.trim());
+        current = '';
+      } else if (current) {
+        current += '\n\n';
+      }
+      const sentences = para.match(/[^.!?]+[.!?]*(?:\s+|$)/g) || [para];
+      for (const sentence of sentences) {
+        if (current && (current + sentence).length > PAGE_TARGET) {
+          pages.push(current.trim());
+          current = '';
+        }
+        let rest = sentence;
+        while ((current + rest).length > PAGE_TARGET) {
+          let cut = rest.lastIndexOf(' ', PAGE_TARGET - current.length);
+          if (cut < 80) cut = PAGE_TARGET - current.length;
+          pages.push((current + rest.slice(0, cut)).trim());
+          current = '';
+          rest = rest.slice(cut);
+        }
+        current += rest;
+      }
+    }
+    if (current.trim()) pages.push(current.trim());
+    return pages.length > 0 ? pages : [''];
+  }, [note?.content]);
 
   if (!isOpen || !note) return null;
 
@@ -37,6 +75,17 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
 
   const isLockedNote = note.is_locked && !isUnlocked;
 
+  // For now we treat responses as a single extra page rendered by ThreadedResponses
+  const responsePage = (
+    <ThreadedResponses noteId={note.id} />
+  );
+
+  const pages = [...mainPages, responsePage];
+
+  const totalPages = pages.length;
+
+  const goPrev = () => setPageIndex((i) => Math.max(i - 1, 0));
+  const goNext = () => setPageIndex((i) => Math.min(i + 1, totalPages - 1));
 
   return (
     <AnimatePresence>
@@ -75,9 +124,10 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
           </div>
 
           {isLockedNote ? (
-            // Locked view (unchanged)
-            <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 text-center text-wood-950 relative">
-              <div className="letter-ribbon" />
+            // Locked keepsake scroll
+            <div className="relative">
+              <div className="scroll-rod scroll-rod-top"><span className="scroll-rod-crest" /></div>
+              <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 pt-14 text-center text-wood-950 relative">
               <div className="letter-stamps">
                 <span className="letter-stamp" />
               </div>
@@ -97,87 +147,112 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
               >
                 <span>Break Wax Seal with Passcode</span>
               </button>
+              </div>
+              <div className="scroll-rod scroll-rod-bottom"><span className="scroll-rod-crest" /></div>
             </div>
           ) : (
-            // Continuous scrollable keepsake letter
-            <article className="letter-frame parchment-sheet letter-deckle text-wood-950 relative max-h-[85vh] flex flex-col overflow-hidden">
-              <div className="letter-ribbon" />
-              <div className="letter-stamps">
-                <span className="letter-stamp" />
-                <span className="letter-stamp stamp-green" />
-              </div>
-              <div className="letter-botanical" />
-
-              {/* Rolled top edge of the scroll */}
-              <div className="scroll-roll-top mx-3 mt-2 shrink-0" />
-
-              {/* Fixed letterhead */}
-              <div className="px-6 sm:px-10 pl-9 sm:pl-12 pt-4 shrink-0">
-                <div className="flex items-center justify-between pb-4 mb-4 border-b border-amber-900/20">
-                  <div className="flex items-center gap-3">
-                    <WaxSeal color="crimson" size="md" icon="crest" />
-                    <div>
-                      <span className="label-caps block text-[10px] text-wood-700">The Paper Vault</span>
-                      <span className="font-serif text-2xl font-normal text-wood-950 italic leading-none">
-                        {authorPenName}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <span className="text-xs font-serif text-wood-700">{formattedDate}</span>
-                    <button
-                      type="button"
-                      onClick={() => setHandwritingFont(!handwritingFont)}
-                      className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
-                      title={handwritingFont ? 'Switch to Quill Handwriting' : 'Switch to Classic Book Print'}
-                    >
-                      <Type className="w-4 h-4" />
-                    </button>
-                  </div>
+            // Paginated keepsake scroll, turned page by page
+            <div className="relative">
+              <div className="scroll-rod scroll-rod-top"><span className="scroll-rod-crest" /></div>
+              <article className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 pl-9 sm:pl-12 pt-14 pb-12 text-wood-950 relative max-h-[85vh] flex flex-col">
+                <div className="letter-stamps">
+                  <span className="letter-stamp" />
+                  <span className="letter-stamp stamp-green" />
                 </div>
-
-                {prompt && (
-                  <div className="mb-4">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-serif italic text-amber-950 bg-amber-800/10 border border-amber-800/20 px-3 py-1 rounded-full">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-800" />
-                      <span>From the shelf: "{prompt.title}"</span>
+                <span className="filigree-corner fc-tl" />
+                <span className="filigree-corner fc-tr" />
+                <span className="filigree-corner fc-bl" />
+                <span className="filigree-corner fc-br" />
+              {/* Header bar */}
+              <div className="flex items-center justify-between pb-4 mb-5 border-b border-amber-900/20">
+                <div className="flex items-center gap-3">
+                  <WaxSeal color="crimson" size="md" icon="crest" />
+                  <div>
+                    <span className="label-caps block text-[10px] text-wood-700">The Paper Vault</span>
+                    <span className="font-serif text-2xl font-normal text-wood-950 italic leading-none">
+                      {authorPenName}
                     </span>
                   </div>
-                )}
-
-                {note.title && (
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold text-wood-950 mb-3 tracking-tight leading-snug">
-                    {note.title}
-                  </h2>
-                )}
-              </div>
-
-              {/* The letter unrolls - one continuous scroll, however long it runs */}
-              <div className="flex-1 overflow-y-auto px-6 sm:px-10 pl-9 sm:pl-12 pb-6">
-                <div
-                  className={`text-wood-950 whitespace-pre-wrap select-text ${
-                    handwritingFont
-                      ? 'font-serif text-xl sm:text-2xl font-normal leading-relaxed'
-                      : 'font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]'
-                  }`}
-                >
-                  {note.content}
                 </div>
-
-                {showResponses && (
-                  <div className="mt-6 pt-4 border-t border-dashed border-amber-900/25">
-                    <ThreadedResponses noteId={note.id} />
-                  </div>
-                )}
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-serif text-wood-700">{formattedDate}</span>
+                  <button
+                    type="button"
+                    onClick={() => setHandwritingFont(!handwritingFont)}
+                    className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
+                    title={handwritingFont ? 'Switch to Quill Handwriting' : 'Switch to Classic Book Print'}
+                  >
+                    <Type className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
-              {/* Rolled bottom edge of the scroll */}
-              <div className="scroll-roll-bottom mx-3 shrink-0" />
+              {/* Prompt badge */}
+              {prompt && (
+                <div className="mb-4">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-serif italic text-amber-950 bg-amber-800/10 border border-amber-800/20 px-3 py-1 rounded-full">
+                    <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+                    <span>From the shelf: "{prompt.title}"</span>
+                  </span>
+                </div>
+              )}
 
-              {/* Fixed footer actions - extra bottom padding so the deckled
-                  torn rim erodes empty paper, not the attribution line */}
-              <div className="px-6 sm:px-10 pl-9 sm:pl-12 pt-4 pb-8 shrink-0">
-                <div className="pt-4 border-t border-amber-900/20 flex flex-wrap items-center justify-between gap-3">
+              {/* Title */}
+              {note.title && (
+                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-wood-950 mb-4 tracking-tight leading-snug">
+                  {note.title}
+                </h2>
+              )}
+
+              {/* Page content with flip animation */}
+              <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden min-h-[200px]">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={pageIndex}
+                    className="w-full"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                    style={{ backfaceVisibility: 'hidden' }}
+                  >
+                    <div
+                      className={`text-wood-950 whitespace-pre-wrap select-text mb-6 ${
+                        handwritingFont
+                          ? 'font-serif text-xl sm:text-2xl font-normal leading-relaxed'
+                          : 'font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]'
+                      }`}
+                    >
+                      {pages[pageIndex]}
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Navigation controls */}
+                <div className="flex items-center justify-between mt-4 w-full">
+                  <button
+                    onClick={goPrev}
+                    disabled={pageIndex === 0}
+                    className="px-3 py-1 rounded-full bg-wood-800/60 text-amber-100 disabled:opacity-40"
+                  >
+                    ← Prev
+                  </button>
+                  <span className="text-sm text-wood-700">
+                    Page {pageIndex + 1} of {totalPages}
+                  </span>
+                  <button
+                    onClick={goNext}
+                    disabled={pageIndex === totalPages - 1}
+                    className="px-3 py-1 rounded-full bg-wood-800/60 text-amber-100 disabled:opacity-40"
+                  >
+                    Next →
+                  </button>
+                </div>
+              </div>
+
+              {/* Bottom actions */}
+              <div className="pt-6 border-t border-amber-900/20">
+                <div className="flex flex-wrap items-center justify-between gap-3">
                   <span className="font-serif italic text-sm text-wood-700">— Preserved in the archive by {authorPenName}</span>
                   <div className="flex items-center gap-3">
                     <button
@@ -198,8 +273,16 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                     )}
                   </div>
                 </div>
+                {/* Optional threaded responses – shown only when user toggles */}
+                {showResponses && (
+                  <div className="mt-5 pt-4 border-t border-dashed border-amber-900/25">
+                    <ThreadedResponses noteId={note.id} />
+                  </div>
+                )}
               </div>
-            </article>
+              </article>
+              <div className="scroll-rod scroll-rod-bottom"><span className="scroll-rod-crest" /></div>
+            </div>
           )}
 
           {/* Passcode Modal for breaking the seal */}
