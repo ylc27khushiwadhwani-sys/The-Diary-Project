@@ -690,6 +690,7 @@ html:not([data-entry]) .hall-pushin { animation: pushIn 14s cubic-bezier(0.2, 0.
 
 /* Page-turn bar stays reachable while a long page scrolls inside the sheet */
 .reader-nav {
+  background: rgba(232, 214, 170, 0.55);
   background: linear-gradient(to top, rgba(236, 220, 180, 0.96) 70%, rgba(236, 220, 180, 0));
 }
 
@@ -702,4 +703,106 @@ html:not([data-entry]) .hall-pushin { animation: pushIn 14s cubic-bezier(0.2, 0.
   opacity: 0;
   animation: entryFade 1.2s ease 1.8s forwards;
   z-index: -1;
+}
+
+/* Short landscape screens: tighter sheet so more of each page is readable at once */
+@media (max-height: 520px) {
+  .reader-scroll { padding-top: 1.75rem !important; padding-bottom: 0.75rem !important; }
+  .reader-scroll h2 { margin-bottom: 0.5rem; }
+  .reader-nav { padding-top: 0.4rem !important; padding-bottom: 1.25rem !important; }
+}
+/* Decorative stamps and botanicals never sit above page controls */
+.letter-stamps, .letter-botanical, .letter-ribbon { pointer-events: none; }
+
+/* --- Ribbon tied over the seal (sealed letters) ------------------------ */
+.seal-ribbon-band {
+  position: absolute; top: 0; height: 40%; left: 50%; width: 16px; margin-left: -8px;
+  background: linear-gradient(90deg, #4a0c18 0%, #8a1a2c 35%, #6b1021 70%, #3d0912 100%);
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.35);
+  opacity: 0.92; pointer-events: none; z-index: 2;
+}
+.seal-ribbon-tails { position: absolute; left: 50%; bottom: -6px; width: 0; height: 0; z-index: 4; pointer-events: none; }
+.seal-ribbon-tails i {
+  position: absolute; top: 0; width: 12px; height: 22px;
+  background: linear-gradient(180deg, #8a1a2c, #4a0c18);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
+}
+.seal-ribbon-tails .tail-l { left: -15px; transform: rotate(14deg); transform-origin: 50% 0; }
+.seal-ribbon-tails .tail-r { left: 2px; transform: rotate(-12deg); transform-origin: 50% 0; }
+
+/* --- Floral liner that peels away when a letter opens ------------------ */
+.letter-liner {
+  position: absolute; inset: 0; z-index: 30; pointer-events: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23a98a52' stroke-width='1.1' opacity='0.8'%3E%3Ccircle cx='40' cy='40' r='5'/%3E%3Cpath d='M40 35 Q34 26 40 20 Q46 26 40 35 M45 40 Q54 34 60 40 Q54 46 45 40 M40 45 Q46 54 40 60 Q34 54 40 45 M35 40 Q26 46 20 40 Q26 34 35 40'/%3E%3Cpath d='M0 0 Q10 8 4 18 M80 80 Q70 72 76 62'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 80px 80px,
+    linear-gradient(160deg, #7b1a2b 0%, #5a1020 100%);
+  animation: linerPeel 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.45s forwards;
+}
+@keyframes linerPeel {
+  0% { transform: translateY(0); opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translateY(-104%); opacity: 0; visibility: hidden; }
+}
+
+/* --- Keepsake box (collection view) ------------------------------------ */
+.keepsake-box {
+  position: relative; border-radius: 14px; padding: 0 0 18px;
+  background: linear-gradient(180deg, #3a2314 0%, #24150b 100%);
+  border: 1px solid rgba(201, 154, 82, 0.25);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.8), inset 0 0 0 5px rgba(0, 0, 0, 0.25);
+  animation: boxRise 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+@keyframes boxRise { 0% { opacity: 0; transform: translateY(24px) scale(0.98); } 100% { opacity: 1; transform: none; } }
+.keepsake-lid {
+  text-align: center; padding: 14px 0 12px;
+  border-bottom: 1px solid rgba(201, 154, 82, 0.2);
+  background: linear-gradient(180deg, rgba(201, 154, 82, 0.12), transparent);
+  border-radius: 14px 14px 0 0;
+}
+.keepsake-tray {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 18px 14px; padding: 20px 18px 6px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(0, 0, 0, 0.0), rgba(0, 0, 0, 0.35));
+}
+.keepsake-letter {
+  position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  min-height: 150px; padding: 40px 10px 12px; text-align: center; cursor: pointer;
+  background: linear-gradient(180deg, #ecdcb4 0%, #d9c79c 100%);
+  color: #2b1d10; border-radius: 3px; transform: rotate(var(--land-rot, 0deg));
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.55);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  clip-path: polygon(0 1%, 4% 0, 12% 1.5%, 30% 0, 55% 1%, 80% 0, 100% 1.5%, 100% 98%, 90% 100%, 60% 98.5%, 30% 100%, 8% 98.5%, 0 100%);
+}
+.keepsake-letter:hover, .keepsake-letter:focus-visible { transform: translateY(-5px) rotate(0deg); box-shadow: 0 12px 20px rgba(0, 0, 0, 0.6); outline: none; }
+.keepsake-twine {
+  position: absolute; left: 0; right: 0; top: 28px; height: 5px;
+  background: repeating-linear-gradient(100deg, #8c7447 0 3px, #b9a06b 3px 6px, #6f5a36 6px 8px);
+}
+.keepsake-seal { position: absolute; top: 14px; left: 50%; margin-left: -15px; z-index: 2; }
+.keepsake-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 0.95rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.keepsake-by { margin-top: 6px; font-size: 0.68rem; letter-spacing: 0.06em; color: #6b4f2a; font-family: serif; font-style: italic; }
+
+/* --- Moth by the candlelight (calm, tiny, slow) ------------------------ */
+.hall-moth { position: fixed; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0.8; animation: mothDrift 46s ease-in-out infinite; }
+.hall-moth svg { display: block; animation: mothBob 3.2s ease-in-out infinite; }
+.moth-wing { transform-box: fill-box; animation: mothFlutter 0.28s ease-in-out infinite alternate; }
+.moth-l { transform-origin: 100% 50%; }
+.moth-r { transform-origin: 0% 50%; animation-name: mothFlutterR; }
+@keyframes mothFlutter { from { transform: scaleX(1); } to { transform: scaleX(0.35); } }
+@keyframes mothFlutterR { from { transform: scaleX(1); } to { transform: scaleX(0.35); } }
+@keyframes mothBob { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-9px) rotate(8deg); } }
+@keyframes mothDrift {
+  0% { transform: translate(8vw, 70vh); opacity: 0; }
+  8% { opacity: 0.8; }
+  25% { transform: translate(22vw, 38vh); }
+  45% { transform: translate(14vw, 22vh); }
+  62% { transform: translate(30vw, 30vh); }
+  85% { transform: translate(12vw, 52vh); opacity: 0.8; }
+  100% { transform: translate(6vw, 74vh); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hall-moth { display: none !important; }
+  .letter-liner { display: none !important; }
+  .keepsake-box { animation: none !important; }
 }

@@ -1,9 +1,10 @@
-import React, { useMemo, useState } from 'react';
-import { BookOpen, Feather } from 'lucide-react';
-import { Note } from '../../types/database';
-import { BookItem } from './BookItem';
-import { BookReaderModal } from './BookReaderModal';
-import promptsData from '../../data/prompts.json';
+import React, { useMemo, useState } from "react";
+import { BookOpen, Feather } from "lucide-react";
+import { Note } from "../../types/database";
+import { BookItem } from "./BookItem";
+import { KeepsakeBox } from "./KeepsakeBox";
+import { BookReaderModal } from "./BookReaderModal";
+import promptsData from "../../data/prompts.json";
 
 interface InteractiveBookshelfProps {
   notes: Note[];
@@ -14,36 +15,36 @@ interface InteractiveBookshelfProps {
 // Shelf sections as filter tabs. Labels are kept to 3-4 words so the
 // header row stays compact instead of printing long joined prompt titles.
 const SHELF_SECTIONS = [
-  { id: 'all', label: 'All Shelves', category: 'All' },
-  { id: 'miss', label: 'To Someone I Miss', category: 'Nostalgia' },
-  { id: 'sorry', label: "Things I'm Sorry For", category: 'Forgiveness' },
-  { id: 'wish', label: 'Wish I Had Said It', category: 'Truth' },
-  { id: 'left', label: 'For The One Left', category: 'Closure' },
-  { id: 'swallowed', label: 'Words I Swallowed', category: 'Vulnerability' },
-  { id: 'younger', label: 'Letter To Younger Me', category: 'Self' },
-  { id: '2am', label: '2AM Thoughts', category: 'Late Night' },
-  { id: 'unsaid', label: 'Couldn\u2019t Say To You', category: 'Unspoken' },
-  { id: 'memories', label: 'Memories & Reflections', category: 'Memory' },
-  { id: 'hope', label: 'Hope & Dreams', category: 'Hope' },
-  { id: 'misc', label: 'Miscellaneous', category: 'Misc' },
+  { id: "all", label: "All Shelves", category: "All" },
+  { id: "miss", label: "To Someone I Miss", category: "Nostalgia" },
+  { id: "sorry", label: "Things I'm Sorry For", category: "Forgiveness" },
+  { id: "wish", label: "Wish I Had Said It", category: "Truth" },
+  { id: "left", label: "For The One Left", category: "Closure" },
+  { id: "swallowed", label: "Words I Swallowed", category: "Vulnerability" },
+  { id: "younger", label: "Letter To Younger Me", category: "Self" },
+  { id: "2am", label: "2AM Thoughts", category: "Late Night" },
+  { id: "unsaid", label: "Couldn\u2019t Say To You", category: "Unspoken" },
+  { id: "memories", label: "Memories & Reflections", category: "Memory" },
+  { id: "hope", label: "Hope & Dreams", category: "Hope" },
+  { id: "misc", label: "Miscellaneous", category: "Misc" },
 ];
 
 // Keyword fallbacks for notes whose prompt_id doesn't map to a section
 const SECTION_KEYWORDS: Record<string, string[]> = {
-  sorry: ['sorry', 'apolog'],
-  miss: ['miss', 'remember'],
-  left: ['left', 'goodbye'],
-  swallowed: ['quiet', 'swallow', 'smile'],
-  younger: ['young', 'child', 'past'],
-  unsaid: ["couldn't say", 'unsaid'],
-  '2am': ['2am', 'late night'],
-  memories: ['memory'],
-  hope: ['hope'],
-  misc: ['misc'],
+  sorry: ["sorry", "apolog"],
+  miss: ["miss", "remember"],
+  left: ["left", "goodbye"],
+  swallowed: ["quiet", "swallow", "smile"],
+  younger: ["young", "child", "past"],
+  unsaid: ["couldn't say", "unsaid"],
+  "2am": ["2am", "late night"],
+  memories: ["memory"],
+  hope: ["hope"],
+  misc: ["misc"],
 };
 
 const matchesSection = (note: Note, sectionId: string): boolean => {
-  if (sectionId === 'all') return true;
+  if (sectionId === "all") return true;
 
   const section = SHELF_SECTIONS.find((s) => s.id === sectionId);
   if (!section) return true;
@@ -56,7 +57,7 @@ const matchesSection = (note: Note, sectionId: string): boolean => {
     return true;
   }
 
-  const text = `${note.title || ''} ${note.content}`.toLowerCase();
+  const text = `${note.title || ""} ${note.content}`.toLowerCase();
   const keywords = SECTION_KEYWORDS[sectionId] || [];
   return keywords.some((kw) => text.includes(kw));
 };
@@ -69,13 +70,14 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   onWriteClick,
   onRespondLetter,
 }) => {
-  const [activeSectionId, setActiveSectionId] = useState('all');
+  const [activeSectionId, setActiveSectionId] = useState("all");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [view, setView] = useState<"shelves" | "box">("shelves");
 
   // One filter pass: only the active section's notes are rendered, once
   const sectionNotes = useMemo(
     () => notes.filter((n) => matchesSection(n, activeSectionId)),
-    [notes, activeSectionId]
+    [notes, activeSectionId],
   );
 
   // Pack the filtered notes into shelf ledges of at most BOOKS_PER_SHELF
@@ -104,7 +106,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
       <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
         {SHELF_SECTIONS.map((sec) => {
           const count = notes.filter((n) => matchesSection(n, sec.id)).length;
-          if (sec.id !== 'all' && count === 0) return null;
+          if (sec.id !== "all" && count === 0) return null;
           const isActive = activeSectionId === sec.id;
           return (
             <button
@@ -114,14 +116,14 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
               aria-pressed={isActive}
               className={`px-3 py-1.5 rounded-full text-xs font-serif tracking-wide transition-all duration-200 cursor-pointer border ${
                 isActive
-                  ? 'bg-gold text-wood-950 border-gold shadow-candle'
-                  : 'bg-card/70 text-amber-200 border-hairline hover:border-gold/60 hover:text-gold-light'
+                  ? "bg-gold text-wood-950 border-gold shadow-candle"
+                  : "bg-card/70 text-amber-200 border-hairline hover:border-gold/60 hover:text-gold-light"
               }`}
             >
               {sec.label}
               <span
                 className={`ml-1.5 text-[10px] font-sans ${
-                  isActive ? 'text-wood-950/70' : 'text-[#9e9488]'
+                  isActive ? "text-wood-950/70" : "text-[#9e9488]"
                 }`}
               >
                 {count}
@@ -129,6 +131,29 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
             </button>
           );
         })}
+      </div>
+
+      {/* View switch: library shelves or the keepsake box */}
+      <div
+        className="flex items-center justify-center gap-2 mb-5"
+        role="group"
+        aria-label="Collection view"
+      >
+        {(["shelves", "box"] as const).map((v) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => setView(v)}
+            aria-pressed={view === v}
+            className={`px-4 py-1.5 rounded-full text-xs font-serif tracking-wide cursor-pointer border transition-all duration-200 ${
+              view === v
+                ? "bg-wax-crimson text-amber-50 border-red-400/40 shadow-candle"
+                : "bg-card/70 text-amber-200 border-hairline hover:border-gold/60"
+            }`}
+          >
+            {v === "shelves" ? "On the shelves" : "In the keepsake box"}
+          </button>
+        ))}
       </div>
 
       {/* Condensed packed shelves */}
@@ -147,6 +172,8 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
             Write the first letter
           </button>
         </div>
+      ) : view === "box" ? (
+        <KeepsakeBox notes={sectionNotes} onOpen={(n) => setSelectedNote(n)} />
       ) : (
         <div className="space-y-4">
           {shelves.map((shelf, shelfIdx) => (

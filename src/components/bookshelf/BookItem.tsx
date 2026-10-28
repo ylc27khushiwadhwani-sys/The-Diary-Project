@@ -1,7 +1,7 @@
-import React from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import { Lock } from 'lucide-react';
-import { Note } from '../../types/database';
+import React from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { Lock } from "lucide-react";
+import { Note } from "../../types/database";
 
 interface BookItemProps {
   note: Note;
@@ -12,40 +12,40 @@ interface BookItemProps {
 // Rich antique leather book bindings palette
 const BOOK_BINDINGS = [
   {
-    bg: 'linear-gradient(135deg, #4a151b 0%, #2e0d11 100%)', // Burgundy
-    accent: '#d4a373',
-    ribbon: '#a3333d',
-    border: '#6b232c',
+    bg: "linear-gradient(135deg, #4a151b 0%, #2e0d11 100%)", // Burgundy
+    accent: "#d4a373",
+    ribbon: "#a3333d",
+    border: "#6b232c",
   },
   {
-    bg: 'linear-gradient(135deg, #122820 0%, #0a1813 100%)', // Deep Forest
-    accent: '#e2b17a',
-    ribbon: '#204a39',
-    border: '#1f4536',
+    bg: "linear-gradient(135deg, #122820 0%, #0a1813 100%)", // Deep Forest
+    accent: "#e2b17a",
+    ribbon: "#204a39",
+    border: "#1f4536",
   },
   {
-    bg: 'linear-gradient(135deg, #152238 0%, #0c1422 100%)', // Oxford Navy
-    accent: '#d4a373',
-    ribbon: '#2a4365',
-    border: '#23385d',
+    bg: "linear-gradient(135deg, #152238 0%, #0c1422 100%)", // Oxford Navy
+    accent: "#d4a373",
+    ribbon: "#2a4365",
+    border: "#23385d",
   },
   {
-    bg: 'linear-gradient(135deg, #422918 0%, #29180d 100%)', // Aged Leather Amber
-    accent: '#f3ece0',
-    ribbon: '#8c5027',
-    border: '#633e24',
+    bg: "linear-gradient(135deg, #422918 0%, #29180d 100%)", // Aged Leather Amber
+    accent: "#f3ece0",
+    ribbon: "#8c5027",
+    border: "#633e24",
   },
   {
-    bg: 'linear-gradient(135deg, #2e1c2b 0%, #1c111a 100%)', // Muted Plum
-    accent: '#e2b17a',
-    ribbon: '#522f4d',
-    border: '#4a2c45',
+    bg: "linear-gradient(135deg, #2e1c2b 0%, #1c111a 100%)", // Muted Plum
+    accent: "#e2b17a",
+    ribbon: "#522f4d",
+    border: "#4a2c45",
   },
   {
-    bg: 'linear-gradient(135deg, #22201d 0%, #151412 100%)', // Deep Charcoal
-    accent: '#d4a373',
-    ribbon: '#44403c',
-    border: '#383530',
+    bg: "linear-gradient(135deg, #22201d 0%, #151412 100%)", // Deep Charcoal
+    accent: "#d4a373",
+    ribbon: "#44403c",
+    border: "#383530",
   },
 ];
 
@@ -55,7 +55,7 @@ const SPINE_HEIGHTS = [96, 116, 104, 124, 108, 132, 100, 120];
 
 export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
   const binding = BOOK_BINDINGS[index % BOOK_BINDINGS.length];
-  const title = note.title || 'Untitled Letter';
+  const title = note.title || "Untitled Letter";
 
   // 3D Tilt calculation (inspired by bloomiedays.replit.app cursor physics)
   const x = useMotionValue(0);
@@ -64,8 +64,8 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
   const mouseXSpring = useSpring(x, { stiffness: 220, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 220, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['8deg', '-8deg']);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-8deg', '8deg']);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["8deg", "-8deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-8deg", "8deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -99,17 +99,17 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
         onMouseLeave={handleMouseLeave}
         style={{
           height: `${bookHeight}px`,
-          width: '100%',
+          width: "100%",
           background: binding.bg,
           borderColor: binding.border,
           rotateX,
           rotateY,
-          transformStyle: 'preserve-3d',
+          transformStyle: "preserve-3d",
         }}
         whileHover={{
           y: -6,
           scale: 1.08,
-          transition: { type: 'spring', stiffness: 300, damping: 20 },
+          transition: { type: "spring", stiffness: 300, damping: 20 },
         }}
         whileTap={{ scale: 0.97 }}
         className="cursor-pointer relative rounded-t-[2px] border-x border-t shadow-[0_8px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between select-none transition-shadow group-hover:shadow-[0_12px_30px_rgba(212,163,115,0.35)]"
@@ -129,9 +129,9 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
           <span
             className="font-serif text-[9px] md:text-[10px] font-semibold tracking-wide text-gold/90 line-clamp-1 whitespace-nowrap"
             style={{
-              writingMode: 'vertical-rl',
-              transform: 'rotate(180deg)',
-              textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+              writingMode: "vertical-rl",
+              transform: "rotate(180deg)",
+              textShadow: "0 1px 2px rgba(0,0,0,0.8)",
             }}
           >
             {title}
