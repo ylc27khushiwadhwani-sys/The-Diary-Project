@@ -317,7 +317,12 @@ export const PublicFeedPage: React.FC = () => {
           {/* Sample Unsent Parchment Note from the shelf */}
           <div>
             <p className="label-caps mb-4 text-center">From a shelf, someday</p>
-            <div className="parchment-sheet rotate-[0.6deg] rounded-sm p-8 sm:p-12 shadow-parchment text-wood-950 border border-amber-900/30">
+            <div className="letter-frame parchment-sheet letter-deckle rotate-[0.6deg] p-8 sm:p-12 pl-10 sm:pl-14 text-wood-950 relative">
+              <div className="letter-ribbon" />
+              <div className="letter-stamps">
+                <span className="letter-stamp" />
+              </div>
+              <div className="letter-botanical" />
               <blockquote className="font-serif text-2xl sm:text-3xl italic leading-relaxed text-wood-950">
                 "To the friend I stopped calling:
                 <br />

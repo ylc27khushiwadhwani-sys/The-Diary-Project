@@ -184,7 +184,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             type="button"
             onClick={() => setHandwritingFont(!handwritingFont)}
             className="p-1.5 bg-wood-950/80 border border-amber-800/40 text-amber-300 hover:text-amber-100 rounded-lg text-xs transition cursor-pointer"
-            title={handwritingFont ? "Switch to Book Print" : "Switch to Quill Cursive"}
+            title={handwritingFont ? "Switch to Quill Cursive" : "Switch to Book Print"}
           >
             <Type className="w-4 h-4" />
           </button>
@@ -202,9 +202,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       </div>
 
       {/* The Scroll Parchment Writing Canvas */}
-      <div className="parchment-sheet rounded-b-2xl shadow-2xl p-6 sm:p-10 md:p-12 relative overflow-hidden min-h-[580px] flex flex-col justify-between">
-        {/* Top Scroll Roll */}
-        <div className="scroll-roll-top -mx-2 -mt-4 mb-6" />
+      <div className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 md:p-12 pl-9 sm:pl-12 relative min-h-[580px] flex flex-col justify-between">
+        <div className="letter-ribbon" />
+        <div className="letter-stamps">
+          <span className="letter-stamp" />
+          <span className="letter-stamp stamp-green" />
+        </div>
+        <div className="letter-botanical" />
 
         <div className="flex-1 flex flex-col">
           {/* Letterhead Header with Wax Seal */}
@@ -279,14 +283,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             onChange={(e) => setContent(e.target.value)}
             className={`flex-1 w-full text-wood-950 placeholder:text-wood-600/50 focus:outline-none resize-none bg-transparent ${
               handwritingFont
-                ? 'font-script text-2xl md:text-3xl leading-loose font-normal'
-                : 'font-body text-xl md:text-2xl leading-relaxed font-medium'
+                ? 'font-body text-xl md:text-2xl leading-relaxed font-medium'
+                : 'font-hand text-2xl md:text-3xl leading-[1.8] font-normal'
             }`}
           />
         </div>
 
         {/* Bottom Scroll Roll */}
-        <div className="scroll-roll-bottom -mx-2 -mb-4 mt-8" />
       </div>
 
       {/* Sharing and Safety Modals */}

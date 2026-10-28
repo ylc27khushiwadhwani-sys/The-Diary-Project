@@ -4,13 +4,14 @@
 
 @layer base {
   body {
-    background-color: #0d0b09;
+    background-color: #0a0705;
     color: #f3ece0;
     font-family: 'Lora', Georgia, serif;
-    background-image: 
-      radial-gradient(ellipse at 50% 15%, rgba(212, 163, 115, 0.14) 0%, transparent 65%),
-      radial-gradient(ellipse at 20% 50%, rgba(139, 74, 82, 0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(212, 163, 115, 0.08) 0%, transparent 60%);
+    background-image:
+      radial-gradient(ellipse at 50% 12%, rgba(212, 163, 115, 0.17) 0%, transparent 62%),
+      radial-gradient(ellipse at 14% 45%, rgba(74, 48, 26, 0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 86% 72%, rgba(58, 36, 19, 0.5) 0%, transparent 55%),
+      radial-gradient(ellipse at 50% 105%, rgba(139, 74, 82, 0.1) 0%, transparent 60%);
     background-attachment: fixed;
   }
 
@@ -71,18 +72,107 @@
   animation: fadeUpAnim 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Antique Parchment Paper Texture */
+/* Antique Parchment Paper Texture - cream laid paper with fiber flecks */
 .parchment-sheet {
-  background-color: #fbf5e8;
-  background-image: 
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 0%, rgba(237, 226, 204, 0.7) 100%),
-    linear-gradient(to right, rgba(165, 141, 85, 0.12) 0%, transparent 8%, transparent 92%, rgba(165, 141, 85, 0.12) 100%),
-    linear-gradient(to bottom, rgba(165, 141, 85, 0.15) 0%, transparent 6%, transparent 94%, rgba(165, 141, 85, 0.18) 100%);
-  box-shadow: 
+  background-color: #f8f0dd;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(255, 253, 246, 0.85) 0%, rgba(244, 234, 210, 0.4) 55%, rgba(232, 218, 188, 0.55) 100%),
+    repeating-radial-gradient(circle at 18% 32%, rgba(150, 122, 74, 0.05) 0px, rgba(150, 122, 74, 0.05) 1px, transparent 1px, transparent 7px),
+    repeating-radial-gradient(circle at 74% 68%, rgba(120, 96, 56, 0.045) 0px, rgba(120, 96, 56, 0.045) 1px, transparent 1px, transparent 9px),
+    linear-gradient(to right, rgba(165, 141, 85, 0.14) 0%, transparent 8%, transparent 92%, rgba(165, 141, 85, 0.14) 100%),
+    linear-gradient(to bottom, rgba(165, 141, 85, 0.16) 0%, transparent 6%, transparent 94%, rgba(165, 141, 85, 0.2) 100%);
+  box-shadow:
     0 15px 40px -10px rgba(0, 0, 0, 0.75),
     0 2px 8px rgba(0, 0, 0, 0.4),
-    inset 0 0 40px rgba(189, 162, 104, 0.25);
+    inset 0 0 40px rgba(189, 162, 104, 0.28);
   position: relative;
+}
+
+/* Deckled / hand-torn paper edge. The mask erodes the paper rim with
+   turbulence noise; pair with .letter-frame so the shadow follows the
+   torn silhouette instead of the clipped box. */
+.letter-frame {
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.5)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+}
+.letter-deckle {
+  box-shadow: inset 0 0 40px rgba(189, 162, 104, 0.28);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.055' numOctaves='4' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='d'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.045 0.055' numOctaves='4' seed='11'/%3E%3CfeDisplacementMap in='SourceGraphic' scale='9'/%3E%3C/filter%3E%3Crect x='8' y='8' width='224' height='224' fill='%23ffffff' filter='url(%23d)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+
+/* Deep burgundy velvet ribbon hugging the left edge of the sheet */
+.letter-ribbon {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  left: 5px;
+  width: 20px;
+  background: linear-gradient(90deg,
+    #3f0a15 0%, #6d1626 22%, #8f2233 50%, #671223 78%, #3a0913 100%);
+  box-shadow:
+    2px 0 5px rgba(0, 0, 0, 0.35),
+    inset 1px 0 2px rgba(255, 255, 255, 0.18),
+    inset -1px 0 2px rgba(0, 0, 0, 0.5);
+  opacity: 0.94;
+  transform: rotate(0.35deg);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Vintage postage stamp with perforated rim and a pressed-leaf emblem */
+.letter-stamps {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  display: flex;
+  gap: 7px;
+  transform: rotate(2.5deg);
+  pointer-events: none;
+  z-index: 1;
+}
+.letter-stamp {
+  width: 38px;
+  height: 46px;
+  background: #f3ead2;
+  padding: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  -webkit-mask-image: radial-gradient(circle 2.4px at 2.4px 2.4px, transparent 94%, #000 100%);
+  mask-image: radial-gradient(circle 2.4px at 2.4px 2.4px, transparent 94%, #000 100%);
+  -webkit-mask-size: 7px 7px;
+  mask-size: 7px 7px;
+  -webkit-mask-position: -3.5px -3.5px;
+  mask-position: -3.5px -3.5px;
+}
+.letter-stamp::before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(140, 70, 60, 0.45);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg fill='%239c4a35'%3E%3Cpath d='M60 8 L70 28 L92 20 L80 40 L102 46 L82 58 L96 76 L72 70 L70 94 L60 76 L50 94 L48 70 L24 76 L38 58 L18 46 L40 40 L28 20 L50 28 Z'/%3E%3C/g%3E%3Cpath d='M60 76 L58 106' stroke='%237a5a3a' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E") center / 70% 70% no-repeat;
+  opacity: 0.85;
+}
+.letter-stamp.stamp-green::before {
+  border-color: rgba(90, 105, 70, 0.5);
+  filter: hue-rotate(52deg) saturate(0.8);
+}
+
+/* Pressed botanical accent resting on the bottom corner of the sheet */
+.letter-botanical {
+  position: absolute;
+  right: 2px;
+  bottom: 4px;
+  width: 128px;
+  height: 128px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cg opacity='0.9'%3E%3Cpath d='M60 8 L70 28 L92 20 L80 40 L102 46 L82 58 L96 76 L72 70 L70 94 L60 76 L50 94 L48 70 L24 76 L38 58 L18 46 L40 40 L28 20 L50 28 Z' fill='%239c4a35'/%3E%3Cpath d='M60 76 L56 112' stroke='%237a5a3a' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M14 116 Q30 84 44 78 M22 104 l-8 -8 M27 96 l-9 -6 M33 88 l-8 -7' stroke='%236b7048' stroke-width='3' fill='none' stroke-linecap='round'/%3E%3C/g%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0.42;
+  transform: rotate(-14deg);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .scroll-roll-top {

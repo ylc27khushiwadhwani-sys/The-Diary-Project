@@ -15,12 +15,12 @@ export const App: React.FC = () => {
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0d0b09]">
+    <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0a0705]">
       {/* Ambient Floating Candlelit Embers / Motes */}
       <AmbientEmbers />
 
       {/* Top Header Matching thediaryproject.lovable.app */}
-      <header className="sticky top-0 z-50 border-b border-hairline bg-[#0d0b09]/85 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5">
           {/* Brand */}
           <div
@@ -104,7 +104,7 @@ export const App: React.FC = () => {
       </main>
 
       {/* Footer from thediaryproject.lovable.app */}
-      <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-[#9e9488] relative z-10 bg-[#0d0b09]/80 backdrop-blur-sm">
+      <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-[#9e9488] relative z-10 bg-[#0a0705]/80 backdrop-blur-sm">
         <div className="mx-auto max-w-xl space-y-4">
           <div className="flex items-center justify-center gap-2 text-xs font-serif text-[#9e9488]">
             <ShieldCheck className="w-4 h-4 text-gold/70" />

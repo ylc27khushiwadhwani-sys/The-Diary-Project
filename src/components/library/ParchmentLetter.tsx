@@ -42,10 +42,16 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
     return (
       <div
         onClick={onOpen}
-        className="group relative cursor-pointer rounded-xl overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-candle"
+        className="group relative letter-frame cursor-pointer transition-all duration-300 hover:-translate-y-1"
       >
         {/* Envelope Body */}
-        <div className="parchment-sheet p-6 border border-amber-900/30 rounded-xl relative flex flex-col items-center justify-center min-h-[220px] text-center">
+        <div className="parchment-sheet letter-deckle p-6 relative flex flex-col items-center justify-center min-h-[220px] text-center">
+          {/* Velvet ribbon along the spine edge */}
+          <div className="letter-ribbon" />
+          {/* Vintage stamps */}
+          <div className="letter-stamps">
+            <span className="letter-stamp" />
+          </div>
           {/* Envelope Flap Crease Overlay */}
           <div className="absolute top-0 left-0 right-0 h-16 bg-gradient-to-b from-amber-900/10 to-transparent pointer-events-none" />
           <div className="absolute inset-x-6 top-0 border-b border-dashed border-amber-800/25" />
@@ -83,21 +89,27 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
     );
   }
 
-  // Open Unrolled Parchment Scroll Letter
+  // Open deckle-edged keepsake letter
   return (
+    <div className="letter-frame h-full">
     <article
       onClick={mode === 'shelf' ? onOpen : undefined}
-      className={`group relative parchment-sheet rounded-xl transition-all duration-300 flex flex-col justify-between ${
+      className={`group relative parchment-sheet letter-deckle transition-all duration-300 flex flex-col justify-between h-full ${
         mode === 'shelf'
-          ? 'cursor-pointer hover:-translate-y-1 hover:shadow-candle'
-          : 'shadow-parchment'
+          ? 'cursor-pointer hover:-translate-y-1'
+          : ''
       }`}
     >
-      {/* Top Scroll Roll */}
-      <div className="scroll-roll-top mx-2 mt-1.5" />
+      {/* Velvet ribbon along the spine edge */}
+      <div className="letter-ribbon" />
+      {/* Vintage stamps */}
+      <div className="letter-stamps">
+        <span className="letter-stamp" />
+        {mode !== 'shelf' && <span className="letter-stamp stamp-green" />}
+      </div>
 
       {/* Parchment Inner Content */}
-      <div className="p-6 sm:p-8 flex-1 flex flex-col justify-between">
+      <div className="p-6 sm:p-8 pl-9 sm:pl-10 flex-1 flex flex-col justify-between">
         <div>
           {/* Header Bar with Seal and Ornate Title */}
           <div className="flex items-start justify-between gap-3 mb-4 border-b border-amber-900/20 pb-3">
@@ -126,7 +138,7 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
                   setHandwritingFont(!handwritingFont);
                 }}
                 className="p-1 text-wood-600 hover:text-wood-950 rounded transition"
-                title={handwritingFont ? "Switch to Book Serif" : "Switch to Quill Script"}
+                title={handwritingFont ? "Switch to Quill Handwriting" : "Switch to Book Serif"}
               >
                 <Type className="w-3.5 h-3.5" />
               </button>
@@ -180,16 +192,21 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
             </h3>
           )}
 
-          {/* Letter Body Text */}
+          {/* Letter Body Text - handwritten cursive by default */}
           <div
-            className={`text-wood-900 leading-relaxed whitespace-pre-wrap select-text ${
+            className={`text-wood-900 whitespace-pre-wrap select-text ${
               handwritingFont
-                ? 'font-script text-2xl md:text-3xl font-normal leading-loose'
-                : 'font-body text-lg md:text-xl font-medium'
-            }`}
+                ? 'font-serif text-lg md:text-xl font-medium leading-relaxed'
+                : 'font-hand text-2xl md:text-[1.75rem] font-normal leading-[1.8]'
+            } ${mode === 'shelf' && note.content.length > 420 ? 'line-clamp-[7]' : ''}`}
           >
             {note.content}
           </div>
+          {mode === 'shelf' && note.content.length > 420 && (
+            <p className="font-body text-xs italic text-wood-700 mt-2">
+              ...open the letter to keep reading
+            </p>
+          )}
         </div>
 
         {/* Bottom Flourish & Signature */}
@@ -236,8 +253,9 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
         </div>
       </div>
 
-      {/* Bottom Scroll Roll */}
-      <div className="scroll-roll-bottom mx-2 mb-1.5" />
+      {/* Pressed botanical accent */}
+      {mode !== 'shelf' && <div className="letter-botanical" />}
     </article>
+    </div>
   );
 };

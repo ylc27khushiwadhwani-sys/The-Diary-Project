@@ -26,10 +26,41 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
   const [showResponses, setShowResponses] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
 
-  // Split the note content into pages (double‑newline delimiter).
+  // Split the note content into book pages. Paragraphs stay together when
+  // they fit; anything longer is broken at sentence (then word) boundaries
+  // so a long letter always turns into turnable pages.
   // Hooks must run unconditionally, so this precedes the early return below.
   const mainPages = useMemo(() => {
-    return (note?.content ?? '').split(/\r?\n\r?\n/).filter((p) => p.trim().length > 0);
+    const PAGE_TARGET = 620;
+    const paras = (note?.content ?? '').split(/\r?\n\r?\n/).filter((p) => p.trim().length > 0);
+    const pages: string[] = [];
+    let current = '';
+    for (const para of paras) {
+      if (current && (current + '\n\n' + para).length > PAGE_TARGET) {
+        pages.push(current.trim());
+        current = '';
+      } else if (current) {
+        current += '\n\n';
+      }
+      const sentences = para.match(/[^.!?]+[.!?]*(?:\s+|$)/g) || [para];
+      for (const sentence of sentences) {
+        if (current && (current + sentence).length > PAGE_TARGET) {
+          pages.push(current.trim());
+          current = '';
+        }
+        let rest = sentence;
+        while ((current + rest).length > PAGE_TARGET) {
+          let cut = rest.lastIndexOf(' ', PAGE_TARGET - current.length);
+          if (cut < 80) cut = PAGE_TARGET - current.length;
+          pages.push((current + rest.slice(0, cut)).trim());
+          current = '';
+          rest = rest.slice(cut);
+        }
+        current += rest;
+      }
+    }
+    if (current.trim()) pages.push(current.trim());
+    return pages.length > 0 ? pages : [''];
   }, [note?.content]);
 
   if (!isOpen || !note) return null;
@@ -94,8 +125,11 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
 
           {isLockedNote ? (
             // Locked view (unchanged)
-            <div className="parchment-sheet rounded-2xl p-8 sm:p-12 text-center text-wood-950 shadow-2xl border border-amber-900/40 relative overflow-hidden">
-              <div className="scroll-roll-top -mx-4 -mt-6 mb-6" />
+            <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 text-center text-wood-950 relative">
+              <div className="letter-ribbon" />
+              <div className="letter-stamps">
+                <span className="letter-stamp" />
+              </div>
               <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-4">
                 <WaxSeal color="crimson" size="lg" icon="lock" />
               </div>
@@ -112,11 +146,16 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
               >
                 <span>Break Wax Seal with Passcode</span>
               </button>
-              <div className="scroll-roll-bottom -mx-4 -mb-6 mt-8" />
             </div>
           ) : (
             // Paginated open book
-            <article className="parchment-sheet rounded-2xl shadow-2xl p-6 sm:p-10 text-wood-950 relative overflow-hidden border border-amber-900/30 max-h-[85vh] flex flex-col">
+            <article className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 pl-9 sm:pl-12 text-wood-950 relative max-h-[85vh] flex flex-col">
+              <div className="letter-ribbon" />
+              <div className="letter-stamps">
+                <span className="letter-stamp" />
+                <span className="letter-stamp stamp-green" />
+              </div>
+              <div className="letter-botanical" />
               {/* Header bar */}
               <div className="flex items-center justify-between pb-4 mb-5 border-b border-amber-900/20">
                 <div className="flex items-center gap-3">
@@ -134,7 +173,7 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                     type="button"
                     onClick={() => setHandwritingFont(!handwritingFont)}
                     className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
-                    title={handwritingFont ? 'Switch to Classic Book Print' : 'Switch to Quill Handwriting'}
+                    title={handwritingFont ? 'Switch to Quill Handwriting' : 'Switch to Classic Book Print'}
                   >
                     <Type className="w-4 h-4" />
                   </button>
@@ -171,10 +210,10 @@ export const BookReaderModal: React.FC<BookReaderModalProps> = ({
                     style={{ backfaceVisibility: 'hidden' }}
                   >
                     <div
-                      className={`text-wood-950 leading-relaxed whitespace-pre-wrap select-text mb-6 ${
+                      className={`text-wood-950 whitespace-pre-wrap select-text mb-6 ${
                         handwritingFont
-                          ? 'font-script text-2xl sm:text-3xl font-normal leading-loose'
-                          : 'font-serif text-xl sm:text-2xl font-normal'
+                          ? 'font-serif text-xl sm:text-2xl font-normal leading-relaxed'
+                          : 'font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]'
                       }`}
                     >
                       {pages[pageIndex]}

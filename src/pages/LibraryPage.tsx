@@ -209,8 +209,13 @@ export const LibraryPage: React.FC = () => {
   if (!user) {
     return (
       <div className="max-w-xl mx-auto py-16 px-4 text-center">
-        <div className="parchment-sheet p-8 sm:p-12 rounded-2xl shadow-parchment text-wood-950 relative overflow-hidden">
-          <div className="scroll-roll-top -mx-4 -mt-6 mb-6" />
+        <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 pl-10 sm:pl-14 text-wood-950 relative">
+          <div className="letter-ribbon" />
+          <div className="letter-stamps">
+            <span className="letter-stamp" />
+            <span className="letter-stamp stamp-green" />
+          </div>
+          <div className="letter-botanical" />
 
           <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-5 shadow-inner">
             <WaxSeal color="crimson" size="lg" icon="lock" />
@@ -235,7 +240,6 @@ export const LibraryPage: React.FC = () => {
             <span>Enter Sanctuary as Anonymous Guest</span>
           </button>
 
-          <div className="scroll-roll-bottom -mx-4 -mb-6 mt-8" />
         </div>
       </div>
     );
