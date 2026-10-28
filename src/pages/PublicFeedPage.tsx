@@ -791,9 +791,9 @@ export const PublicFeedPage: React.FC = () => {
       </section>
 
       {/* 3. The Interactive Bookshelf (Letters are opened by touching a book) */}
-      <div id="bookshelf" className="scroll-mt-16 py-16">
+      <div id="bookshelf" className="scroll-mt-16 py-10">
         {/* Search + sort control: lives above the bookshelf and narrows what it renders */}
-        <div className="mx-auto max-w-5xl px-4 mb-8 flex flex-col sm:flex-row items-center gap-3">
+        <div className="mx-auto max-w-5xl px-4 mb-6 flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
             <Search className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input

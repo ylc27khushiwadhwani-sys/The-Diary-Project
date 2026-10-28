@@ -17,3 +17,7 @@ Thumbs.db
 # Freebuff app workspace metadata
 .freebuff/
 /freebuff-sites-build/
+
+# Local test/verification artifacts
+screenshots/
+supabase/.temp/

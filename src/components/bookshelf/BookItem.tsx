@@ -49,9 +49,13 @@ const BOOK_BINDINGS = [
   },
 ];
 
+// Compact spine sizing: slim volumes of varied heights so a whole shelf
+// packs into a short band, like a tightly filled bookcase row.
+const SPINE_HEIGHTS = [96, 116, 104, 124, 108, 132, 100, 120];
+
 export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
   const binding = BOOK_BINDINGS[index % BOOK_BINDINGS.length];
-  const penName = note.profiles?.pen_name || 'Anonymous';
+  const title = note.title || 'Untitled Letter';
 
   // 3D Tilt calculation (inspired by bloomiedays.replit.app cursor physics)
   const x = useMotionValue(0);
@@ -60,8 +64,8 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
   const mouseXSpring = useSpring(x, { stiffness: 220, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 220, damping: 20 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['12deg', '-12deg']);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-12deg', '12deg']);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ['8deg', '-8deg']);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ['-8deg', '8deg']);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -76,16 +80,16 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
     y.set(0);
   };
 
-  // Height and thickness variation for organic library aesthetic
-  const heights = [210, 230, 200, 225, 215, 235];
-  const bookHeight = heights[index % heights.length];
-  const bookWidth = 52 + (index % 3) * 6; // 52px - 64px width
+  const bookHeight = SPINE_HEIGHTS[index % SPINE_HEIGHTS.length];
 
   return (
-    <div className="relative group perspective-[1000px] shrink-0 flex flex-col items-center">
-      {/* Floating Hover Tooltip */}
-      <div className="absolute -top-12 z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap bg-wood-950/95 border border-gold/40 text-gold-light text-xs font-serif px-3 py-1 rounded-md shadow-candle backdrop-blur-md">
-        <span>Click to open: "{note.title || 'Untitled Letter'}"</span>
+    // Spines flex so a shelf's books distribute across the full ledge,
+    // tightly packed like a filled bookcase row (min/max keep them book-like)
+    <div className="relative group perspective-[1000px] flex-1 min-w-[14px] max-w-[44px] flex flex-col items-center">
+      {/* Floating Hover Tooltip — light speech bubble with a small tail */}
+      <div className="absolute -top-8 left-1/2 -translate-x-1/2 z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-150 pointer-events-none whitespace-nowrap bg-[#fbf5e8] text-wood-950 text-[11px] font-serif px-2.5 py-1 rounded-md shadow-[0_6px_16px_rgba(0,0,0,0.55)]">
+        <span>Click to open: &quot;{title}&quot;</span>
+        <span className="absolute left-1/2 -translate-x-1/2 -bottom-1 w-2 h-2 rotate-45 bg-[#fbf5e8] rounded-[1px]" />
       </div>
 
       {/* 3D Book Spine */}
@@ -95,7 +99,7 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
         onMouseLeave={handleMouseLeave}
         style={{
           height: `${bookHeight}px`,
-          width: `${bookWidth}px`,
+          width: '100%',
           background: binding.bg,
           borderColor: binding.border,
           rotateX,
@@ -103,53 +107,49 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
           transformStyle: 'preserve-3d',
         }}
         whileHover={{
-          y: -14,
-          scale: 1.05,
+          y: -6,
+          scale: 1.08,
           transition: { type: 'spring', stiffness: 300, damping: 20 },
         }}
         whileTap={{ scale: 0.97 }}
-        className="cursor-pointer relative rounded-t-sm border-x border-t shadow-[0_8px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between p-2 select-none transition-shadow group-hover:shadow-[0_12px_30px_rgba(212,163,115,0.35)]"
+        className="cursor-pointer relative rounded-t-[2px] border-x border-t shadow-[0_8px_20px_rgba(0,0,0,0.85)] flex flex-col justify-between select-none transition-shadow group-hover:shadow-[0_12px_30px_rgba(212,163,115,0.35)]"
       >
         {/* Embossed gold spine lines at top */}
-        <div className="space-y-1 pt-1 opacity-75">
+        <div className="space-y-0.5 pt-1 opacity-75">
           <div className="h-px bg-gold/50 mx-1" />
-          <div className="h-0.5 bg-gold/40 mx-0.5" />
+          <div className="h-px bg-gold/40 mx-0.5" />
         </div>
 
         {/* Vertical Title along the spine */}
-        <div className="flex-1 flex items-center justify-center py-2 overflow-hidden">
+        <div className="flex-1 flex items-center justify-center overflow-hidden">
           <span
-            className="font-serif text-sm md:text-base font-semibold tracking-wide text-gold/90 line-clamp-1 whitespace-nowrap"
+            className="font-serif text-[9px] md:text-[10px] font-semibold tracking-wide text-gold/90 line-clamp-1 whitespace-nowrap"
             style={{
               writingMode: 'vertical-rl',
               transform: 'rotate(180deg)',
               textShadow: '0 1px 2px rgba(0,0,0,0.8)',
             }}
           >
-            {note.title || 'Unspoken Letter'}
+            {title}
           </span>
         </div>
 
-        {/* Lock indicator or Pen name glyph at base of spine */}
+        {/* Lock indicator at base of spine */}
         <div className="pb-1 text-center flex flex-col items-center">
-          <div className="h-px bg-gold/50 mx-1 w-full mb-1.5 opacity-75" />
+          <div className="h-px bg-gold/50 mx-1 w-full mb-1 opacity-75" />
           {note.is_locked ? (
-            <div className="p-1 rounded-full bg-wax-crimson text-white shadow-xs">
-              <Lock className="w-2.5 h-2.5 text-amber-200" />
-            </div>
+            <Lock className="w-2 h-2 text-amber-200" />
           ) : (
             <span
-              className="text-[9px] font-sans font-medium text-gold/70 tracking-widest uppercase truncate max-w-full"
-              style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}
-            >
-              {penName.slice(0, 10)}
-            </span>
+              className="w-1 h-1 rounded-full"
+              style={{ backgroundColor: binding.accent, opacity: 0.7 }}
+            />
           )}
         </div>
 
         {/* Hanging Ribbon Bookmark peeking out of bottom */}
         <div
-          className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-2 h-4 rounded-b-xs shadow-md opacity-90 transition-transform group-hover:translate-y-1"
+          className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-1.5 h-3 rounded-b-xs shadow-md opacity-90 transition-transform group-hover:translate-y-0.5"
           style={{ backgroundColor: binding.ribbon }}
         />
       </motion.div>

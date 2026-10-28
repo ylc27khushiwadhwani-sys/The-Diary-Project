@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { BookOpen, Sparkles, Feather } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
+import { BookOpen, Feather } from 'lucide-react';
 import { Note } from '../../types/database';
 import { BookItem } from './BookItem';
 import { BookReaderModal } from './BookReaderModal';
@@ -11,16 +11,58 @@ interface InteractiveBookshelfProps {
   onRespondLetter: (note: Note) => void;
 }
 
-// The core thematic sections from thediaryproject.lovable.app
+// Shelf sections as filter tabs. Labels are kept to 3-4 words so the
+// header row stays compact instead of printing long joined prompt titles.
 const SHELF_SECTIONS = [
   { id: 'all', label: 'All Shelves', category: 'All' },
-  { id: 'miss', label: 'To someone I miss', category: 'Nostalgia' },
-  { id: 'sorry', label: "Things I'm sorry for", category: 'Forgiveness' },
-  { id: 'wish', label: "What I wish I'd said", category: 'Truth' },
-  { id: 'left', label: 'To the one who left', category: 'Closure' },
-  { id: 'swallowed', label: 'Things I swallowed to keep the peace', category: 'Vulnerability' },
-  { id: 'younger', label: 'Dear younger me', category: 'Self' },
+  { id: 'miss', label: 'To Someone I Miss', category: 'Nostalgia' },
+  { id: 'sorry', label: "Things I'm Sorry For", category: 'Forgiveness' },
+  { id: 'wish', label: 'Wish I Had Said It', category: 'Truth' },
+  { id: 'left', label: 'For The One Left', category: 'Closure' },
+  { id: 'swallowed', label: 'Words I Swallowed', category: 'Vulnerability' },
+  { id: 'younger', label: 'Letter To Younger Me', category: 'Self' },
+  { id: '2am', label: '2AM Thoughts', category: 'Late Night' },
+  { id: 'unsaid', label: 'Couldn\u2019t Say To You', category: 'Unspoken' },
+  { id: 'memories', label: 'Memories & Reflections', category: 'Memory' },
+  { id: 'hope', label: 'Hope & Dreams', category: 'Hope' },
+  { id: 'misc', label: 'Miscellaneous', category: 'Misc' },
 ];
+
+// Keyword fallbacks for notes whose prompt_id doesn't map to a section
+const SECTION_KEYWORDS: Record<string, string[]> = {
+  sorry: ['sorry', 'apolog'],
+  miss: ['miss', 'remember'],
+  left: ['left', 'goodbye'],
+  swallowed: ['quiet', 'swallow', 'smile'],
+  younger: ['young', 'child', 'past'],
+  unsaid: ["couldn't say", 'unsaid'],
+  '2am': ['2am', 'late night'],
+  memories: ['memory'],
+  hope: ['hope'],
+  misc: ['misc'],
+};
+
+const matchesSection = (note: Note, sectionId: string): boolean => {
+  if (sectionId === 'all') return true;
+
+  const section = SHELF_SECTIONS.find((s) => s.id === sectionId);
+  if (!section) return true;
+
+  const prompt = promptsData.find((p) => p.id === note.prompt_id);
+  if (
+    prompt &&
+    prompt.category.toLowerCase() === section.category.toLowerCase()
+  ) {
+    return true;
+  }
+
+  const text = `${note.title || ''} ${note.content}`.toLowerCase();
+  const keywords = SECTION_KEYWORDS[sectionId] || [];
+  return keywords.some((kw) => text.includes(kw));
+};
+
+// Slim spines pack tightly; this many per shelf ledge before stacking a new one
+const BOOKS_PER_SHELF = 14;
 
 export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   notes,
@@ -30,122 +72,107 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   const [activeSectionId, setActiveSectionId] = useState('all');
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
-  const activeSection = SHELF_SECTIONS.find((s) => s.id === activeSectionId) || SHELF_SECTIONS[0];
+  // One filter pass: only the active section's notes are rendered, once
+  const sectionNotes = useMemo(
+    () => notes.filter((n) => matchesSection(n, activeSectionId)),
+    [notes, activeSectionId]
+  );
 
-  // Filter notes belonging to the selected shelf section
-  const sectionNotes = notes.filter((n) => {
-    if (activeSection.id === 'all') return true;
-
-    // Check if the note is attached to a prompt in this category
-    const prompt = promptsData.find((p) => p.id === n.prompt_id);
-    if (prompt && prompt.category.toLowerCase() === activeSection.category.toLowerCase()) {
-      return true;
+  // Pack the filtered notes into shelf ledges of at most BOOKS_PER_SHELF
+  const shelves = useMemo(() => {
+    const rows: Note[][] = [];
+    for (let i = 0; i < sectionNotes.length; i += BOOKS_PER_SHELF) {
+      rows.push(sectionNotes.slice(i, i + BOOKS_PER_SHELF));
     }
-
-    // Match keywords in note title or content
-    const text = `${n.title || ''} ${n.content}`.toLowerCase();
-    if (activeSection.id === 'sorry' && (text.includes('sorry') || text.includes('apolog'))) return true;
-    if (activeSection.id === 'miss' && (text.includes('miss') || text.includes('remember'))) return true;
-    if (activeSection.id === 'left' && (text.includes('left') || text.includes('goodbye'))) return true;
-    if (activeSection.id === 'swallowed' && (text.includes('quiet') || text.includes('swallow') || text.includes('smile'))) return true;
-    if (activeSection.id === 'younger' && (text.includes('young') || text.includes('child') || text.includes('past'))) return true;
-
-    return false;
-  });
+    return rows;
+  }, [sectionNotes]);
 
   return (
-    <section className="relative w-full max-w-5xl mx-auto px-4 py-8">
-      {/* Bookshelf Section Header & Tabs */}
-      <div className="text-center mb-8">
-        <div className="flex items-center justify-center gap-2 mb-2">
+    <section className="relative w-full max-w-4xl mx-auto px-4 py-4">
+      {/* Bookshelf Header */}
+      <div className="text-center mb-5">
+        <div className="flex items-center justify-center gap-2 mb-1.5">
           <BookOpen className="w-4 h-4 text-gold" />
           <span className="label-caps">The Library Shelves</span>
         </div>
-        <h2 className="font-serif text-3xl sm:text-4xl text-amber-100 font-normal tracking-tight">
+        <h2 className="font-serif text-2xl sm:text-3xl text-amber-100 font-normal tracking-tight">
           Touch any book to unroll its letter
         </h2>
-        <p className="font-body text-sm text-[#9e9488] max-w-md mx-auto mt-2 italic">
-          Every volume rests in silence upon these shelves. Click open a book to read what someone carried in quiet.
-        </p>
       </div>
 
-      {/* Shelf Sections Horizontal Scroll / Tabs */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none justify-start sm:justify-center">
+      {/* Section filter tabs — short labels, interactive */}
+      <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
         {SHELF_SECTIONS.map((sec) => {
+          const count = notes.filter((n) => matchesSection(n, sec.id)).length;
+          if (sec.id !== 'all' && count === 0) return null;
           const isActive = activeSectionId === sec.id;
           return (
             <button
               key={sec.id}
+              type="button"
               onClick={() => setActiveSectionId(sec.id)}
-              className={`px-4 py-2 rounded-full text-xs font-serif transition-all duration-200 cursor-pointer whitespace-nowrap ${
+              aria-pressed={isActive}
+              className={`px-3 py-1.5 rounded-full text-xs font-serif tracking-wide transition-all duration-200 cursor-pointer border ${
                 isActive
-                  ? 'bg-gold text-wood-950 font-semibold shadow-candle scale-105'
-                  : 'bg-card/90 text-amber-200/70 hover:text-amber-100 hover:bg-wood-800 border border-hairline'
+                  ? 'bg-gold text-wood-950 border-gold shadow-candle'
+                  : 'bg-card/70 text-amber-200 border-hairline hover:border-gold/60 hover:text-gold-light'
               }`}
             >
-              {sec.id === 'all' && <Sparkles className="w-3 h-3 inline mr-1 text-gold-dark" />}
               {sec.label}
+              <span
+                className={`ml-1.5 text-[10px] font-sans ${
+                  isActive ? 'text-wood-950/70' : 'text-[#9e9488]'
+                }`}
+              >
+                {count}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {/* The Visual Wooden Bookshelf Frame */}
-      <div className="relative rounded-2xl bg-[#14100c] border border-hairline p-6 sm:p-10 shadow-[0_20px_50px_rgba(0,0,0,0.9)] overflow-hidden">
-        {/* Soft Background Bookcase Gradient & Ambient Glow */}
-        <div className="absolute inset-0 bg-radial-[at_50%_0%] from-gold/10 via-transparent to-black/60 pointer-events-none" />
-
-        {/* Shelf Ledge Header Information */}
-        <div className="relative z-10 flex items-center justify-between pb-3 mb-8 border-b border-hairline">
-          <div className="flex items-center gap-2 text-gold">
-            <Sparkles className="w-4 h-4" />
-            <span className="font-serif italic text-lg sm:text-xl text-amber-100">
-              Shelf: "{activeSection.label}"
-            </span>
-          </div>
-          <span className="label-caps text-[10px] text-muted-foreground">
-            {sectionNotes.length} {sectionNotes.length === 1 ? 'Volume' : 'Volumes'} on Shelf
-          </span>
+      {/* Condensed packed shelves */}
+      {sectionNotes.length === 0 ? (
+        <div className="text-center py-10 px-4">
+          <BookOpen className="w-6 h-6 text-gold/50 mx-auto mb-3" />
+          <p className="font-body text-sm text-[#9e9488] italic mb-4">
+            This shelf is currently quiet.
+          </p>
+          <button
+            type="button"
+            onClick={onWriteClick}
+            className="rounded-full bg-gold hover:bg-gold-light px-6 py-2 font-serif text-sm text-wood-950 font-semibold shadow-candle transition-all duration-200 hover:-translate-y-0.5 cursor-pointer inline-flex items-center gap-2"
+          >
+            <Feather className="w-4 h-4" />
+            Write the first letter
+          </button>
         </div>
-
-        {/* The Books on the Wooden Shelf */}
-        {sectionNotes.length === 0 ? (
-          <div className="relative z-10 text-center py-20 px-4">
-            <Feather className="w-10 h-10 text-gold/40 mx-auto mb-3" />
-            <h3 className="font-serif text-2xl text-amber-100 font-normal">This shelf is currently quiet</h3>
-            <p className="font-body text-sm text-[#9e9488] max-w-sm mx-auto mt-2 italic">
-              No unsent letters have been placed in this section yet. You can be the first to shelve a letter here.
-            </p>
-            <button
-              onClick={onWriteClick}
-              className="mt-6 px-6 py-2.5 rounded-full bg-gold text-wood-950 font-serif text-sm font-semibold hover:bg-gold-light transition shadow-candle cursor-pointer inline-flex items-center gap-2"
+      ) : (
+        <div className="space-y-4">
+          {shelves.map((shelf, shelfIdx) => (
+            <div
+              key={shelfIdx}
+              className="relative rounded-xl bg-[#14100c] border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)]"
             >
-              <Feather className="w-4 h-4" />
-              <span>Write the First Letter</span>
-            </button>
-          </div>
-        ) : (
-          <div className="relative z-10">
-            {/* Shelf Row 1 */}
-            <div className="flex items-end gap-3 sm:gap-5 overflow-x-auto pb-0 pt-6 px-2 scrollbar-none justify-start sm:justify-center min-h-[260px]">
-              {sectionNotes.map((note, index) => (
-                <BookItem
-                  key={note.id}
-                  note={note}
-                  index={index}
-                  onOpen={(opened) => setSelectedNote(opened)}
-                />
-              ))}
+              <div className="absolute inset-0 bg-radial-[at_50%_0%] from-gold/8 via-transparent to-black/50 pointer-events-none rounded-xl" />
+              <div className="relative flex items-end justify-center gap-[3px] flex-wrap min-h-[136px] pb-1">
+                {shelf.map((note, idx) => (
+                  <BookItem
+                    key={note.id}
+                    note={note}
+                    index={shelfIdx * BOOKS_PER_SHELF + idx}
+                    onOpen={(opened) => setSelectedNote(opened)}
+                  />
+                ))}
+              </div>
+              {/* Ledge */}
+              <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
             </div>
+          ))}
+        </div>
+      )}
 
-            {/* Wooden Shelf Ledge Plank */}
-            <div className="wood-shelf-ledge h-5 w-full rounded-b-md relative z-20" />
-            <div className="h-4 bg-gradient-to-b from-black/60 to-transparent w-full" />
-          </div>
-        )}
-      </div>
-
-      {/* Book Reader Modal when a book is touched open */}
+      {/* Book Reader Modal */}
       <BookReaderModal
         note={selectedNote}
         isOpen={!!selectedNote}

@@ -9,11 +9,29 @@ interface SignInModalProps {
 }
 
 export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
-  const { signInWithMagicLink, loginAsGuestDemo } = useAuth();
+  const { signInWithMagicLink, loginAsGuestDemo, updatePenName } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+    const nameOptions = [
+    "The Boy Who Cried Wolf",
+    "The One Who Lived",
+    "Silent Quill",
+    "Midnight Wanderer",
+    "Velvet Sparrow",
+    "Luminous Dreamer",
+    "Mysterious Stranger",
+    "Hidden Ink",
+    "Wandering Bard",
+    "Shadow Scribe",
+  ];
+  const [chosenName, setChosenName] = useState('');
+  const handleNameSelect = (name: string) => {
+    setChosenName(name);
+    // In a real app this would persist to user profile; for demo we store in localStorage
+    localStorage.setItem('demo_pen_name', name);
+  };
 
   if (!isOpen) return null;
 
@@ -33,7 +51,10 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
     }
   };
 
-  const handleGuestEntry = () => {
+  const handleGuestEntry = async () => {
+    if (chosenName) {
+      await updatePenName(chosenName);
+    }
     loginAsGuestDemo();
     onClose();
   };
@@ -100,6 +121,19 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
                     placeholder="reader@example.com"
                     className="w-full pl-9 pr-4 py-2.5 bg-amber-50/80 border border-amber-900/30 rounded-xl text-sm font-cinzel text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600 transition"
                   />
+                </div>
+                {/* Name selection for guest */}
+                <div className="flex flex-wrap gap-2 justify-center mb-2">
+                  {nameOptions.map((name) => (
+                    <button
+                      key={name}
+                      type="button"
+                      onClick={() => handleNameSelect(name)}
+                      className={`px-3 py-1 rounded ${chosenName === name ? 'bg-amber-600 text-white' : 'bg-wood-800 text-amber-200'} text-xs font-cinzel`}
+                    >
+                      {name}
+                    </button>
+                  ))}
                 </div>
               </div>
 
