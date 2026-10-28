@@ -16,7 +16,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Subway Window in October',
     content:
-      'I still catch myself looking for your reflection in subway windows whenever the train decelerates between 14th and 8th. I don\'t miss the person who left without turning back, but I miss the person who once believed I was courageous enough to start over in this city. You never knew that your confidence in me was the only thing standing between me and giving up.',
+      "I still catch myself looking for your reflection in subway windows whenever the train decelerates between 14th and 8th. I don't miss the person who left without turning back, but I miss the person who once believed I was courageous enough to start over in this city.\n\nThe glass goes dark in the tunnel and everyone becomes a double of themselves. A woman holding flowers. A man asleep above an open book. Me, older than you would expect, wearing the coat I finally learned to mend instead of throwing away. I look for you between them before I remember that you take a different line now, if you still take trains at all.\n\nThat first winter, you walked me to interviews I pretended not to care about. You waited outside with two coffees and never asked how badly my hands had shaken. When I said the city wasn't for me, you pointed at a lit window above a bakery and said somebody up there had once thought the same thing. You made staying sound like something a person could learn.\n\nI stayed. There are people who know my usual order now. I have a spare key with a neighbor. These are small things, but I wish you could see them without thinking they were an invitation to come back.\n\nYou never knew that your confidence in me was the only thing standing between me and giving up.",
     prompt_id: 'prompt-5',
     is_locked: false,
     passcode_hash: null,
@@ -39,7 +39,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Blue Porcelain Mugs',
     content:
-      'You always drank your tea lukewarm because you spent every morning making sure everyone else\'s cup was poured and sweet before you sat down. I bought a set of blue porcelain mugs yesterday and cried in the kitchen aisle because I never once said "sit down, Mom, let me pour yours." I hope wherever you are now, tea stays warm for you as long as you want.',
+      "You always drank your tea lukewarm because you spent every morning making sure everyone else's cup was poured and sweet before you sat down.\n\nThey were stacked on a low shelf, six of them, with handles just large enough for two fingers. I turned one over to check whether it could go in the dishwasher, exactly as you would have done. Then I stood there holding it while a shopping cart squeaked past, unable to explain why a perfectly ordinary purchase had made it difficult to breathe.\n\nI used to think you preferred standing in the kitchen. You could hear us from there, and you always said you were coming in a minute. I understand that minute differently now. It held the spoon somebody dropped, the milk somebody needed, the towel you used to wipe a spill before anyone noticed it. By the time you sat down, we were getting up.\n\nI brought the mugs home and washed them one by one. There is no ceremony for learning too late how much someone did. Tonight I made tea and sat down before doing anything else. I left the dishes where they were. It felt strangely like disobedience, and then like something you might have wanted for me.\n\nI bought a set of blue porcelain mugs yesterday and cried in the kitchen aisle because I never once said \"sit down, Mom, let me pour yours.\" I hope wherever you are now, tea stays warm for you as long as you want.",
     prompt_id: 'prompt-7',
     is_locked: false,
     passcode_hash: null,
@@ -62,7 +62,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'A Cassette Taped Over Twice',
     content:
-      'I found the mixtapes we made the summer before college in a dusty shoe box under the bed. Side B still has your handwriting with the crooked little heart next to Track 4. I listened to it all the way through without fast-forwarding. I missed the sound of your laugh in the two seconds of silence before the guitar kicked in.',
+      "I found the mixtapes we made the summer before college in a dusty shoe box under the bed. Side B still has your handwriting with the crooked little heart next to Track 4. I listened to it all the way through without fast-forwarding.\n\nI had to borrow a player to hear them. The first time I pressed play, the tape dragged and your favorite singer sounded half asleep. I almost laughed. You would have blamed my batteries, then taken the whole thing apart on the floor with a butter knife, certain you could fix it.\n\nThere are pieces of other songs underneath ours. We recorded over a weather report, then over a song you decided was too obvious. In the gap after Track 4, I can hear a door closing and you asking whether I am ready. I must have nodded. There is no answer on the tape, only that tiny laugh and the scrape of something being moved closer.\n\nWe were so careful about the order of the songs, as if getting the transitions right could prepare us for leaving. Neither of us said we were frightened. We just kept rewinding and trying again. I don't know what you listen to now. I wish I could tell you that I finally heard the question you were asking between all those songs.\n\nI missed the sound of your laugh in the two seconds of silence before the guitar kicked in.",
     prompt_id: 'prompt-5',
     is_locked: false,
     passcode_hash: null,
@@ -85,7 +85,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Your Laugh in a Crowded Train',
     content:
-      'Someone on the morning commute laughed this morning in that rapid, breathless way you used to when something caught you off guard. I turned around so fast I bumped into the person behind me. It wasn\'t you, of course. But for three seconds, it was seven years ago and we were sitting on the steps with melted ice cream.',
+      "Someone on the morning commute laughed this morning in that rapid, breathless way you used to when something caught you off guard. I turned around so fast I bumped into the person behind me. It wasn't you, of course.\n\nThe stranger had one hand over their mouth. Their friend was trying to finish a story and couldn't. I apologized for the collision and faced the window, embarrassed by how quickly my body had believed in something my mind knew was impossible. My stop came and went before I noticed.\n\nOn those steps, you kept tilting your cone to catch the drip with your tongue. It ran over your wrist anyway. I handed you a receipt because neither of us had a napkin, and you laughed harder at that than at whatever joke had started it. For years I remembered the story we were telling. Today I can only remember your sticky hand and the patch of sunlight on your knee.\n\nI wonder whether you still laugh before the funny part is finished. I wonder who knows to wait while you catch your breath. There isn't anything useful I could do with the answers. I have a whole life that doesn't need changing. It simply surprised me how much of the old one could fit inside a sound.\n\nBut for three seconds, it was seven years ago and we were sitting on the steps with melted ice cream.",
     prompt_id: 'prompt-5',
     is_locked: false,
     passcode_hash: null,
@@ -110,7 +110,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Apology Swallowed at 17',
     content:
-      'We stood on your porch in the damp autumn air and I knew you were waiting for me to say it. I felt the words right behind my teeth, but my stubborn teenage pride thought keeping quiet was strength. I have spent ten years learning that apologizing is the only real courage there is. I am so sorry.',
+      "We stood on your porch in the damp autumn air and I knew you were waiting for me to say it. I felt the words right behind my teeth, but my stubborn teenage pride thought keeping quiet was strength. I have spent ten years learning that apologizing is the only real courage there is.\n\nYour porch light had filled with small insects, and I watched them instead of your face. You were wearing socks on the cold boards. I remember thinking you ought to go inside, then resenting you for making it possible for me to leave without finishing what I had started.\n\nYou had already given me every opening. You asked whether I meant what I said. You asked whether there was something else going on. I shrugged as if your questions were an inconvenience. The truth was that you had seen me being cruel, and I could not bear to be seen clearly enough to be forgiven.\n\nFor a long time I retold that evening with the beginning missing. I made it sound like we had simply drifted apart. It was easier than admitting you stayed at the door and I chose the steps. I don't expect this letter to bring us back to who we were. You don't owe the grown version of me another chance because I finally learned to name what the younger one did.\n\nI am so sorry.",
     prompt_id: 'prompt-2',
     is_locked: false,
     passcode_hash: null,
@@ -133,7 +133,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'I Let the Phone Ring Out',
     content:
-      'You called at 11:42 PM on a Thursday. I saw your name glowing on my bedside table, and I told myself I was too tired and would call you back at breakfast. There was no breakfast call. I will carry the sound of those four unanswered rings for the rest of my life.',
+      "You called at 11:42 PM on a Thursday. I saw your name glowing on my bedside table, and I told myself I was too tired and would call you back at breakfast. There was no breakfast call.\n\nI remember the small, unreasonable details. The charger was caught beneath the bed leg. A glass of water had left a circle on the wood. I had turned the screen face down because the light annoyed me, and the room went dark again as if nothing had happened.\n\nPeople have told me I couldn't have known. I know they are trying to make a place for me to rest. Sometimes I can accept that sentence for an afternoon. Other times I remember all the calls I did answer, the ones when you had nothing particular to say and stayed anyway, talking while you folded laundry or searched for your keys.\n\nI don't know what that last conversation would have been. That is the part I keep trying to write and cannot. I won't put words in your mouth to make my guilt easier to carry. I wish I had heard whatever you wanted to tell me, even if it was only that you couldn't sleep. I wish being tired had seemed as small then as it does now.\n\nI will carry the sound of those four unanswered rings for the rest of my life.",
     prompt_id: 'prompt-2',
     is_locked: false,
     passcode_hash: null,
@@ -156,7 +156,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Pride Was Smaller Than You',
     content:
-      'I wanted so badly to win that argument in the diner parking lot. I used sharp sentences like knives because I thought being right meant being safe. When your car backed out of the space, I realized that being right in an empty parking lot is the loneliest feeling in the world.',
+      "I wanted so badly to win that argument in the diner parking lot. I used sharp sentences like knives because I thought being right meant being safe.\n\nThere was a paper cup on the roof of your car. You took it down before opening the door, careful even then not to leave a mess for somebody else. I noticed that and still found one more thing to say. I wanted the last sentence more than I wanted you to stay.\n\nI had been saving small grievances all week, polishing them into evidence. When you tried to explain, I listened for a mistake I could use. You said that wasn't what you meant. I said it was exactly what you meant, as if I knew the inside of your head better than you did.\n\nAfter you left, the diner sign kept blinking against the windshield of the car beside me. Someone came out carrying a box of leftovers. Everything ordinary went on around the place where I had made us impossible. I can remember every point I proved. None of them helps me understand why I let someone I loved stand there asking to be heard.\n\nWhen your car backed out of the space, I realized that being right in an empty parking lot is the loneliest feeling in the world.",
     prompt_id: 'prompt-2',
     is_locked: false,
     passcode_hash: null,
@@ -179,7 +179,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Letter Left in the Glovebox',
     content:
-      'I wrote you an honest three-page letter on yellow legal paper. I put it in an envelope, slipped it into your car glove compartment, and took it back out twenty minutes later before you got back from the store. I should have left it there. You deserved to know the truth.',
+      "I wrote you an honest three-page letter on yellow legal paper. I put it in an envelope, slipped it into your car glove compartment, and took it back out twenty minutes later before you got back from the store. I should have left it there.\n\nThe envelope had no name on it. That tells you something, doesn't it? Even at the moment I thought I was being honest, I wanted the option of pretending it belonged to someone else. I tucked it beneath the folded manual and shut the compartment gently, as though the sound might wake you.\n\nThrough the windshield I watched people come out with their bags. Every time the doors opened, I felt relieved and disappointed that it wasn't you. I had told the truth on paper because I couldn't bear the moment after telling it aloud, when your face would change and I would have to stay there to see it.\n\nThen I opened the glovebox again. The envelope caught on a receipt, and I tore one corner pulling it free. You came back asking if I had been waiting long. I said no. It was such an easy lie that I nearly missed what it cost. The letter is still folded along those same creases. Taking it back did not make any of it less true.\n\nYou deserved to know the truth.",
     prompt_id: 'prompt-2',
     is_locked: false,
     passcode_hash: null,
@@ -204,7 +204,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'To the Stranger on the Bench',
     content:
-      'You handed me your extra umbrella on a Tuesday afternoon when the rain was coming down sideways and said, "Hold on, the storm always breaks eventually." You walked away into the deluge before I could say a word. You had no idea what I was carrying that afternoon. You kept someone alive with seven words.',
+      "You handed me your extra umbrella on a Tuesday afternoon when the rain was coming down sideways and said, \"Hold on, the storm always breaks eventually.\" You walked away into the deluge before I could say a word. You had no idea what I was carrying that afternoon.\n\nI was sitting at the far end of the bench, where the shelter leaked. My bag was getting wet and I couldn't make myself move it. You didn't ask for a reason. You shook the umbrella once, checked that it opened, and put the handle into my hand as though I had simply forgotten something that belonged to me.\n\nFor a while I stayed where you left me. Water gathered at the tips of my shoes. Then I stood, opened the umbrella, and walked to a place with lights on. I asked someone to sit with me. That was all I managed that day, but it was more than I had believed I could manage when I reached the bench.\n\nI still have it. One spoke is bent, and there is a little rust at the fastening. I don't keep it because I think an object can do what people do. I keep it because you noticed a person in the rain and made no performance of noticing. You gave me enough shelter to take the next step.\n\nYou kept someone alive with seven words.",
     prompt_id: 'prompt-8',
     is_locked: false,
     passcode_hash: null,
@@ -227,7 +227,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'You Made the Heavy Things Light',
     content:
-      'Whenever my world felt like it was caving in, you never gave speeches or offered advice. You just brought hot soup in plastic containers, sat on the rug, and let me exist without having to perform being okay. I never told you that your quiet presence saved me from drowning.',
+      "Whenever my world felt like it was caving in, you never gave speeches or offered advice. You just brought hot soup in plastic containers, sat on the rug, and let me exist without having to perform being okay.\n\nYou always called from downstairs instead of ringing the bell. You knew that some days a sudden noise could undo the little balance I had found. If I didn't answer, you sent a message saying the food was outside, no need to come to the door.\n\nWhen I did let you in, you never looked around at what I hadn't cleaned. You found two spoons. You warmed the soup. Once you spent an entire evening untangling the fringe of the rug while I cried without explaining why. You didn't hurry me toward the part where I could make sense.\n\nI think I said thank you for dinner. It was such a small receipt for what you had given me. I wanted to tell you that I had started leaving a clean bowl out on the days you might come, that expecting you was sometimes the only shape the evening had. I was afraid that knowing how much I needed you would make coming feel like a duty. So I asked for your recipe instead.\n\nI never told you that your quiet presence saved me from drowning.",
     prompt_id: 'prompt-6',
     is_locked: false,
     passcode_hash: null,
@@ -250,7 +250,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'I Loved You Before I Understood It',
     content:
-      'I knew I loved you the morning we were stuck in traffic on the expressway and you were singing terribly off-key to a song on the radio with your hand on the wheel. I looked at the side of your face and thought, "I could spend eighty years being stuck in traffic with you." I swallowed the words because I was terrified of spoiling the simplicity of that moment.',
+      "I knew I loved you the morning we were stuck in traffic on the expressway and you were singing terribly off-key to a song on the radio with your hand on the wheel.\n\nYou didn't know half the words. You filled in the missing ones with complete confidence, tapping the wrong rhythm against the steering wheel. There was a delivery truck in front of us and a strip of sun across your cheek. Nothing had happened that anyone would call memorable. That was what frightened me.\n\nBefore you, I thought love would announce itself in a way I couldn't misunderstand. I had prepared for the large confession, the unreasonable gesture, the moment that made a good story afterward. I hadn't prepared for wanting the traffic to stay exactly as it was because there was nowhere else I would rather have been.\n\nYou glanced over and asked what I was smiling at. I pointed at something outside. A dog in another car, I think, though I can't be certain there was one. You believed me and turned the radio up. I have wondered whether you would have kept singing if I'd told you. Perhaps you would have gone quiet. Perhaps you had been waiting. I was so determined to preserve the moment that I left the most important part of it out.\n\nI looked at the side of your face and thought, \"I could spend eighty years being stuck in traffic with you.\" I swallowed the words because I was terrified of spoiling the simplicity of that moment.",
     prompt_id: 'prompt-6',
     is_locked: false,
     passcode_hash: null,
@@ -273,7 +273,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Stay Five More Minutes',
     content:
-      'When you reached for your coat on the rack by the front door, every cell in my body wanted to reach out and hold the sleeve. I just stood there with my hands in my cardigan pockets and said, "Drive safe, text me when you get in." Those five minutes would have given us everything we never got to finish.',
+      "When you reached for your coat on the rack by the front door, every cell in my body wanted to reach out and hold the sleeve.\n\nThe television was still on in the other room, talking to nobody. Two cups sat on the table with the dark rings of tea at the bottom. We had spent an hour discussing things that didn't matter because each of us seemed to be waiting for the other to begin.\n\nYou struggled with the lining of your sleeve. I could have helped. That would have given me a reason to stand close enough to say something quietly, without making it a declaration across the hallway. Instead I watched you straighten your collar and looked down at the shoes by the mat.\n\nI don't imagine five minutes would have repaired everything. I have stopped giving time that much power. But I could have admitted I wasn't finished talking. I could have asked you to sit down, even knowing you might say no. There is a difference between being left and never asking someone to stay, and I have spent too long pretending I don't know it. You reached for the handle. I moved aside to let you through.\n\nI just stood there with my hands in my cardigan pockets and said, \"Drive safe, text me when you get in.\" Those five minutes would have given us everything we never got to finish.",
     prompt_id: 'prompt-6',
     is_locked: false,
     passcode_hash: null,
@@ -298,7 +298,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Words Left on the Platform',
     content:
-      'I watched the train pull away, and my hands stayed in my pockets. Everything I planned to say felt too heavy to carry through the station air. The platform slowly emptied out, and I sat on the wooden bench until the next train arrived for a destination I wasn\'t traveling to. I hope the quiet didn\'t sound like I didn\'t care.',
+      "I watched the train pull away, and my hands stayed in my pockets. Everything I planned to say felt too heavy to carry through the station air. The platform slowly emptied out, and I sat on the wooden bench until the next train arrived for a destination I wasn't traveling to.\n\nYour window passed before I found you in it. For a second I thought you were looking straight at me, but the glass held the station lights and I couldn't tell. I raised one hand too late, low enough that it could have been mistaken for reaching into my coat.\n\nI had practiced on the way there. Nothing dramatic: that I was proud of you, that I would miss the ordinary days, that leaving did not make what we had shared less real. In the station those sentences sounded borrowed. You were checking the carriage number and lifting your bag, and I kept thinking there would be a quieter moment before the doors closed.\n\nOn the bench, someone had carved initials into the wood. I traced the rough edge with my thumb and listened to an announcement for another town. I wasn't waiting for you to return. I was waiting to become the person who could stand up and go home without you. I wish I had given you something warmer than a nod to take with you.\n\nI hope the quiet didn't sound like I didn't care.",
     prompt_id: 'prompt-1',
     is_locked: false,
     passcode_hash: null,
@@ -321,7 +321,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'You Took the Key but Left the Door Open',
     content:
-      'You slipped your house key onto the front credenza beside the ceramic dish and walked out without slamming the door. The draft from the hallway rustled the papers on the table for ten minutes after you were gone. I didn\'t lock the deadbolt for six weeks because I kept imagining you\'d remember you left your favorite woolen scarf behind.',
+      "You slipped your house key onto the front credenza beside the ceramic dish and walked out without slamming the door. The draft from the hallway rustled the papers on the table for ten minutes after you were gone.\n\nThe key made a little sound against the wood. You had always missed the dish, even on mornings when we were happy, and I hated that my mind found room for that familiar irritation while you were leaving. I nearly told you to put it where it belonged. Instead I watched your hand pull away.\n\nThe scarf stayed on the last hook. Once, I took it down to wash it, then put it back because washing it felt too definite. I caught myself listening whenever the lift stopped on our floor. I invented practical reasons you might need to come back: a document, a charger, the spare buttons in the kitchen drawer.\n\nYou had not asked me to wait. I need to say that honestly. The opening I kept was one I made for myself, and I began to resent you for not walking through it. Eventually I folded the scarf and closed the door properly. The lock sounded much louder than your key had. I stood with my hand on it until the hallway light went out.\n\nI didn't lock the deadbolt for six weeks because I kept imagining you'd remember you left your favorite woolen scarf behind.",
     prompt_id: 'prompt-1',
     is_locked: false,
     passcode_hash: null,
@@ -344,7 +344,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Winter We Stopped Trying',
     content:
-      'We didn\'t have a massive screaming match or a dramatic final chapter. We just stopped asking each other about our afternoons. We let the silence fill the space between the kitchen table and the television until we were two strangers sharing a lease. I am writing this to say that the quiet ending broke me more than a fight ever could.',
+      "We didn't have a massive screaming match or a dramatic final chapter. We just stopped asking each other about our afternoons. We let the silence fill the space between the kitchen table and the television until we were two strangers sharing a lease.\n\nAt first I thought it was a kindness, how little we asked of each other. You could come home tired without explaining yourself. I could eat at the counter and leave the evening unexamined. We mistook the absence of demands for a kind of peace.\n\nThen I started telling small stories to other people because I knew you wouldn't look up. The wrong parcel delivered downstairs. The bird that got into the office. Nothing important, except that once you would have wanted to hear it. You learned to turn the television down just enough to say hello, then back up before I could decide where to begin.\n\nI did it too. That is the part I leave out when I am lonely. I stopped asking because I was afraid of how little you might give me, and after a while I stopped having anything ready to give you. When we finally discussed moving out, we were patient and practical. We found a pen that worked. I wanted you to be angry about something, anything, so I could recognize us in the room.\n\nI am writing this to say that the quiet ending broke me more than a fight ever could.",
     prompt_id: 'prompt-1',
     is_locked: false,
     passcode_hash: null,
@@ -367,7 +367,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'No Goodbye at the Gate',
     content:
-      'You texted "boarding now" while I was standing outside Terminal 2 looking up at the departing flights board. I held the silver keychain I bought you in my palm until the edges dug into my skin. I never sent the reply I drafted: "Turn around and let\'s try again."',
+      "You texted \"boarding now\" while I was standing outside Terminal 2 looking up at the departing flights board. I held the silver keychain I bought you in my palm until the edges dug into my skin.\n\nThe keychain came in a little cardboard box with a foam lining. I had taken it out because handing you a box seemed too formal. Now the empty packaging was in my coat pocket, and I kept pressing it flat with my other hand.\n\nThere were families leaning over the barrier, people checking their watches, a child asleep against someone's shoulder. I tried to work out whether boarding meant you were already on the plane or still walking toward it. The distinction felt enormous. I could imagine calling your name in one version and only hearing my own voice in the other.\n\nI typed the reply, deleted it, and typed it again without the first two words. As if making it shorter would make it fairer to send. You had a journey to make. I knew that before I came. I wish I had asked to see you instead of hoping to be discovered there, brave enough to arrive and too afraid to let you know. I put the keychain back in its box before I left.\n\nI never sent the reply I drafted: \"Turn around and let's try again.\"",
     prompt_id: 'prompt-1',
     is_locked: false,
     passcode_hash: null,
@@ -392,7 +392,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Laughing at the Dinner Table',
     content:
-      'I wanted to tell you how deeply it bruised when you made a joke out of the things that made my eyes light up. Instead I forced a smile and laughed with the rest of the table so nobody would think I was "too sensitive." I am finally unlearning the habit of shrinking myself to fit inside rooms that were never built for depth.',
+      "I wanted to tell you how deeply it bruised when you made a joke out of the things that made my eyes light up.\n\nI had brought the little notebook because you asked what I was working on. I remember being pleased that you wanted to know. Then you repeated one of my sentences in a voice that wasn't mine, and everybody laughed before I had worked out where to put my face.\n\nI closed the notebook under the table. Later, while we cleared the plates, you asked why I had gone quiet. I said I was tired. You handed me a dish towel and started telling me about your week, and I let that be the explanation because I didn't want to make the evening difficult.\n\nWhat stayed with me wasn't the joke alone. It was how readily I helped you make it harmless. I laughed first the next time, so nobody could get there before me. I stopped carrying the notebook. I called the work silly when people asked. This week I read a page aloud to someone who listened all the way to the end. They asked me to read another. I had forgotten a room could sound like that.\n\nInstead I forced a smile and laughed with the rest of the table so nobody would think I was \"too sensitive.\" I am finally unlearning the habit of shrinking myself to fit inside rooms that were never built for depth.",
     prompt_id: 'prompt-3',
     is_locked: false,
     passcode_hash: null,
@@ -415,7 +415,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'I Pretended It Didn\'t Bruise',
     content:
-      'You said "no offense, but..." and then proceeded to dismantle the project I spent four months pouring my nights into. I nodded and said, "No, totally, you make great points!" while my chest felt like it was caving in. I am done smiling through people\'s carelessness.',
+      "You said \"no offense, but...\" and then proceeded to dismantle the project I spent four months pouring my nights into. I nodded and said, \"No, totally, you make great points!\" while my chest felt like it was caving in.\n\nYou barely looked at the pages. That is what I remember most clearly: your thumb still moving over your phone while you told me what was wrong with something I had made after everyone else went to sleep. I had brought a spare copy because I imagined you might want to keep one.\n\nI am capable of hearing criticism. I have crossed out whole sections, started again, asked difficult questions of the work. What hurt was having to stand there gratefully while you made a performance of how little it deserved your attention. Then I went home and repeated your remarks to myself as if they had been carefully earned.\n\nThe next morning I opened the project. I didn't fix it immediately. I sat with the fact that I still wanted to finish it, even after showing it to you. There are parts that need work. There are parts I am proud of. Neither requires the little laugh I gave you to make your bluntness comfortable.\n\nI am done smiling through people's carelessness.",
     prompt_id: 'prompt-3',
     is_locked: false,
     passcode_hash: null,
@@ -438,7 +438,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Sentences I Bit in Half',
     content:
-      'Every Sunday phone call I rehearse five sentences about how lonely I actually feel. And every Sunday when you ask "How\'s everything?", I answer "Super busy, doing great!" and swallow the rest like cold stones. I wish I was brave enough to let you know me as I really am.',
+      "Every Sunday phone call I rehearse five sentences about how lonely I actually feel. And every Sunday when you ask \"How's everything?\", I answer \"Super busy, doing great!\" and swallow the rest like cold stones.\n\nI write the sentences on the back of an envelope before I dial. I am eating dinner standing up. I haven't spoken out loud today. I miss being expected somewhere. On paper they look simple enough. Then you answer, pleased to hear from me, and I cannot bear to change the sound of your voice.\n\nYou tell me about the weather and something that needs fixing in the house. I ask questions. I know how to keep a conversation moving without putting anything of myself inside it. When you say you won't keep me, I agree too quickly, as if there really is someone waiting in the next room.\n\nAfterward I leave the phone beside me for a while. I wonder whether you heard anything in the pause before I said goodbye. I am afraid you'll worry if I tell you. I am also afraid of how easy it has become to disappear while still calling every week. Next Sunday I want to leave one sentence whole. You wouldn't have to solve it. You could just stay on the line.\n\nI wish I was brave enough to let you know me as I really am.",
     prompt_id: 'prompt-3',
     is_locked: false,
     passcode_hash: null,
@@ -461,7 +461,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Smiling So Nobody Would Ask',
     content:
-      'I got very good at being the cheerful friend who listens to everyone\'s crises over coffee. The problem with being the person who never breaks is that nobody ever checks whether you are already in pieces. I am letting this letter carry the breakdown I never gave myself permission to have.',
+      "I got very good at being the cheerful friend who listens to everyone's crises over coffee. The problem with being the person who never breaks is that nobody ever checks whether you are already in pieces.\n\nYou always say I know what to say. Usually I do. I can ask the next question, remember the name, notice when a cup is empty. I have learned to reach for the tissue box without making a person feel watched. None of that was false. I wanted to be there for you.\n\nBut sometimes I arrived early and sat outside until my face felt ready. Sometimes I was relieved when you started talking before asking about my day. It meant I could postpone the small humiliation of needing something and not knowing how to ask for it.\n\nI don't want to turn every good thing I gave into proof that nobody cared for me. You might have listened if I had let the smile drop. I need to make room for that possibility too. What I wish you knew is that being useful became the price I thought I had to pay to be included. I would like to meet you for coffee once without earning my chair. I would like you to ask again when I say I'm fine.\n\nI am letting this letter carry the breakdown I never gave myself permission to have.",
     prompt_id: 'prompt-3',
     is_locked: false,
     passcode_hash: null,
@@ -486,7 +486,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'You Didn\'t Have to Grow Up in One Night',
     content:
-      'You were 14 sitting on the bottom of the basement stairs listening to the shouting upstairs, deciding that from that night on you would be the parent, the protector, and the rock. I am writing from 20 years in the future to tell you: you were just a kid. You were allowed to be frightened. Put the backpack down. You did enough.',
+      "You were 14 sitting on the bottom of the basement stairs listening to the shouting upstairs, deciding that from that night on you would be the parent, the protector, and the rock. I am writing from 20 years in the future to tell you: you were just a kid. You were allowed to be frightened. Put the backpack down.\n\nYour schoolbag was still on your back. You had come down for something ordinary, a clean shirt or a notebook, and stayed because the stairs felt far enough away to be safe and close enough to hear if you were needed. You counted the gaps between the voices. You thought counting was helping.\n\nTomorrow you will get up early. You will check the kitchen before anyone else comes in, move a chair back to its place, and remember which breakfast is easiest to make. Someone will call you mature. You will carry that word for years because it sounds better than frightened.\n\nI wish I could sit on the step below you without asking for anything. I would tell you that you can go to bed without first making sure everybody else is all right. That a child is not failing a family by needing one. We are learning this slowly now. Some evenings I let the phone ring while I finish my dinner. Nothing terrible happens. It still surprises me, how ordinary a boundary can look from the outside.\n\nYou did enough.",
     prompt_id: 'prompt-4',
     is_locked: false,
     passcode_hash: null,
@@ -509,7 +509,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Softness Was Never Your Weakness',
     content:
-      'The world convinced you that feeling things deeply would get you destroyed, so you built fortress walls out of sarcasm and closed doors. Look at where we are now. It took a decade of unlearning to realize that your tender heart was the only thing truly extraordinary about you. Don\'t hide it.',
+      "The world convinced you that feeling things deeply would get you destroyed, so you built fortress walls out of sarcasm and closed doors. Look at where we are now. It took a decade of unlearning to realize that your tender heart was the only thing truly extraordinary about you.\n\nI remember the first time you laughed along with someone who had hurt your feelings. You were relieved to discover how quickly a joke could close the subject. After that you always had one ready. People called you funny, and you mistook being difficult to reach for being difficult to wound.\n\nYou still noticed everything. The person left out of the photograph. The dog waiting outside the shop. You simply learned to look away before anyone caught you caring. It was exhausting, pretending the world made less of an impression on you than it did.\n\nWe are letting people see it now, a little at a time. We send the kind message without adding a joke at the end. We admit when a film makes us cry. Sometimes someone is careless with what we offer. I won't promise that stops happening. But there are people who set it down gently, and we would never have found them if every door stayed closed. You don't need to become harder to deserve better company.\n\nDon't hide it.",
     prompt_id: 'prompt-4',
     is_locked: false,
     passcode_hash: null,
@@ -532,7 +532,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Ocean Wasn\'t Angry at You',
     content:
-      'You spent years wondering what was fundamentally wrong with you that people seemed to leave so easily. The answer is nothing. Sometimes seasons change and leaves fall, not because the tree failed, but because winter is just winter. You are going to survive every single heartbreak.',
+      "You spent years wondering what was fundamentally wrong with you that people seemed to leave so easily. The answer is nothing. Sometimes seasons change and leaves fall, not because the tree failed, but because winter is just winter.\n\nYou used to stand where the water reached your shoes and retreat each time it came closer. You thought you could learn its timing well enough never to be surprised. Later you tried the same thing with people: watching for a change in their voice, apologizing before you knew what you had done.\n\nI wish I could save you the evenings you will spend reading old messages for a clue. You will find ordinary sentences and make accusations out of them. You will think that if you can locate the exact mistake, you can become someone no one ever leaves.\n\nThere isn't such a person. I know that is not the answer you wanted. But one day you will go down to the water without making its coming and going a judgment on you. You will take your shoes off. You will stay long enough to feel the sand shift and still know where you are standing. Some people will stay too. You won't have to hold your breath to keep them there.\n\nYou are going to survive every single heartbreak.",
     prompt_id: 'prompt-4',
     is_locked: false,
     passcode_hash: null,
@@ -555,7 +555,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'Put Down the Armor, It\'s Morning',
     content:
-      'You don\'t have to stay braced for impact anymore. The war you were fighting in that house ended a long time ago. The doors have locks now, the windows let in morning sunlight, and nobody is going to come in and take away the things you love. Take a deep breath. You are home.',
+      "You don't have to stay braced for impact anymore. The war you were fighting in that house ended a long time ago. The doors have locks now, the windows let in morning sunlight, and nobody is going to come in and take away the things you love. Take a deep breath.\n\nI know why you listen before opening a door. I know why a dropped pan can send you straight back into the old hallway, even when the person in the kitchen is only making breakfast. Your body learned its lessons carefully. It hasn't yet noticed that we moved.\n\nHere is what is different now. There is a cup you chose because you liked its color. There are books nobody searches through. If you leave a light on, the worst thing that happens is that you turn it off later. You are allowed to make a mistake without preparing a defense.\n\nYou don't have to believe all of this at once. Sit where you can see the door if that helps. Keep the spare key in the same place. But try eating while the toast is warm instead of walking through every room first. Try leaving the music on. I am here in this quiet morning with you, and I am not going to scold you for needing time to arrive.\n\nYou are home.",
     prompt_id: 'prompt-4',
     is_locked: false,
     passcode_hash: null,
@@ -580,7 +580,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Kitchen Light at 2AM',
     content:
-      'It is 2AM and the house is asleep except for me and the refrigerator hum. I keep rehearsing the conversation we never finished, giving you better lines than the ones you actually said. Maybe by morning I will finally let you answer badly and be done with it.',
+      "It is 2AM and the house is asleep except for me and the refrigerator hum. I keep rehearsing the conversation we never finished, giving you better lines than the ones you actually said.\n\nThe clock above the stove is three minutes fast. I know because I keep checking it against my phone, as though one of them might offer a different evening if I look often enough. There is a spoon in the sink and a square of light on the floor where the cupboard doesn't quite close.\n\nIn tonight's version, I explain myself without stumbling. You put your cup down. You understand what I meant the first time, before I grew tired and started saying things I didn't mean. Sometimes I even let you apologize. I am generous with you when I am the one writing both parts.\n\nBut I remember your actual face. You were tired too. You asked a question I didn't answer. I keep improving your lines so I don't have to listen to my own. The refrigerator stops humming, and for a moment the kitchen is completely quiet. I can hear how long I have been sitting here.\n\nMaybe by morning I will finally let you answer badly and be done with it.",
     prompt_id: null,
     is_locked: false,
     passcode_hash: null,
@@ -603,7 +603,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'What I Couldn\'t Say Across the Table',
     content:
-      'You asked how work was and I said "fine" in that flat way that ends conversations. What I couldn\'t say is that I spent the whole drive home practicing how to tell you I am not okay, and that your question was the first door anyone opened all week.',
+      "You asked how work was and I said \"fine\" in that flat way that ends conversations.\n\nAt the red lights I had said the first sentence aloud. By the third one, it almost sounded like something I could carry through the front door. I left the radio off so I wouldn't lose it. Then I saw you setting another plate on the table, and the ordinary kindness of that undid my preparation.\n\nYou were listening. I need to be honest about that. You put your phone down, turned toward me, and waited. I looked at the salt beside your hand and gave you the word that would let us both keep eating. You asked whether I wanted more rice. I said yes.\n\nI am not writing this to blame you for believing me. I have practiced being convincing for a long time. I just wish I could return to that little pause before you picked up your fork, when the question was still open and I hadn't made another evening out of pretending. I didn't need a better answer from you. I needed to risk giving you a true one.\n\nWhat I couldn't say is that I spent the whole drive home practicing how to tell you I am not okay, and that your question was the first door anyone opened all week.",
     prompt_id: null,
     is_locked: false,
     passcode_hash: null,
@@ -626,7 +626,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'A Small Green Hope on the Windowsill',
     content:
-      'I bought a plant this week, which feels ridiculous to write down. But I have spent two years not planning anything past Friday, and now there is a small green thing on my windowsill that needs me next month. I hope you would have laughed and called it a start. It is a start.',
+      "I bought a plant this week, which feels ridiculous to write down. But I have spent two years not planning anything past Friday, and now there is a small green thing on my windowsill that needs me next month. I hope you would have laughed and called it a start.\n\nI stood in the shop reading the little care label as if it were a contract. Indirect light. Water when the soil feels dry. Nothing about becoming a different person first. I chose the one with a bent leaf because it was already less than perfect and still seemed to be managing.\n\nAt home I cleared a space among the envelopes on the sill. The pot left a damp ring, so I found a saucer. Then I opened the curtain a little farther. It is embarrassing how much effort those small adjustments took, and how pleased I was when I had made them.\n\nYou would have asked what I named it. I haven't, yet. I am trying to let it be a plant rather than an examination I can fail. Yesterday I looked for a new leaf before checking my phone. There wasn't one. I watered it anyway. I thought you might understand why that matters: wanting to be here for something that hasn't happened yet.\n\nIt is a start.",
     prompt_id: null,
     is_locked: false,
     passcode_hash: null,
@@ -649,7 +649,7 @@ export const INITIAL_PUBLIC_NOTES: Note[] = [
     shelf_id: null,
     title: 'The Memory I Keep in the Coat Pocket',
     content:
-      'Every winter the first cold morning brings back the same memory: your scarf, the bus stop, and the thermos we shared because we only remembered one cup. I do not want the years back. I just wanted to set the memory down somewhere safe, the way you would set down something made of glass.',
+      "Every winter the first cold morning brings back the same memory: your scarf, the bus stop, and the thermos we shared because we only remembered one cup. I do not want the years back.\n\nThe lid was stiff from the cold. You held the thermos between your knees while I tried to loosen it, both of us laughing because the bus was coming and we had spent the whole wait getting ready to drink. When it finally opened, we each took a hurried mouthful and burned our tongues.\n\nI couldn't tell you what we talked about. Probably the late bus, or the weather, or whether we had time to buy bread on the way back. I used to think forgetting the words meant I was losing the morning. Now I think some things stayed without them: the rough seam of your glove, the steam moving across your face, the way you held the cup until I had a proper grip.\n\nThere are winters when I barely think of it. Then I reach into a coat pocket and find an old ticket, and the cold at the bus stop is there again. You don't need to come back for the memory to belong here. I can be grateful for a morning without asking it to become my life again.\n\nI just wanted to set the memory down somewhere safe, the way you would set down something made of glass.",
     prompt_id: null,
     is_locked: false,
     passcode_hash: null,
