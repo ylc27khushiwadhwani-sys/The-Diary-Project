@@ -440,7 +440,7 @@
 }
 .hall-pool.p1 { left: 6%; }
 .hall-pool.p2 { left: 38%; animation-delay: -7s; background: radial-gradient(ellipse, rgba(214, 140, 120, 0.2) 0%, rgba(214, 140, 120, 0) 68%); }
-.hall-pool.p3 { left: 68%; animation-delay: -13s; background: radial-gradient(ellipse, rgba(220, 170, 90, 0.16) 0%, rgba(130, 160, 214, 0) 68%); }
+.hall-pool.p3 { left: 68%; animation-delay: -13s; background: radial-gradient(ellipse, rgba(220, 170, 90, 0.16) 0%, rgba(220, 170, 90, 0) 68%); }
 @keyframes poolDrift {
   0% { transform: skewX(-24deg) translateX(-18px); opacity: 0.55; }
   100% { transform: skewX(-24deg) translateX(26px); opacity: 1; }
