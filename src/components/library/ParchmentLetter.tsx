@@ -13,6 +13,12 @@ import {
 import { Note, Shelf } from "../../types/database";
 import { WaxSeal } from "./WaxSeal";
 import { maskText } from "../../utils/crypto";
+import {
+  isDateSealed,
+  getUnsealDate,
+  daysUntilUnseal,
+  formatUnsealDate,
+} from "../../utils/unseal";
 import promptsData from "../../data/prompts.json";
 
 interface ParchmentLetterProps {
@@ -49,6 +55,34 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
     day: "numeric",
     year: "numeric",
   });
+
+  const sealedUntil = isDateSealed(note) ? getUnsealDate(note.tags) : null;
+  if (sealedUntil) {
+    return (
+      <div
+        onClick={mode === "shelf" ? onOpen : undefined}
+        className={`group relative letter-frame ${mode === "shelf" && onOpen ? "cursor-pointer" : ""}`}
+        data-testid="date-sealed-card"
+      >
+        <div className="parchment-sheet letter-deckle p-6 relative flex flex-col items-center justify-center min-h-[200px] text-center">
+          <div className="mb-3">
+            <WaxSeal color="crimson" size="lg" icon="lock" />
+          </div>
+          <span className="reader-footer-caps">
+            Sealed until {formatUnsealDate(sealedUntil)}
+          </span>
+          <h4 className="font-serif font-medium text-base text-wood-950 line-clamp-1 max-w-[240px] mt-1">
+            {note.title || "A letter that is waiting"}
+          </h4>
+          <p className="font-serif italic text-sm text-wood-700 mt-1">
+            {daysUntilUnseal(sealedUntil) === 1
+              ? "opens tomorrow"
+              : `${daysUntilUnseal(sealedUntil)} days to go`}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // If the note is locked and not unlocked yet, render the Folded Wax-Sealed Envelope
   if (note.is_locked && !isUnlocked) {

@@ -152,7 +152,7 @@ describe('AuthorInbox reopen integration', () => {
 
     const { rerender } = render(view(false));
     rerender(view(true));
-    await screen.findByText('Your letter box is quiet');
+    await screen.findByText('Your postbox is quiet');
 
     rerender(view(false));
 
@@ -161,6 +161,6 @@ describe('AuthorInbox reopen integration', () => {
     rerender(view(true));
     expect(screen.getByText('Gathering correspondence...')).toBeInTheDocument();
 
-    await screen.findByText('Your letter box is quiet');
+    await screen.findByText('Your postbox is quiet');
   });
 });

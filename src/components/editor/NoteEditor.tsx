@@ -1,10 +1,26 @@
-import React, { useState } from 'react';
-import { ArrowLeft, Save, Globe, EyeOff, Sparkles, Folder, Type, Feather } from 'lucide-react';
-import { Note, Shelf } from '../../types/database';
-import { LockNoteToggle } from './LockNoteToggle';
-import { ShareModal } from '../library/ShareModal';
-import { HelplineModal } from '../safety/HelplineModal';
-import { WaxSeal } from '../library/WaxSeal';
+import React, { useState } from "react";
+import {
+  ArrowLeft,
+  Save,
+  Globe,
+  EyeOff,
+  Sparkles,
+  Folder,
+  Type,
+  Feather,
+} from "lucide-react";
+import { Note, Shelf } from "../../types/database";
+import { LockNoteToggle } from "./LockNoteToggle";
+import { ShareModal } from "../library/ShareModal";
+import { HelplineModal } from "../safety/HelplineModal";
+import { WaxSeal } from "../library/WaxSeal";
+import {
+  getUnsealDate,
+  visibleTags,
+  withUnsealTag,
+  daysUntilUnseal,
+  formatUnsealDate,
+} from "../../utils/unseal";
 
 interface NoteEditorProps {
   note: Partial<Note> | null;
@@ -19,18 +35,29 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   onSave,
   onClose,
 }) => {
-  const [title, setTitle] = useState(note?.title || '');
-  const [content, setContent] = useState(note?.content || '');
+  const [title, setTitle] = useState(note?.title || "");
+  const [content, setContent] = useState(note?.content || "");
   const [shelfId, setShelfId] = useState<string | null>(note?.shelf_id || null);
   const [isLocked, setIsLocked] = useState(note?.is_locked || false);
-  const [passcodeHash, setPasscodeHash] = useState<string | null>(note?.passcode_hash || null);
+  const [passcodeHash, setPasscodeHash] = useState<string | null>(
+    note?.passcode_hash || null,
+  );
   const [isPublic, setIsPublic] = useState(note?.is_public || false);
-  const [allowResponses, setAllowResponses] = useState(note?.allow_responses ?? true);
+  const [allowResponses, setAllowResponses] = useState(
+    note?.allow_responses ?? true,
+  );
   const [handwritingFont, setHandwritingFont] = useState(false);
   const [tags, setTags] = useState<string[]>(
-    (note?.tags ?? []).map((tag) => tag.toLowerCase())
+    visibleTags(note?.tags).map((tag) => tag.toLowerCase()),
   );
-  const [tagDraft, setTagDraft] = useState('');
+  const [tagDraft, setTagDraft] = useState("");
+  const [unsealOn, setUnsealOn] = useState<string>(
+    getUnsealDate(note?.tags) ?? "",
+  );
+  const [todayIso] = useState(() => {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  });
 
   const [saving, setSaving] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -46,21 +73,21 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   };
 
   const handleTagInput = (value: string) => {
-    if (!value.includes(',')) {
+    if (!value.includes(",")) {
       setTagDraft(value);
       return;
     }
-    const segments = value.split(',');
+    const segments = value.split(",");
     segments.slice(0, -1).forEach((segment) => addTag(segment));
     setTagDraft(segments[segments.length - 1]);
   };
 
   const handleTagKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       addTag(tagDraft);
-      setTagDraft('');
-    } else if (e.key === 'Backspace' && tagDraft === '' && tags.length > 0) {
+      setTagDraft("");
+    } else if (e.key === "Backspace" && tagDraft === "" && tags.length > 0) {
       setTags((prev) => prev.slice(0, -1));
     }
   };
@@ -78,7 +105,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       is_public: isPublic,
       allow_responses: allowResponses,
       prompt_id: note?.prompt_id || null,
-      tags,
+      tags: withUnsealTag(tags, unsealOn || null),
     });
     setSaving(false);
   };
@@ -96,7 +123,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       is_public: true,
       allow_responses: allowResponsesVal,
       prompt_id: note?.prompt_id || null,
-      tags,
+      tags: withUnsealTag(tags, unsealOn || null),
       published_at: new Date().toISOString(),
     });
   };
@@ -112,7 +139,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       passcode_hash: passcodeHash,
       is_public: false,
       allow_responses: allowResponses,
-      tags,
+      tags: withUnsealTag(tags, unsealOn || null),
     });
   };
 
@@ -133,13 +160,19 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           <div className="flex items-center gap-1.5 bg-wood-950/80 border border-amber-800/40 rounded-lg px-3 py-1.5 shadow-wood-inset">
             <Folder className="w-3.5 h-3.5 text-amber-500" />
             <select
-              value={shelfId || ''}
+              value={shelfId || ""}
               onChange={(e) => setShelfId(e.target.value || null)}
               className="text-xs bg-transparent text-amber-100 font-serif focus:outline-none cursor-pointer"
             >
-              <option value="" className="bg-wood-900 text-amber-100">Unsorted Shelf</option>
+              <option value="" className="bg-wood-900 text-amber-100">
+                Unsorted Shelf
+              </option>
               {shelves.map((s) => (
-                <option key={s.id} value={s.id} className="bg-wood-900 text-amber-100">
+                <option
+                  key={s.id}
+                  value={s.id}
+                  className="bg-wood-900 text-amber-100"
+                >
                   {s.name}
                 </option>
               ))}
@@ -157,6 +190,41 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             />
           )}
 
+          {/* Date seal: the letter waits until a day you choose */}
+          <div className="date-seal-box" data-testid="date-seal">
+            <label
+              className="flex items-center gap-2 text-xs font-serif font-semibold text-amber-200/90"
+              htmlFor="unseal-date"
+            >
+              <span aria-hidden="true">&#128367;</span>
+              <span>Let this letter wait until a date</span>
+            </label>
+            <div className="flex items-center gap-2 mt-1.5">
+              <input
+                id="unseal-date"
+                type="date"
+                min={todayIso}
+                value={unsealOn}
+                onChange={(e) => setUnsealOn(e.target.value)}
+                className="px-2 py-1 rounded-md bg-wood-950/80 border border-amber-800/40 text-xs text-amber-100 font-mono"
+              />
+              {unsealOn && (
+                <button
+                  type="button"
+                  onClick={() => setUnsealOn("")}
+                  className="text-[11px] font-serif text-amber-300/80 underline cursor-pointer"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+            <p className="mt-2 text-[11px] font-body italic leading-snug text-[#b9a98a] max-w-xs">
+              {unsealOn
+                ? `It stays sealed on the shelf, with a countdown, and opens for everyone on ${formatUnsealDate(unsealOn)} (${daysUntilUnseal(unsealOn)} days from now).`
+                : "Pick a birthday, an anniversary or a someday. Until that morning the letter shows only a sealed envelope and a countdown. After it, anyone can read it. It hides the letter on this site; it is not encryption."}
+            </p>
+          </div>
+
           {/* Public Sharing Toggle */}
           {isPublic ? (
             <button
@@ -172,7 +240,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
               onClick={() => setIsShareModalOpen(true)}
               disabled={!content.trim() || isLocked}
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-wood-800 hover:bg-wood-700 text-amber-200 border border-amber-600/40 rounded-lg text-xs font-serif transition disabled:opacity-40 cursor-pointer"
-              title={isLocked ? "Unlock before sharing" : "Publish to the Grand Library archive"}
+              title={
+                isLocked
+                  ? "Unlock before sharing"
+                  : "Publish to the Grand Library archive"
+              }
             >
               <Globe className="w-3.5 h-3.5 text-amber-400" />
               <span>Release to Grand Library</span>
@@ -184,7 +256,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             type="button"
             onClick={() => setHandwritingFont(!handwritingFont)}
             className="p-1.5 bg-wood-950/80 border border-amber-800/40 text-amber-300 hover:text-amber-100 rounded-lg text-xs transition cursor-pointer"
-            title={handwritingFont ? "Switch to Quill Cursive" : "Switch to Book Print"}
+            title={
+              handwritingFont
+                ? "Switch to Quill Cursive"
+                : "Switch to Book Print"
+            }
           >
             <Type className="w-4 h-4" />
           </button>
@@ -196,7 +272,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             className="flex items-center gap-1.5 px-4 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-lg text-xs font-serif font-bold shadow-candle border border-red-500/30 transition disabled:opacity-40 cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>{saving ? 'Sealing...' : 'Seal & Store'}</span>
+            <span>{saving ? "Sealing..." : "Seal & Store"}</span>
           </button>
         </div>
       </div>
@@ -214,13 +290,21 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           {/* Letterhead Header with Wax Seal */}
           <div className="flex items-center justify-between pb-4 mb-6 border-b border-amber-900/25">
             <div className="flex items-center gap-3">
-              <WaxSeal color={isLocked ? 'crimson' : isPublic ? 'gold' : 'crimson'} size="md" icon={isLocked ? 'lock' : 'quill'} />
+              <WaxSeal
+                color={isLocked ? "crimson" : isPublic ? "gold" : "crimson"}
+                size="md"
+                icon={isLocked ? "lock" : "quill"}
+              />
               <div>
                 <span className="font-serif text-[11px] tracking-widest uppercase text-wood-700 block font-bold">
                   The Paper Vault
                 </span>
                 <span className="font-body text-xs italic text-wood-900">
-                  {isLocked ? "Eyes-Only Confidential Letter" : isPublic ? "Archived for the Sanctuary" : "Private Library Parchment"}
+                  {isLocked
+                    ? "Eyes-Only Confidential Letter"
+                    : isPublic
+                      ? "Archived for the Sanctuary"
+                      : "Private Library Parchment"}
                 </span>
               </div>
             </div>
@@ -258,7 +342,9 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
                 <button
                   type="button"
                   aria-label={`Remove tag ${tag}`}
-                  onClick={() => setTags((prev) => prev.filter((t) => t !== tag))}
+                  onClick={() =>
+                    setTags((prev) => prev.filter((t) => t !== tag))
+                  }
                   className="text-wood-600 hover:text-wax-crimson cursor-pointer"
                 >
                   ×
@@ -283,8 +369,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             onChange={(e) => setContent(e.target.value)}
             className={`flex-1 w-full text-wood-950 placeholder:text-wood-600/50 focus:outline-none resize-none bg-transparent ${
               handwritingFont
-                ? 'font-body text-xl md:text-2xl leading-relaxed font-medium'
-                : 'font-hand text-2xl md:text-3xl leading-[1.8] font-normal'
+                ? "font-body text-xl md:text-2xl leading-relaxed font-medium"
+                : "font-hand text-2xl md:text-3xl leading-[1.8] font-normal"
             }`}
           />
         </div>

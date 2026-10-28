@@ -11,6 +11,12 @@ import {
 } from "lucide-react";
 import { Note } from "../../types/database";
 import { WaxSeal } from "../library/WaxSeal";
+import {
+  isDateSealed,
+  getUnsealDate,
+  daysUntilUnseal,
+  formatUnsealDate,
+} from "../../utils/unseal";
 import { paginate } from "../../utils/paginate";
 import { PasscodeModal } from "../library/PasscodeModal";
 import { ThreadedResponses } from "../feed/ThreadedResponses";
@@ -60,6 +66,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   });
 
   const isLockedNote = note.is_locked && !isUnlocked;
+  const dateSealed = isDateSealed(note);
+  const unsealDate = getUnsealDate(note.tags);
 
   // For now we treat responses as a single extra page rendered by ThreadedResponses
   const responsePage = <ThreadedResponses noteId={note.id} />;
@@ -107,7 +115,32 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
             </button>
           </div>
 
-          {isLockedNote ? (
+          {dateSealed && unsealDate ? (
+            <div
+              className="letter-frame parchment-sheet letter-deckle reader-ivory p-8 sm:p-12 text-center text-wood-950 relative"
+              data-testid="date-sealed"
+            >
+              <div className="w-16 h-16 rounded-full bg-amber-900/10 border border-amber-800/30 flex items-center justify-center mx-auto mb-4">
+                <WaxSeal color="crimson" size="lg" icon="lock" />
+              </div>
+              <span className="reader-footer-caps block mb-2">
+                Sealed until
+              </span>
+              <h2 className="font-serif text-3xl font-bold text-wood-950 mb-1">
+                {formatUnsealDate(unsealDate)}
+              </h2>
+              <p className="font-serif italic text-lg text-wood-800 mb-5">
+                {daysUntilUnseal(unsealDate) === 1
+                  ? "opens tomorrow"
+                  : `${daysUntilUnseal(unsealDate)} days to go`}
+              </p>
+              <p className="font-body text-sm text-wood-800 max-w-md mx-auto italic leading-relaxed">
+                "{note.title || "This letter"}" was written to wait. Its author
+                sealed it until this day, and it opens for everyone the moment
+                the date arrives. Come back then.
+              </p>
+            </div>
+          ) : isLockedNote ? (
             // Locked parchment letter
             <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 text-center text-wood-950 relative">
               <div className="letter-ribbon" />

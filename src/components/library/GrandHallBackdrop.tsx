@@ -116,6 +116,7 @@ export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
       <div className="hall-dapple" />
       <div className="grand-hall-dust" />
       <div className="grand-hall-dust dust-slow" />
+      <div className="hall-tint" />
       <div className="hall-vignette" />
       <span className="hall-moth" aria-hidden="true">
         <svg viewBox="0 0 40 30" width="22" height="16">

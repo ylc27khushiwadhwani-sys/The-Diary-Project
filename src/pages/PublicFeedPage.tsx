@@ -4,6 +4,7 @@ import { Feather, Search, SlidersHorizontal } from "lucide-react";
 import { Note } from "../types/database";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
+import { RoomMemory } from '../components/cinematic/RoomMemory';
 import { InteractiveBookshelf } from "../components/bookshelf/InteractiveBookshelf";
 import { InkText } from "../components/cinematic/InkText";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
@@ -240,6 +241,8 @@ export const PublicFeedPage: React.FC = () => {
               Open the Keepsake Box
             </button>
           </motion.div>
+
+          <RoomMemory />
 
           {/* First-visit guidance: what this place is and how to begin */}
           <motion.p

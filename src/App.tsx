@@ -1,43 +1,63 @@
-import React, { useState } from 'react';
-import { BookOpen, Feather, LogOut, ShieldCheck } from 'lucide-react';
-import { useAuth } from './contexts/AuthContext';
-import { PenNameBadge } from './components/auth/PenNameBadge';
-import { SignInModal } from './components/auth/SignInModal';
-import { HelplineModal } from './components/safety/HelplineModal';
-import { PublicFeedPage } from './pages/PublicFeedPage';
-import { LibraryPage } from './pages/LibraryPage';
-import { DustCanvas } from './components/cinematic/DustCanvas';
-import { EntrySequence } from './components/cinematic/EntrySequence';
-import { InkText } from './components/cinematic/InkText';
-import { burstEmbers } from './lib/motion';
+import React, { useEffect, useState } from "react";
+import { BookOpen, Feather, LogOut, ShieldCheck } from "lucide-react";
+import { useAuth } from "./contexts/AuthContext";
+import { PenNameBadge } from "./components/auth/PenNameBadge";
+import { SignInModal } from "./components/auth/SignInModal";
+import { HelplineModal } from "./components/safety/HelplineModal";
+import { PublicFeedPage } from "./pages/PublicFeedPage";
+import { LibraryPage } from "./pages/LibraryPage";
+import { DustCanvas } from "./components/cinematic/DustCanvas";
+import { EntrySequence } from "./components/cinematic/EntrySequence";
+import { InkText } from "./components/cinematic/InkText";
+import { VisitBadge } from "./components/cinematic/VisitBadge";
+import { QuillCursor } from "./components/cinematic/QuillCursor";
+import { burstEmbers } from "./lib/motion";
+import { currentHallHour } from "./lib/timeOfDay";
 
 export const App: React.FC = () => {
   const { user, profile, signOut } = useAuth();
-  const [activeTab, setActiveTabState] = useState<'public' | 'sanctuary'>('public');
-  const setActiveTab = (tab: 'public' | 'sanctuary') => {
+  const [activeTab, setActiveTabState] = useState<"public" | "sanctuary">(
+    "public",
+  );
+  const setActiveTab = (tab: "public" | "sanctuary") => {
     if (tab !== activeTab) burstEmbers();
     setActiveTabState(tab);
   };
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
 
+  // The hall is lit for the visitor's local hour; re-checked every ten minutes
+  useEffect(() => {
+    const apply = () =>
+      document.documentElement.setAttribute("data-tod", currentHallHour());
+    apply();
+    const id = window.setInterval(apply, 10 * 60 * 1000);
+    return () => window.clearInterval(id);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0a0705]">
       <EntrySequence />
       {/* Drifting dust that glows in the light shafts, plus ember bursts */}
       <DustCanvas />
+      <QuillCursor />
 
       {/* Top Header Matching thediaryproject.lovable.app */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">
+        <VisitBadge />
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-3.5">
           {/* Brand */}
           <div
-            onClick={() => setActiveTab('public')}
+            onClick={() => setActiveTab("public")}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div>
               <span className="font-serif text-xl sm:text-2xl italic tracking-wide text-[#f3ece0] block leading-tight group-hover:text-gold transition">
-                <InkText text="The Paper Vault" startDelay={0.2} perLetter={0.06} />
+                <InkText
+                  text="The Paper Vault"
+                  startDelay={0.2}
+                  perLetter={0.06}
+                />
               </span>
               <span className="label-caps text-[9px] block text-gold/70">
                 Anonymous Literary Sanctuary
@@ -48,11 +68,11 @@ export const App: React.FC = () => {
           {/* Navigation Rooms */}
           <nav className="flex items-center gap-2 sm:gap-3">
             <button
-              onClick={() => setActiveTab('public')}
+              onClick={() => setActiveTab("public")}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-serif transition-all cursor-pointer ${
-                activeTab === 'public'
-                  ? 'bg-card text-gold border border-gold/40 shadow-candle'
-                  : 'text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60'
+                activeTab === "public"
+                  ? "bg-card text-gold border border-gold/40 shadow-candle"
+                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-gold" />
@@ -60,11 +80,11 @@ export const App: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setActiveTab('sanctuary')}
+              onClick={() => setActiveTab("sanctuary")}
               className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-serif transition-all cursor-pointer ${
-                activeTab === 'sanctuary'
-                  ? 'bg-card text-gold border border-gold/40 shadow-candle'
-                  : 'text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60'
+                activeTab === "sanctuary"
+                  ? "bg-card text-gold border border-gold/40 shadow-candle"
+                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
               }`}
             >
               <Feather className="w-3.5 h-3.5 text-gold" />
@@ -104,11 +124,7 @@ export const App: React.FC = () => {
 
       {/* Main Content Area */}
       <main key={activeTab} className="flex-1 relative z-10 room-enter">
-        {activeTab === 'public' ? (
-          <PublicFeedPage />
-        ) : (
-          <LibraryPage />
-        )}
+        {activeTab === "public" ? <PublicFeedPage /> : <LibraryPage />}
       </main>
 
       {/* Footer from thediaryproject.lovable.app */}
@@ -116,11 +132,14 @@ export const App: React.FC = () => {
         <div className="mx-auto max-w-xl space-y-4">
           <div className="flex items-center justify-center gap-2 text-xs font-serif text-[#9e9488]">
             <ShieldCheck className="w-4 h-4 text-gold/70" />
-            <span>Encrypted at rest & in transit • Pseudonymous by default</span>
+            <span>
+              Encrypted at rest & in transit • Pseudonymous by default
+            </span>
           </div>
 
           <p className="text-xs leading-relaxed">
-            Our library isn't a substitute for professional support. If you're struggling, please reach out to a{' '}
+            Our library isn't a substitute for professional support. If you're
+            struggling, please reach out to a{" "}
             <button
               onClick={() => setIsHelplineOpen(true)}
               className="text-gold underline underline-offset-4 hover:text-gold-light transition cursor-pointer"
@@ -131,7 +150,8 @@ export const App: React.FC = () => {
           </p>
 
           <p className="text-xs text-[#9e9488]/70">
-            We only use your email to preserve your private library across devices. We never share it.
+            We only use your email to preserve your private library across
+            devices. We never share it.
           </p>
 
           <p className="font-serif italic text-gold/80 text-base">

@@ -1,39 +1,63 @@
-import React, { useState } from 'react';
-import { BookOpen, Feather, Mail, KeyRound, Download } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
-import { Note, Shelf, Prompt } from '../types/database';
-import { ShelfManager } from '../components/library/ShelfManager';
-import { PromptSelector } from '../components/library/PromptSelector';
-import { NoteCard } from '../components/library/NoteCard';
-import { NoteEditor } from '../components/editor/NoteEditor';
-import { AuthorInbox } from '../components/library/AuthorInbox';
-import { WaxSeal } from '../components/library/WaxSeal';
-import { GrandHallBackdrop } from '../components/library/GrandHallBackdrop';
-import { useCancellableLoad } from '../hooks/useCancellableLoad';
-import { DEMO_NOTES_KEY, loadNotes, searchNotes } from '../services/notes';
-import { downloadNotesExport } from '../services/export';
+import React, { useEffect, useState } from "react";
+import { BookOpen, Feather, Mail, KeyRound, Download } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase, isSupabaseConfigured } from "../lib/supabase";
+import { Note, Shelf, Prompt } from "../types/database";
+import { ShelfManager } from "../components/library/ShelfManager";
+import { PromptSelector } from "../components/library/PromptSelector";
+import { NoteCard } from "../components/library/NoteCard";
+import { NoteEditor } from "../components/editor/NoteEditor";
+import {
+  AuthorInbox,
+  loadAuthorResponses,
+  getSeenResponseIds,
+} from "../components/library/AuthorInbox";
+import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
+import { PasscodeModal } from "../components/library/PasscodeModal";
+import { WaxSeal } from "../components/library/WaxSeal";
+import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
+import { useCancellableLoad } from "../hooks/useCancellableLoad";
+import { DEMO_NOTES_KEY, loadNotes, searchNotes } from "../services/notes";
+import { downloadNotesExport } from "../services/export";
 
-const DEMO_SHELVES_KEY = 'unsent_library_demo_shelves';
+const DEMO_SHELVES_KEY = "unsent_library_demo_shelves";
 
 const loadShelves = async (userId: string): Promise<Shelf[] | null> => {
   if (!isSupabaseConfigured) {
     const saved = localStorage.getItem(DEMO_SHELVES_KEY);
     if (saved) return JSON.parse(saved) as Shelf[];
     const defaultShelves: Shelf[] = [
-      { id: 'shelf-1', user_id: userId, name: 'Unspoken Words', icon: 'feather', created_at: new Date().toISOString() },
-      { id: 'shelf-2', user_id: userId, name: 'Letters Never Sent', icon: 'bookmark', created_at: new Date().toISOString() },
-      { id: 'shelf-3', user_id: userId, name: 'Grief & Healing', icon: 'heart', created_at: new Date().toISOString() },
+      {
+        id: "shelf-1",
+        user_id: userId,
+        name: "Unspoken Words",
+        icon: "feather",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "shelf-2",
+        user_id: userId,
+        name: "Letters Never Sent",
+        icon: "bookmark",
+        created_at: new Date().toISOString(),
+      },
+      {
+        id: "shelf-3",
+        user_id: userId,
+        name: "Grief & Healing",
+        icon: "heart",
+        created_at: new Date().toISOString(),
+      },
     ];
     localStorage.setItem(DEMO_SHELVES_KEY, JSON.stringify(defaultShelves));
     return defaultShelves;
   }
 
   const { data } = await supabase
-    .from('shelves')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: true });
+    .from("shelves")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: true });
 
   return data ? (data as Shelf[]) : null;
 };
@@ -43,10 +67,14 @@ export const LibraryPage: React.FC = () => {
   const [shelves, setShelves] = useState<Shelf[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [selectedShelfId, setSelectedShelfId] = useState<string | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeEditingNote, setActiveEditingNote] = useState<Partial<Note> | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeEditingNote, setActiveEditingNote] =
+    useState<Partial<Note> | null>(null);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [isInboxOpen, setIsInboxOpen] = useState(false);
+  const [studyView, setStudyView] = useState<"box" | "list">("box");
+  const [passcodeNote, setPasscodeNote] = useState<Note | null>(null);
+  const [unreadReplies, setUnreadReplies] = useState(0);
   // Notes unlocked via passcode earlier in this session (U8 export reads this).
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
   const [exportSummary, setExportSummary] = useState<string | null>(null);
@@ -60,13 +88,33 @@ export const LibraryPage: React.FC = () => {
     ([loadedShelves, loadedNotes]) => {
       if (loadedShelves) setShelves(loadedShelves);
       if (loadedNotes) setNotes(loadedNotes);
-    }
+    },
   );
+
+  useEffect(() => {
+    if (!user || isInboxOpen) return;
+    let cancelled = false;
+    loadAuthorResponses(user.id).then((list) => {
+      if (cancelled || !list) return;
+      const seen = getSeenResponseIds(user.id);
+      setUnreadReplies(list.filter((r) => !seen.has(r.id)).length);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user, isInboxOpen]);
+
+  const openForEditing = (selected: Note) => {
+    setActiveEditingNote(selected);
+    setIsEditorOpen(true);
+  };
 
   const handleCreateShelf = async (name: string, icon: string) => {
     if (!user) return;
     const newShelf: Shelf = {
-      id: isSupabaseConfigured ? (undefined as unknown as string) : 'shelf-' + Date.now(),
+      id: isSupabaseConfigured
+        ? (undefined as unknown as string)
+        : "shelf-" + Date.now(),
       user_id: user.id,
       name,
       icon,
@@ -80,7 +128,11 @@ export const LibraryPage: React.FC = () => {
       return;
     }
 
-    const { data } = await supabase.from('shelves').insert([newShelf]).select().single();
+    const { data } = await supabase
+      .from("shelves")
+      .insert([newShelf])
+      .select()
+      .single();
     if (data) setShelves((prev) => [...prev, data]);
   };
 
@@ -93,7 +145,7 @@ export const LibraryPage: React.FC = () => {
       return;
     }
 
-    await supabase.from('shelves').delete().eq('id', shelfId);
+    await supabase.from("shelves").delete().eq("id", shelfId);
     setShelves((prev) => prev.filter((s) => s.id !== shelfId));
     if (selectedShelfId === shelfId) setSelectedShelfId(null);
   };
@@ -107,17 +159,17 @@ export const LibraryPage: React.FC = () => {
       let updatedList: Note[];
       if (isNew) {
         const newNote: Note = {
-          id: 'note-' + Date.now(),
+          id: "note-" + Date.now(),
           user_id: user.id,
           shelf_id: noteData.shelf_id || null,
           title: noteData.title || null,
-          content: noteData.content || '',
+          content: noteData.content || "",
           prompt_id: noteData.prompt_id || null,
           is_locked: noteData.is_locked || false,
           passcode_hash: noteData.passcode_hash || null,
           is_public: noteData.is_public || false,
           allow_responses: noteData.allow_responses ?? true,
-          moderation_status: noteData.moderation_status || 'clean',
+          moderation_status: noteData.moderation_status || "clean",
           report_count: 0,
           published_at: noteData.is_public ? now : null,
           created_at: now,
@@ -126,7 +178,9 @@ export const LibraryPage: React.FC = () => {
         };
         updatedList = [newNote, ...notes];
       } else {
-        updatedList = notes.map((n) => (n.id === noteData.id ? ({ ...n, ...noteData } as Note) : n));
+        updatedList = notes.map((n) =>
+          n.id === noteData.id ? ({ ...n, ...noteData } as Note) : n,
+        );
       }
       setNotes(updatedList);
       localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(updatedList));
@@ -136,19 +190,20 @@ export const LibraryPage: React.FC = () => {
 
     if (isNew) {
       const { data } = await supabase
-        .from('notes')
+        .from("notes")
         .insert([{ ...noteData, user_id: user.id }])
         .select()
         .single();
       if (data) setNotes((prev) => [data, ...prev]);
     } else {
       const { data } = await supabase
-        .from('notes')
+        .from("notes")
         .update(noteData)
-        .eq('id', noteData.id!)
+        .eq("id", noteData.id!)
         .select()
         .single();
-      if (data) setNotes((prev) => prev.map((n) => (n.id === data.id ? data : n)));
+      if (data)
+        setNotes((prev) => prev.map((n) => (n.id === data.id ? data : n)));
     }
     setIsEditorOpen(false);
   };
@@ -160,7 +215,7 @@ export const LibraryPage: React.FC = () => {
       localStorage.setItem(DEMO_NOTES_KEY, JSON.stringify(updated));
       return;
     }
-    await supabase.from('notes').delete().eq('id', noteId);
+    await supabase.from("notes").delete().eq("id", noteId);
     setNotes((prev) => prev.filter((n) => n.id !== noteId));
   };
 
@@ -169,7 +224,7 @@ export const LibraryPage: React.FC = () => {
       title: prompt.title,
       prompt_id: prompt.id,
       shelf_id: selectedShelfId,
-      content: '',
+      content: "",
     });
     setIsEditorOpen(true);
   };
@@ -177,7 +232,7 @@ export const LibraryPage: React.FC = () => {
   const handleCreateNewBlank = () => {
     setActiveEditingNote({
       shelf_id: selectedShelfId,
-      content: '',
+      content: "",
     });
     setIsEditorOpen(true);
   };
@@ -189,20 +244,20 @@ export const LibraryPage: React.FC = () => {
   const handleExport = () => {
     try {
       const result = downloadNotesExport(notes, unlockedIds, shelves);
-      const noun = result.exportedCount === 1 ? 'note' : 'notes';
+      const noun = result.exportedCount === 1 ? "note" : "notes";
       const summary = `Exported ${result.exportedCount} ${noun}`;
       setExportSummary(
         result.skippedCount > 0
           ? `${summary}; ${result.skippedCount} locked ${
-              result.skippedCount === 1 ? 'note was' : 'notes were'
+              result.skippedCount === 1 ? "note was" : "notes were"
             } skipped`
-          : summary
+          : summary,
       );
       setExportError(null);
     } catch (err) {
       setExportSummary(null);
       setExportError(
-        err instanceof Error ? err.message : 'Export failed. Please try again.'
+        err instanceof Error ? err.message : "Export failed. Please try again.",
       );
     }
   };
@@ -227,11 +282,13 @@ export const LibraryPage: React.FC = () => {
             Your Private Sanctuary
           </h2>
           <p className="font-body text-base sm:text-lg text-wood-900 leading-relaxed max-w-md mx-auto mb-6 italic">
-            "A candlelit chamber in the grand library, where your unsaid truths rest upon private wooden shelves, locked from all prying eyes."
+            "A candlelit chamber in the grand library, where your unsaid truths
+            rest upon private wooden shelves, locked from all prying eyes."
           </p>
           <p className="font-body text-sm text-wood-800/80 leading-relaxed max-w-md mx-auto mb-8">
-            Step in as a guest and a gentle pen name is chosen for you. Whatever you
-            write stays private on this device - no account, no email, no name.
+            Step in as a guest and a gentle pen name is chosen for you. Whatever
+            you write stays private on this device - no account, no email, no
+            name.
           </p>
 
           <button
@@ -241,7 +298,6 @@ export const LibraryPage: React.FC = () => {
             <KeyRound className="w-4 h-4 text-gold" />
             <span>Enter Sanctuary as Anonymous Guest</span>
           </button>
-
         </div>
       </div>
     );
@@ -271,13 +327,18 @@ export const LibraryPage: React.FC = () => {
         <div>
           <span className="label-caps block mb-1.5">Private Bookcase</span>
           <h1 className="font-serif text-3xl sm:text-4xl text-[#f3ece0] tracking-tight">
-            {profile?.pen_name ? `${profile.pen_name}'s Sanctuary` : 'Your Private Sanctuary'}
+            {profile?.pen_name
+              ? `${profile.pen_name}'s Sanctuary`
+              : "Your Private Sanctuary"}
           </h1>
           <p className="font-body text-sm text-[#9e9488] italic mt-1.5">
-            {filteredNotes.length} {filteredNotes.length === 1 ? 'letter' : 'letters'} resting upon these shelves
+            {filteredNotes.length}{" "}
+            {filteredNotes.length === 1 ? "letter" : "letters"} resting upon
+            these shelves
           </p>
           <p className="font-body text-xs text-[#9e9488]/80 italic mt-1">
-            Only you can see what rests here. Choose a prompt below, or write freely.
+            Only you can see what rests here. Choose a prompt below, or write
+            freely.
           </p>
         </div>
 
@@ -297,7 +358,15 @@ export const LibraryPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hairline bg-card/60 hover:bg-wood-850 text-[#e8dab2] font-serif text-sm transition cursor-pointer"
           >
             <Mail className="w-4 h-4 text-gold" />
-            <span>Responses Inbox</span>
+            <span>Postbox</span>
+            {unreadReplies > 0 && (
+              <span
+                className="postbox-badge"
+                aria-label={`${unreadReplies} new replies`}
+              >
+                {unreadReplies}
+              </span>
+            )}
           </button>
 
           <button
@@ -315,7 +384,7 @@ export const LibraryPage: React.FC = () => {
         <p
           role="status"
           className={`-mt-6 mb-8 text-sm font-body italic ${
-            exportError ? 'text-red-400' : 'text-gold'
+            exportError ? "text-red-400" : "text-gold"
           }`}
         >
           {exportError ?? exportSummary}
@@ -347,8 +416,9 @@ export const LibraryPage: React.FC = () => {
               <BookOpen className="w-4 h-4 text-gold" />
               <span>
                 {selectedShelfId
-                  ? shelves.find((s) => s.id === selectedShelfId)?.name || 'Custom Shelf'
-                  : 'All Preserved Letters'}
+                  ? shelves.find((s) => s.id === selectedShelfId)?.name ||
+                    "Custom Shelf"
+                  : "All Preserved Letters"}
               </span>
             </div>
             <div className="flex items-center gap-3">
@@ -360,6 +430,27 @@ export const LibraryPage: React.FC = () => {
                 aria-label="Search notes"
                 className="w-40 sm:w-56 bg-card/80 border border-hairline rounded-xl px-3.5 py-2 text-xs font-serif text-[#f3ece0] placeholder:text-[#9e9488]/70 focus:outline-none focus:ring-1 focus:ring-gold transition"
               />
+              <div
+                className="flex items-center gap-1"
+                role="group"
+                aria-label="How your letters are shown"
+              >
+                {(["box", "list"] as const).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setStudyView(v)}
+                    aria-pressed={studyView === v}
+                    className={`px-3 py-1 rounded-full text-[11px] cursor-pointer border transition ${
+                      studyView === v
+                        ? "bg-wax-crimson text-amber-50 border-red-400/40"
+                        : "border-hairline text-amber-200 hover:border-gold/60"
+                    }`}
+                  >
+                    {v === "box" ? "Keepsake box" : "Pages"}
+                  </button>
+                ))}
+              </div>
               <span className="text-gold/80 text-[11px] whitespace-nowrap font-sans">
                 {filteredNotes.length} Documents
               </span>
@@ -374,7 +465,10 @@ export const LibraryPage: React.FC = () => {
               </p>
             </div>
           ) : filteredNotes.length === 0 && searchQuery.trim() ? (
-            <div role="status" className="text-center py-16 bg-card/60 border border-dashed border-hairline rounded-2xl p-8">
+            <div
+              role="status"
+              className="text-center py-16 bg-card/60 border border-dashed border-hairline rounded-2xl p-8"
+            >
               <Feather className="w-8 h-8 text-gold/50 mx-auto mb-3" />
               <h3 className="font-serif text-2xl text-[#f3ece0] mb-2">
                 No letters match your search
@@ -387,12 +481,15 @@ export const LibraryPage: React.FC = () => {
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-16 bg-card/60 border border-dashed border-hairline rounded-2xl p-8">
               <Feather className="w-10 h-10 text-gold/50 mx-auto mb-3" />
-              <h3 className="font-serif text-2xl text-[#f3ece0] mb-2">This shelf is empty</h3>
+              <h3 className="font-serif text-2xl text-[#f3ece0] mb-2">
+                This shelf is empty
+              </h3>
               <p className="font-body text-sm text-[#9e9488] max-w-sm mx-auto mb-2 italic">
                 No unsent letters rest here yet.
               </p>
               <p className="font-body text-xs text-[#9e9488]/80 max-w-sm mx-auto mb-6 italic">
-                Choose a prompt above for a gentle first line, or begin with a blank parchment.
+                Choose a prompt above for a gentle first line, or begin with a
+                blank parchment.
               </p>
               <button
                 onClick={handleCreateNewBlank}
@@ -401,6 +498,16 @@ export const LibraryPage: React.FC = () => {
                 Write First Letter
               </button>
             </div>
+          ) : studyView === "box" ? (
+            <KeepsakeBox
+              notes={filteredNotes}
+              title="Your Keepsake Box"
+              onOpen={(selected) => {
+                if (selected.is_locked && !unlockedIds.has(selected.id))
+                  setPasscodeNote(selected);
+                else openForEditing(selected);
+              }}
+            />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {filteredNotes.map((note) => (
@@ -422,10 +529,20 @@ export const LibraryPage: React.FC = () => {
         </div>
       </div>
 
-      <AuthorInbox
-        isOpen={isInboxOpen}
-        onClose={() => setIsInboxOpen(false)}
+      <PasscodeModal
+        isOpen={!!passcodeNote}
+        passcodeHash={passcodeNote?.passcode_hash ?? null}
+        onSuccess={() => {
+          if (passcodeNote) {
+            handleUnlockNote(passcodeNote.id);
+            openForEditing(passcodeNote);
+          }
+          setPasscodeNote(null);
+        }}
+        onClose={() => setPasscodeNote(null)}
       />
+
+      <AuthorInbox isOpen={isInboxOpen} onClose={() => setIsInboxOpen(false)} />
     </div>
   );
 };

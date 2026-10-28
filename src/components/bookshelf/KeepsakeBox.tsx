@@ -1,21 +1,31 @@
 import React from "react";
 import { Lock } from "lucide-react";
 import { Note } from "../../types/database";
+import {
+  isDateSealed,
+  getUnsealDate,
+  formatUnsealDate,
+} from "../../utils/unseal";
 import { HeartSeal } from "../library/HeartSeal";
 
 interface KeepsakeBoxProps {
   notes: Note[];
   onOpen: (note: Note) => void;
+  title?: string;
 }
 
 const TILTS = [-2.2, 1.4, -0.8, 2.1, -1.5, 0.9, -2.6, 1.8];
 
 /** A wooden keepsake box of folded letters: the collection seen from above. */
-export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({ notes, onOpen }) => {
+export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({
+  notes,
+  onOpen,
+  title = "The Keepsake Box",
+}) => {
   return (
     <div className="keepsake-box">
       <div className="keepsake-lid">
-        <span className="label-caps">The Keepsake Box</span>
+        <span className="label-caps">{title}</span>
       </div>
       <div className="keepsake-tray">
         {notes.map((note, i) => {
@@ -38,7 +48,10 @@ export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({ notes, onOpen }) => {
             >
               <span className="keepsake-twine" />
               <span className="keepsake-seal">
-                <HeartSeal size={30} locked={note.is_locked} />
+                <HeartSeal
+                  size={30}
+                  locked={note.is_locked || isDateSealed(note)}
+                />
               </span>
               <span className="keepsake-title">
                 {note.title || "Untitled Letter"}
@@ -47,7 +60,9 @@ export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({ notes, onOpen }) => {
                 {note.is_locked && (
                   <Lock className="w-3 h-3 inline mr-1 -mt-0.5" />
                 )}
-                {author}
+                {isDateSealed(note)
+                  ? `Opens ${formatUnsealDate(getUnsealDate(note.tags) ?? "")}`
+                  : author}
               </span>
             </button>
           );

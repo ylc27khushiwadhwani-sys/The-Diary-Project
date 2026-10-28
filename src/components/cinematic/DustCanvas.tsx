@@ -1,5 +1,5 @@
-import React, { useEffect, useRef } from 'react';
-import { EMBER_EVENT, prefersReducedMotion } from '../../lib/motion';
+import React, { useEffect, useRef } from "react";
+import { EMBER_EVENT, prefersReducedMotion } from "../../lib/motion";
 
 interface Mote {
   x: number;
@@ -27,7 +27,7 @@ export const DustCanvas: React.FC = () => {
   useEffect(() => {
     const canvas = ref.current;
     if (!canvas || prefersReducedMotion()) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
     let w = 0;
@@ -81,7 +81,8 @@ export const DustCanvas: React.FC = () => {
 
     const onBurst = () => {
       const n = w < 640 ? 22 : 48;
-      for (let i = 0; i < n; i++) motes.push(spawn(true, rand(w * 0.1, w * 0.9)));
+      for (let i = 0; i < n; i++)
+        motes.push(spawn(true, rand(w * 0.1, w * 0.9)));
     };
 
     const frame = (t: number) => {
@@ -90,7 +91,7 @@ export const DustCanvas: React.FC = () => {
       const dt = Math.min((t - last) / 1000, 0.05);
       last = t;
       ctx.clearRect(0, 0, w, h);
-      ctx.globalCompositeOperation = 'lighter';
+      ctx.globalCompositeOperation = "lighter";
       for (let i = motes.length - 1; i >= 0; i--) {
         const m = motes[i];
         m.phase += dt * (0.6 + m.depth);
@@ -115,7 +116,10 @@ export const DustCanvas: React.FC = () => {
         const rad = m.r * (m.life >= 0 ? 5 : 4.5);
         const g = ctx.createRadialGradient(m.x, m.y, 0, m.x, m.y, rad);
         g.addColorStop(0, `hsla(${m.hue}, 90%, 72%, ${Math.max(alpha, 0)})`);
-        g.addColorStop(0.4, `hsla(${m.hue}, 85%, 55%, ${Math.max(alpha * 0.35, 0)})`);
+        g.addColorStop(
+          0.4,
+          `hsla(${m.hue}, 85%, 55%, ${Math.max(alpha * 0.35, 0)})`,
+        );
         g.addColorStop(1, `hsla(${m.hue}, 80%, 40%, 0)`);
         ctx.fillStyle = g;
         ctx.beginPath();
@@ -133,15 +137,15 @@ export const DustCanvas: React.FC = () => {
     };
 
     resize();
-    window.addEventListener('resize', resize);
+    window.addEventListener("resize", resize);
     window.addEventListener(EMBER_EVENT, onBurst);
-    document.addEventListener('visibilitychange', onVisibility);
+    document.addEventListener("visibilitychange", onVisibility);
     raf = requestAnimationFrame(frame);
     return () => {
       cancelAnimationFrame(raf);
-      window.removeEventListener('resize', resize);
+      window.removeEventListener("resize", resize);
       window.removeEventListener(EMBER_EVENT, onBurst);
-      document.removeEventListener('visibilitychange', onVisibility);
+      document.removeEventListener("visibilitychange", onVisibility);
     };
   }, []);
 

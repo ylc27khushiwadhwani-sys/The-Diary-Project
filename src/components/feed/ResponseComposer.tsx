@@ -160,7 +160,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
                 className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-40 cursor-pointer"
               >
                 <Feather className="w-3.5 h-3.5 text-amber-300" />
-                <span>{submitting ? 'Sealing & Dispatching...' : 'Seal & Send Response'}</span>
+                <span>{submitting ? 'Posting...' : 'Post the Reply'}</span>
               </button>
               <button
                 type="button"
