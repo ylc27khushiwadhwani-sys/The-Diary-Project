@@ -4,7 +4,7 @@ export const HALL_LABELS: Record<HallHour, string> = {
   dawn: 'Dawn light through the tall windows',
   day: 'Clear daylight in the hall',
   dusk: 'Dusk gathering at the glass',
-  night: 'Moonlight and candles',
+  night: 'Candlelight, low and amber',
   deep: 'Deep night: the candles burn brightest',
 };
 
