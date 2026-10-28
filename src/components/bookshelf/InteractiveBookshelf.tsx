@@ -152,7 +152,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
           {shelves.map((shelf, shelfIdx) => (
             <div
               key={shelfIdx}
-              className="relative rounded-xl bg-[#14100c] border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)]"
+              className="relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)]"
             >
               <div className="absolute inset-0 bg-radial-[at_50%_0%] from-gold/8 via-transparent to-black/50 pointer-events-none rounded-xl" />
               <div className="relative flex items-end justify-center gap-[3px] flex-wrap min-h-[136px] pb-1">

@@ -5,6 +5,7 @@ import { Note } from '../types/database';
 import { supabase, isSupabaseConfigured } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
 import { InteractiveBookshelf } from '../components/bookshelf/InteractiveBookshelf';
+import { GrandHallBackdrop } from '../components/library/GrandHallBackdrop';
 import { CandleLanternIcon } from '../components/common/CandleLanternIcon';
 import { LibraryCard } from '../components/library/LibraryCard';
 import { ResponseComposer } from '../components/feed/ResponseComposer';
@@ -148,6 +149,7 @@ export const PublicFeedPage: React.FC = () => {
       <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden px-6 py-20 text-center">
         {/* Candle Glow Ambient Gradient */}
         <div className="candle-glow absolute inset-0" />
+        <GrandHallBackdrop />
 
         <div className="relative z-10 max-w-3xl mx-auto">
           {/* Hanging Candle Lantern Icon */}
@@ -174,7 +176,7 @@ export const PublicFeedPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="mt-4 text-5xl sm:text-7xl font-serif tracking-tight text-[#f3ece0]"
+            className="mt-4 text-5xl sm:text-7xl font-serif tracking-tight text-[#f3ece0] [text-shadow:0_0_38px_rgba(212,163,115,0.35)]"
           >
             Say what you couldn't say.
           </motion.h1>

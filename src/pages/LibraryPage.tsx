@@ -9,6 +9,7 @@ import { NoteCard } from '../components/library/NoteCard';
 import { NoteEditor } from '../components/editor/NoteEditor';
 import { AuthorInbox } from '../components/library/AuthorInbox';
 import { WaxSeal } from '../components/library/WaxSeal';
+import { GrandHallBackdrop } from '../components/library/GrandHallBackdrop';
 import { useCancellableLoad } from '../hooks/useCancellableLoad';
 import { DEMO_NOTES_KEY, loadNotes, searchNotes } from '../services/notes';
 import { downloadNotesExport } from '../services/export';
@@ -208,7 +209,8 @@ export const LibraryPage: React.FC = () => {
 
   if (!user) {
     return (
-      <div className="max-w-xl mx-auto py-16 px-4 text-center">
+      <div className="relative max-w-xl mx-auto py-16 px-4 text-center">
+        <GrandHallBackdrop variant="study" />
         <div className="letter-frame parchment-sheet letter-deckle p-8 sm:p-12 pl-10 sm:pl-14 text-wood-950 relative">
           <div className="letter-ribbon" />
           <div className="letter-stamps">
@@ -262,7 +264,8 @@ export const LibraryPage: React.FC = () => {
   const filteredNotes = searchNotes(shelfNotes, searchQuery);
 
   return (
-    <div className="max-w-6xl mx-auto py-8 px-4">
+    <div className="relative max-w-6xl mx-auto py-8 px-4">
+      <GrandHallBackdrop variant="study" />
       {/* Sanctuary Header - same card language as the reading room */}
       <div className="bg-card/80 border border-hairline rounded-2xl p-6 sm:p-8 mb-8 backdrop-blur-md shadow-parchment flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
