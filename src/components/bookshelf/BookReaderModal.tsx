@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, MessageSquare, BookOpen, Type, Sparkles } from 'lucide-react';
 import { Note } from '../../types/database';
@@ -60,9 +61,9 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   const goPrev = () => setPageIndex((i) => Math.max(i - 1, 0));
   const goNext = () => setPageIndex((i) => Math.min(i + 1, totalPages - 1));
 
-  return (
+  return createPortal(
     <AnimatePresence>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-[70] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -122,7 +123,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
             </div>
           ) : (
             // Paginated parchment letter, turned page by page
-            <article ref={articleRef} key={note.id} className="letter-frame parchment-sheet letter-deckle letter-unfold p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-12 text-wood-950 relative max-h-[calc(100vh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain overflow-x-hidden flex flex-col">
+            <article ref={articleRef} key={note.id} className="letter-frame parchment-sheet letter-deckle letter-unfold p-6 sm:p-10 pl-9 sm:pl-12 pt-12 pb-12 text-wood-950 relative max-h-[calc(100vh-6rem)] max-h-[calc(100dvh-6rem)] overflow-y-auto overscroll-contain overflow-x-hidden">
               <div className="letter-ribbon" />
               <div className="letter-stamps">
                 <span className="letter-stamp" />
@@ -261,7 +262,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
           />
         </motion.div>
       </div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
