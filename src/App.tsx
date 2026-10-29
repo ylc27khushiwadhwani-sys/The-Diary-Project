@@ -129,7 +129,7 @@ export const App: React.FC = () => {
                 </button>
                 <button
                   onClick={() => openAuth("signup")}
-                  className="label-caps rounded-full border border-gold/60 bg-gold px-4 py-2 text-wood-950 transition-colors hover:bg-gold-light cursor-pointer text-xs"
+                  className="label-caps rounded-full border border-gold/60 bg-gold px-4 py-2 !text-wood-950 transition-colors hover:bg-gold-light cursor-pointer text-xs"
                 >
                   Sign Up
                 </button>
