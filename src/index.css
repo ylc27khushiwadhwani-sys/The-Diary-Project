@@ -524,61 +524,11 @@ html[data-entry='playing'] .ink-letter { animation-play-state: paused; }
   background: #050302;
   -webkit-mask-image: radial-gradient(circle at 50% 56%, transparent var(--hole), #000 calc(var(--hole) + 22%));
   mask-image: radial-gradient(circle at 50% 56%, transparent var(--hole), #000 calc(var(--hole) + 22%));
-  animation: holeBloom 3.2s cubic-bezier(0.45, 0.05, 0.2, 1) 3.9s forwards;
+  animation: holeBloom 2.4s cubic-bezier(0.45, 0.05, 0.2, 1) 2.5s forwards;
 }
 @keyframes holeBloom {
   0% { --hole: 0%; }
   100% { --hole: 120%; }
-}
-.entry-stage {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding-top: 8vh;
-  gap: 18px;
-}
-.entry-candle { opacity: 0; animation: entryFade 1.2s ease 2.6s forwards; }
-.entry-caption {
-  font-family: 'Cormorant Garamond', Georgia, serif;
-  font-style: italic;
-  font-size: clamp(1.4rem, 5vw, 2.1rem);
-  letter-spacing: 0.08em;
-  color: #f3ece0;
-  text-shadow: 0 0 24px rgba(255, 190, 100, 0.5);
-  opacity: 0;
-  animation: entryFade 1.6s ease 3.5s forwards;
-}
-.entry-seal {
-  opacity: 0;
-  transform: scale(1.7);
-  animation: sealPress 0.7s cubic-bezier(0.3, 1.3, 0.5, 1) 5.5s forwards, sealCrack 0.9s ease 7.3s forwards;
-  filter: drop-shadow(0 8px 14px rgba(0, 0, 0, 0.7));
-}
-.entry-crack {
-  position: absolute;
-  width: 120px; height: 120px;
-  margin-top: 150px;
-  border-radius: 50%;
-  border: 2px solid rgba(255, 190, 100, 0.0);
-  animation: wavePulse 1.1s ease-out 5.95s 1;
-}
-@keyframes entryFade { to { opacity: 1; } }
-@keyframes sealPress {
-  0% { opacity: 0; transform: scale(1.7); }
-  55% { opacity: 1; transform: scale(0.94); }
-  100% { opacity: 1; transform: scale(1); }
-}
-@keyframes sealCrack {
-  0% { opacity: 1; transform: scale(1) rotate(0deg); }
-  35% { transform: scale(1.1) rotate(-3deg); }
-  100% { opacity: 0; transform: scale(1.5) rotate(8deg); filter: blur(5px); }
-}
-@keyframes wavePulse {
-  0% { transform: scale(0.6); border-color: rgba(255, 190, 100, 0.55); }
-  100% { transform: scale(3); border-color: rgba(255, 190, 100, 0); }
 }
 .entry-skip {
   position: absolute;
@@ -694,17 +644,6 @@ html:not([data-entry]) .hall-pushin { animation: pushIn 14s cubic-bezier(0.2, 0.
 .reader-nav {
   background: rgba(232, 214, 170, 0.55);
   background: linear-gradient(to top, rgba(236, 220, 180, 0.96) 70%, rgba(236, 220, 180, 0));
-}
-
-/* Keeps the opening caption and seal legible once the room blooms behind them */
-.entry-stage::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 34% 40% at 50% 56%, rgba(5, 3, 2, 0.88) 0%, rgba(5, 3, 2, 0.7) 55%, rgba(5, 3, 2, 0) 100%);
-  opacity: 0;
-  animation: entryFade 1.2s ease 4.2s forwards;
-  z-index: -1;
 }
 
 /* Short landscape screens: tighter sheet so more of each page is readable at once */

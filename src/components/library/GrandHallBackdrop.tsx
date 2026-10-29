@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { CandleFlame } from "../cinematic/CandleFlame";
-import { prefersReducedMotion } from "../../lib/motion";
 
 // A warm wall of library bookshelves, volumetric light beams and drifting
 // dust motes - the grand-hall atmosphere that sits behind the reading room
@@ -108,38 +107,10 @@ const BookWall: React.FC = () => {
 export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
   variant = "hall",
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-
-  // Pointer parallax across three depths (windows far, rays mid, candles near).
-  // Touch/coarse pointers and reduced-motion get a slow automatic drift instead.
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || prefersReducedMotion()) return;
-    if (
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(pointer: coarse)").matches
-    )
-      return;
-    let frame = 0;
-    const onMove = (e: PointerEvent) => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const nx = e.clientX / window.innerWidth - 0.5;
-        const ny = e.clientY / window.innerHeight - 0.5;
-        el.style.setProperty("--px", `${(nx * 26).toFixed(1)}px`);
-        el.style.setProperty("--py", `${(ny * 14).toFixed(1)}px`);
-      });
-    };
-    window.addEventListener("pointermove", onMove, { passive: true });
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", onMove);
-    };
-  }, []);
-
+  // The backdrop stays still: no cursor-driven parallax. (Removed at the
+  // owner's request; the hall keeps its candlelight, rays and drift.)
   return (
     <div
-      ref={ref}
       className={`grand-hall-backdrop hall-pushin ${variant === "study" ? "grand-hall-study" : ""}`}
       aria-hidden="true"
     >

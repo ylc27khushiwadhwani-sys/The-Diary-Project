@@ -23,6 +23,11 @@ export const App: React.FC = () => {
     setActiveTabState(tab);
   };
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const openAuth = (mode: "signin" | "signup") => {
+    setAuthMode(mode);
+    setIsSignInModalOpen(true);
+  };
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
 
   // The hall is lit for the visitor's local hour; re-checked every ten minutes
@@ -115,12 +120,20 @@ export const App: React.FC = () => {
                 </button>
               </div>
             ) : (
-              <button
-                onClick={() => setIsSignInModalOpen(true)}
-                className="label-caps rounded-full border border-hairline bg-card/60 px-4 py-2 text-gold transition-colors hover:bg-gold hover:text-wood-950 cursor-pointer text-xs"
-              >
-                Sign In
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => openAuth("signin")}
+                  className="label-caps rounded-full border border-hairline bg-card/60 px-4 py-2 text-gold transition-colors hover:bg-gold hover:text-wood-950 cursor-pointer text-xs"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => openAuth("signup")}
+                  className="label-caps rounded-full border border-gold/60 bg-gold px-4 py-2 text-wood-950 transition-colors hover:bg-gold-light cursor-pointer text-xs"
+                >
+                  Sign Up
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -166,8 +179,10 @@ export const App: React.FC = () => {
 
       {/* Global Modals */}
       <SignInModal
+        key={authMode}
         isOpen={isSignInModalOpen}
         onClose={() => setIsSignInModalOpen(false)}
+        initialMode={authMode}
       />
 
       <HelplineModal

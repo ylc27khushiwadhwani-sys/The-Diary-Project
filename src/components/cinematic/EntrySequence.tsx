@@ -5,16 +5,13 @@ import {
   prefersReducedMotion,
   burstEmbers,
 } from "../../lib/motion";
-import { CandleFlame } from "./CandleFlame";
-import { HeartSeal } from "../library/HeartSeal";
-
-const TOTAL_MS = 8600;
+const TOTAL_MS = 5000;
 
 /**
- * Opening sequence, played once per visitor: heavy library doors swing open on candlelight, a single candle in the dark, the
- * room blooms outward from its light, a wax seal presses in, cracks, and the
- * veil lifts into a slow push-in on the hall. Click, tap or any key skips it.
- * It plays on every page load; prefers-reduced-motion skips it.
+ * Opening sequence: heavy library doors swing open on candlelight, the veil
+ * blooms outward, and the visitor lands straight in the library. Click, tap
+ * or any key skips it. It plays on every page load; prefers-reduced-motion
+ * skips it.
  */
 export const EntrySequence: React.FC = () => {
   const [active, setActive] = useState(
@@ -74,14 +71,6 @@ export const EntrySequence: React.FC = () => {
           <i className="door-strap s2" />
           <i className="door-ring" />
         </div>
-      </div>
-      <div className="entry-stage">
-        <CandleFlame className="entry-candle" size={1.5} />
-        <p className="entry-caption">The Paper Vault</p>
-        <div className="entry-seal">
-          <HeartSeal size={92} />
-        </div>
-        <div className="entry-crack" />
       </div>
       <button
         type="button"

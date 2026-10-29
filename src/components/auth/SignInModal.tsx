@@ -6,10 +6,14 @@ import { WaxSeal } from '../library/WaxSeal';
 interface SignInModalProps {
   isOpen: boolean;
   onClose: () => void;
+  initialMode?: 'signin' | 'signup';
 }
 
-export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => {
+// App remounts this modal with `key={authMode}` whenever the chosen mode
+// changes, so initialMode always applies on open.
+export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initialMode = 'signin' }) => {
   const { signInWithMagicLink, loginAsGuestDemo } = useAuth();
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
@@ -70,7 +74,9 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
           <WaxSeal color="crimson" size="md" icon="crest" />
           <div>
-            <h3 className="font-serif text-xl font-bold text-wood-950">Enter the Sanctuary</h3>
+            <h3 className="font-serif text-xl font-bold text-wood-950">
+              {mode === 'signup' ? 'Join the Sanctuary' : 'Enter the Sanctuary'}
+            </h3>
             <p className="font-body text-xs text-wood-800 italic">Your anonymous, locked library chamber</p>
           </div>
         </div>
@@ -92,7 +98,9 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
         ) : (
           <div className="space-y-4">
             <p className="font-body text-sm text-wood-900 leading-relaxed italic">
-              Sign in with an email to preserve your sanctuary across devices. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.
+              {mode === 'signup'
+                ? 'Create your sanctuary with an email sign-up link. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.'
+                : 'Sign in with an email to preserve your sanctuary across devices. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.'}
             </p>
 
             {errorMessage && (
@@ -137,9 +145,21 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose }) => 
                 disabled={loading}
                 className="w-full py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
               >
-                {loading ? 'Dispatching Key...' : 'Send Magic Link via Email'}
+                {loading ? 'Dispatching Key...' : mode === 'signup' ? 'Email Me a Sign-Up Link' : 'Send Magic Link via Email'}
               </button>
             </form>
+
+            <p className="text-center text-xs font-serif text-wood-700">
+              {mode === 'signup' ? (
+                <>Already have a sanctuary?{' '}
+                  <button type="button" onClick={() => setMode('signin')} className="underline text-amber-800 hover:text-amber-900 cursor-pointer">Sign in</button>
+                </>
+              ) : (
+                <>New here?{' '}
+                  <button type="button" onClick={() => setMode('signup')} className="underline text-amber-800 hover:text-amber-900 cursor-pointer">Create an account</button>
+                </>
+              )}
+            </p>
 
             <div className="relative flex py-2 items-center">
               <div className="flex-grow border-t border-amber-900/20" />
