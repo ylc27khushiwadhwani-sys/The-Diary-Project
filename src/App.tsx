@@ -48,7 +48,7 @@ export const App: React.FC = () => {
       {/* Top Header Matching thediaryproject.lovable.app */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-[#0a0705]/85 backdrop-blur-md">
         <VisitBadge />
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-3 sm:px-5 py-3.5">
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-2 sm:px-5 py-3.5">
           {/* Brand */}
           <div
             onClick={() => setActiveTab("public")}
@@ -72,7 +72,7 @@ export const App: React.FC = () => {
           <nav className="flex items-center gap-1 sm:gap-3">
             <button
               onClick={() => setActiveTab("public")}
-              className={`flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "public"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
                   : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
@@ -87,7 +87,7 @@ export const App: React.FC = () => {
 
             <button
               onClick={() => setActiveTab("sanctuary")}
-              className={`flex items-center gap-2 px-2.5 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
+              className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "sanctuary"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
                   : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
@@ -123,13 +123,13 @@ export const App: React.FC = () => {
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openAuth("signin")}
-                  className="label-caps rounded-full border border-hairline bg-card/60 px-4 py-2 text-gold transition-colors hover:bg-gold hover:text-wood-950 cursor-pointer text-xs"
+                  className="label-caps rounded-full border border-hairline bg-card/60 px-3 sm:px-4 py-2 text-gold transition-colors hover:bg-gold hover:text-wood-950 cursor-pointer text-xs"
                 >
                   Sign In
                 </button>
                 <button
                   onClick={() => openAuth("signup")}
-                  className="label-caps rounded-full border border-gold/60 bg-gold px-4 py-2 !text-wood-950 transition-colors hover:bg-gold-light cursor-pointer text-xs"
+                  className="label-caps rounded-full border border-gold/60 bg-gold px-3 sm:px-4 py-2 !text-wood-950 transition-colors hover:bg-gold-light cursor-pointer text-xs"
                 >
                   Sign Up
                 </button>
