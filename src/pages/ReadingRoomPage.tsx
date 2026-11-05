@@ -22,6 +22,7 @@ import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { SignInModal } from "../components/auth/SignInModal";
 import { CandleFlame } from "../components/cinematic/CandleFlame";
+import { WhisperWall } from "../components/library/WhisperWall";
 
 interface ReadingRoomPageProps {
   onEnterLibrary: () => void;
@@ -193,6 +194,9 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 .
               </p>
             </div>
+
+            {/* The whisper wall: one line, no letter, no seal */}
+            <WhisperWall />
           </>
         )}
       </div>

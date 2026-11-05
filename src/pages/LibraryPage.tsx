@@ -24,6 +24,13 @@ import { fetchQuota, isLimitError, FREE_LETTER_LIMIT } from "../lib/payments";
 import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
 import { PasscodeModal } from "../components/library/PasscodeModal";
 import { WaxSeal } from "../components/library/WaxSeal";
+import {
+  getSealChoice,
+  setSealChoice,
+  SealChoice,
+  SealColor,
+  SealIcon,
+} from "../lib/sealPreference";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 import { useCancellableLoad } from "../hooks/useCancellableLoad";
 import { Librarian } from "../components/library/Librarian";
@@ -129,6 +136,29 @@ export const LibraryPage: React.FC = () => {
 
   const whisper = useMemo(() => pickDaily(promptsData as Prompt[]), []);
   const thread = useMemo(() => writingThread(notes), [notes]);
+  const [seal, setSeal] = useState<SealChoice>(() => getSealChoice());
+  const chooseSeal = (next: Partial<SealChoice>) => {
+    const choice = { ...seal, ...next };
+    setSeal(choice);
+    setSealChoice(choice);
+  };
+
+  // Letters from your past self: the Librarian resurfaces the oldest letter
+  // you wrote more than a month ago and never dated for unsealing.
+  const [monthAgo] = useState(() => Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const pastSelfLetter = useMemo(() => {
+    const old = notes
+      .filter(
+        (n) =>
+          new Date(n.created_at).getTime() < monthAgo &&
+          !(n.tags ?? []).includes("futureself"),
+      )
+      .sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      );
+    return old[0] ?? null;
+  }, [notes]);
   const unsealedFutureCount = useMemo(
     () =>
       notes.filter(
@@ -501,6 +531,70 @@ export const LibraryPage: React.FC = () => {
             </button>
           </div>
         )}
+
+        {/* Letters from your past self: the Librarian resurfaces one old letter */}
+        {pastSelfLetter && (
+          <button
+            type="button"
+            onClick={() => setFsReading(pastSelfLetter)}
+            className="w-full text-left bg-card/60 border border-gold/25 rounded-2xl p-5 backdrop-blur-sm hover:border-gold/50 transition cursor-pointer"
+          >
+            <span className="label-caps block mb-1 text-gold">
+              From your past self
+            </span>
+            <p className="font-serif italic text-lg text-[#f3ece0]">
+              "{pastSelfLetter.title || "Untitled Letter"}"
+            </p>
+            <p className="font-body text-xs text-[#9e9488] italic mt-1">
+              You wrote this a while ago and let it rest. The Librarian thought
+              you might want it back today.
+            </p>
+          </button>
+        )}
+
+        {/* Your seal: the wax strangers learn to recognise */}
+        <div className="bg-card/60 border border-hairline rounded-2xl p-5 backdrop-blur-sm">
+          <span className="label-caps block mb-2">Your seal</span>
+          <div className="flex flex-wrap items-center gap-4">
+            <WaxSeal color={seal.color} size="lg" icon={seal.icon} />
+            <div>
+              <div className="flex items-center gap-2 mb-2" role="group" aria-label="Wax colour">
+                {(["crimson", "gold", "emerald", "midnight"] as SealColor[]).map(
+                  (c) => (
+                    <button
+                      key={c}
+                      type="button"
+                      onClick={() => chooseSeal({ color: c })}
+                      aria-pressed={seal.color === c}
+                      aria-label={`${c} wax`}
+                      className={`seal-dot seal-dot-${c} ${seal.color === c ? "seal-dot-on" : ""}`}
+                    />
+                  ),
+                )}
+              </div>
+              <div className="flex items-center gap-2" role="group" aria-label="Seal stamp">
+                {(["quill", "lock", "flame", "crest"] as SealIcon[]).map(
+                  (ic) => (
+                    <button
+                      key={ic}
+                      type="button"
+                      onClick={() => chooseSeal({ icon: ic })}
+                      aria-pressed={seal.icon === ic}
+                      aria-label={`${ic} stamp`}
+                      className={`seal-iconpick ${seal.icon === ic ? "seal-iconpick-on" : ""}`}
+                    >
+                      {ic}
+                    </button>
+                  ),
+                )}
+              </div>
+            </div>
+            <p className="font-body text-xs italic text-[#9e9488] ml-auto max-w-[200px]">
+              The wax on everything you seal - strangers will learn it by
+              sight.
+            </p>
+          </div>
+        </div>
 
         <FutureSelfDesk
           notes={notes}

@@ -31,7 +31,8 @@ const fetchPage = async (from: number): Promise<Note[] | null> => {
     .order("published_at", { ascending: false })
     .range(from, from + PAGE_SIZE - 1);
   if (error || !data) return null;
-  return data as Note[];
+  // Whispers live on the Whisper Wall, never as books on the shelves
+  return (data as Note[]).filter((n) => !(n.tags ?? []).includes("whisper"));
 };
 
 export interface PublicNotesState {

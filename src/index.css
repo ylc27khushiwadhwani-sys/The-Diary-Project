@@ -1613,3 +1613,95 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 .postbox-letter p { color: #3a2a17; }
 .postbox-letter .font-body:first-child { color: #8a5a2b; }
 .postbox-letter p:last-child { color: #7d6647; }
+
+/* ===== Page-turn room transitions ===== */
+.room-enter { animation: roomEnter 0.62s cubic-bezier(0.22, 1, 0.36, 1) backwards; transform-origin: left center; }
+@keyframes roomEnter {
+  0% { opacity: 0; transform: perspective(1400px) rotateY(7deg) translateX(26px); filter: blur(3px) brightness(0.85); }
+  60% { opacity: 1; filter: blur(0) brightness(1.04); }
+  100% { opacity: 1; transform: perspective(1400px) rotateY(0deg) translateX(0); filter: blur(0) brightness(1); }
+}
+
+/* ===== Torn notebook scraps (prompts) ===== */
+.torn-scrap {
+  border-radius: 3px 14px 4px 12px !important;
+  clip-path: polygon(0 4%, 3% 0, 97% 1%, 100% 6%, 99% 95%, 96% 100%, 4% 99%, 1% 94%);
+}
+.torn-scrap:nth-child(odd) { transform: rotate(-0.7deg); }
+.torn-scrap:nth-child(even) { transform: rotate(0.6deg); }
+.torn-scrap:hover { transform: rotate(0deg) translateY(-2px); }
+
+/* ===== Seal picker ===== */
+.seal-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s, border-color 0.15s;
+}
+.seal-dot:hover { transform: scale(1.12); }
+.seal-dot-on { border-color: #f3d9a4; transform: scale(1.12); }
+.seal-dot-crimson { background: radial-gradient(circle at 35% 30%, #d95d68, #7a1f28 70%); }
+.seal-dot-gold { background: radial-gradient(circle at 35% 30%, #f3d9a4, #a5692e 70%); }
+.seal-dot-emerald { background: radial-gradient(circle at 35% 30%, #6fbf8f, #1f5a3a 70%); }
+.seal-dot-midnight { background: radial-gradient(circle at 35% 30%, #6a7fb5, #232f52 70%); }
+.seal-iconpick {
+  padding: 3px 10px;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 163, 115, 0.3);
+  background: rgba(20, 12, 7, 0.6);
+  color: #cbbfa8;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.seal-iconpick:hover { border-color: rgba(243, 217, 164, 0.6); }
+.seal-iconpick-on { border-color: #d4a373; color: #f3d9a4; }
+
+/* ===== The Whisper Wall ===== */
+.whisper-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  max-width: 56rem;
+  margin: 0 auto;
+}
+.whisper-scrap {
+  position: relative;
+  margin: 0;
+  padding: 20px 18px 14px;
+  background: linear-gradient(155deg, rgba(243, 231, 205, 0.96) 0%, rgba(228, 209, 172, 0.96) 100%);
+  color: #46331d;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+  clip-path: polygon(0 5%, 4% 0, 96% 2%, 100% 7%, 98% 93%, 95% 100%, 5% 98%, 1% 92%);
+}
+.whisper-pin {
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #d95d68, #7a1f28 75%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+.whisper-line {
+  margin: 0;
+  font-family: "Great Vibes", "Cormorant Garamond", cursive;
+  font-size: 1.25rem;
+  line-height: 1.45;
+}
+.whisper-by {
+  margin-top: 8px;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7d6647;
+  text-align: right;
+}

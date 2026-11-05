@@ -9,6 +9,7 @@ import {
   formatUnsealDate,
 } from "../../utils/unseal";
 import { WaxSeal } from "../library/WaxSeal";
+import { getSealChoice } from "../../lib/sealPreference";
 
 export const FUTURE_SELF_TAG = "futureself";
 
@@ -107,9 +108,9 @@ export const FutureSelfDesk: React.FC<FutureSelfDeskProps> = ({
                 </span>
                 <span className="fs-seal">
                   <WaxSeal
-                    color={sealed ? "crimson" : "gold"}
+                    color={sealed ? getSealChoice().color : "gold"}
                     size="md"
-                    icon={sealed ? "lock" : "quill"}
+                    icon={sealed ? getSealChoice().icon : "quill"}
                   />
                 </span>
               </motion.button>

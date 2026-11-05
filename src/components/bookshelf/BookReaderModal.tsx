@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useEffect } from "react";
+import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,6 +9,8 @@ import {
   Type,
   Sparkles,
   Flame,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { Note } from "../../types/database";
 import { WaxSeal } from "../library/WaxSeal";
@@ -48,6 +50,37 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   const [candleLit, setCandleLit] = useState(() =>
     note ? isCandleLit(note.id) : false,
   );
+
+  // Read to me: the letter, out loud, a touch slower than speech
+  const [readingAloud, setReadingAloud] = useState(false);
+  const stopReading = useCallback(() => {
+    if ("speechSynthesis" in window) window.speechSynthesis.cancel();
+    setReadingAloud(false);
+  }, []);
+  useEffect(() => stopReading, [stopReading]);
+  useEffect(() => {
+    if (isOpen) return;
+    const id = window.setTimeout(stopReading, 0);
+    return () => window.clearTimeout(id);
+  }, [isOpen, stopReading]);
+
+  const toggleReadAloud = () => {
+    if (readingAloud) {
+      stopReading();
+      return;
+    }
+    if (!("speechSynthesis" in window) || !note) return;
+    const utterance = new SpeechSynthesisUtterance(
+      `${note.title || "Untitled Letter"}. ${note.content}`,
+    );
+    utterance.rate = 0.92;
+    utterance.pitch = 0.95;
+    utterance.onend = () => setReadingAloud(false);
+    utterance.onerror = () => setReadingAloud(false);
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(utterance);
+    setReadingAloud(true);
+  };
 
   const mainPages = useMemo(
     () => paginate(note?.content ?? ""),
@@ -273,6 +306,29 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                       Preserved in the archive · {authorPenName}
                     </span>
                     <div className="flex items-center gap-3">
+                      {"speechSynthesis" in window && (
+                        <button
+                          type="button"
+                          onClick={toggleReadAloud}
+                          className={`inline-flex items-center gap-1.5 text-sm font-serif font-semibold cursor-pointer transition ${
+                            readingAloud
+                              ? "text-amber-600"
+                              : "text-wood-800 hover:text-wood-950"
+                          }`}
+                          title={
+                            readingAloud
+                              ? "Stop the reading"
+                              : "Read this letter aloud - letters were made to be heard"
+                          }
+                        >
+                          {readingAloud ? (
+                            <VolumeX className="w-4 h-4 text-amber-500" />
+                          ) : (
+                            <Volume2 className="w-4 h-4 text-amber-800" />
+                          )}
+                          <span>{readingAloud ? "Hush" : "Read to me"}</span>
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => {

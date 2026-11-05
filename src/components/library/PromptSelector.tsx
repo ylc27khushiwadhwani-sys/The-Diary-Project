@@ -25,7 +25,7 @@ export const PromptSelector: React.FC<PromptSelectorProps> = ({ onSelectPrompt }
           <div
             key={p.id}
             onClick={() => onSelectPrompt(p)}
-            className="group cursor-pointer p-4 parchment-sheet rounded-xl border border-amber-800/30 hover:shadow-candle transition-all duration-300 flex flex-col justify-between"
+            className="group cursor-pointer p-4 parchment-sheet torn-scrap rounded-xl border border-amber-800/30 hover:shadow-candle transition-all duration-300 flex flex-col justify-between"
           >
             <div>
               <span className="text-[10px] font-serif uppercase tracking-wider text-amber-900 font-bold bg-amber-900/10 px-2 py-0.5 rounded-full inline-block mb-1.5 border border-amber-900/20">
