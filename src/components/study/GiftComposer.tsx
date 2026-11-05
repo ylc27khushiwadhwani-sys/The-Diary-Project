@@ -121,7 +121,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-[85] flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-md"
+      className="fixed inset-0 z-[85] flex items-center justify-center p-3 pt-16 sm:p-4 bg-black/75 backdrop-blur-md"
       onClick={onClose}
     >
       <motion.div
