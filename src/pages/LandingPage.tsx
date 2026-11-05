@@ -94,15 +94,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
       {/* 1. Hero - one promise, one door */}
       <section className="landing-hero relative flex min-h-[88vh] items-center justify-center overflow-hidden px-6 py-20">
-        <CoffeeButton />
         <div className="candle-glow absolute inset-0" />
         <QuillFlight />
 
         {/* mini top bar */}
         <div className="absolute top-0 inset-x-0 flex items-center justify-between px-4 sm:px-8 py-4 z-20">
-          <span className="font-serif italic text-lg text-[#f3ece0]">
-            The Paper Vault
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="font-serif italic text-lg text-[#f3ece0]">
+              The Paper Vault
+            </span>
+            <CoffeeButton />
+          </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => onAuth("signin")}
