@@ -75,7 +75,7 @@ export const PublicFeedPage: React.FC = () => {
             (field) => field.toLowerCase().includes(query),
           ),
         )
-        : notes;
+        : shelf;
     const byDate = (n: Note) => n.published_at || n.created_at || "";
     return [...filtered].sort((a, b) =>
       feedSort === "latest"
