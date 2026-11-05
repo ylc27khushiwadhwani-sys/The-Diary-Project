@@ -20,6 +20,7 @@ import { WaxSeal } from "../components/library/WaxSeal";
 import { BookItem } from "../components/bookshelf/BookItem";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
+import { ReportModal } from "../components/feed/ReportModal";
 import { SignInModal } from "../components/auth/SignInModal";
 import { CandleFlame } from "../components/cinematic/CandleFlame";
 import { WhisperWall } from "../components/library/WhisperWall";
@@ -47,6 +48,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [sealBreaking, setSealBreaking] = useState(false);
   const [finishedNote, setFinishedNote] = useState<Note | null>(null);
   const [respondingNote, setRespondingNote] = useState<Note | null>(null);
+  const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   // Letters you can actually open today (date-sealed ones are still waiting)
@@ -214,6 +216,11 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
           setSelectedNote(null);
           setFinishedNote(n);
         }}
+        onReport={
+          selectedNote && !isSampleNote(selectedNote.id)
+            ? (n) => setReportingNote(n)
+            : undefined
+        }
       />
 
       {/* Completion ceremony */}
@@ -294,6 +301,19 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
           onResponseSent={() => {
             setRespondingNote(null);
             refetch();
+          }}
+        />
+      )}
+
+      {/* Report */}
+      {reportingNote && (
+        <ReportModal
+          isOpen={!!reportingNote}
+          noteId={reportingNote.id}
+          onClose={() => setReportingNote(null)}
+          onReportSubmitted={() => {
+            refetch();
+            setReportingNote(null);
           }}
         />
       )}

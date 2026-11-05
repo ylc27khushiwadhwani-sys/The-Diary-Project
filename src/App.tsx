@@ -10,6 +10,7 @@ import { PublicFeedPage } from "./pages/PublicFeedPage";
 import { LibraryPage } from "./pages/LibraryPage";
 import { DoorsPage } from "./pages/DoorsPage";
 import { GiftOpeningPage } from "./pages/GiftOpeningPage";
+import { GuidelinesPage } from "./pages/GuidelinesPage";
 import { giftFromLocation, GiftPayload } from "./lib/giftLink";
 import { PostboxPage, countUnseen } from "./pages/PostboxPage";
 import { loadAuthorResponses } from "./components/library/AuthorInbox";
@@ -49,6 +50,7 @@ export const App: React.FC = () => {
     setIsSignInModalOpen(true);
   };
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
+  const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
 
   // After entering, the two doors come first; the rooms wait behind them.
   const [doorChosen, setDoorChosen] = useState(false);
@@ -98,7 +100,10 @@ export const App: React.FC = () => {
             <LandingPage onAuth={openAuth} onGuest={loginAsGuestDemo} />
           </main>
         )}
-        <LandingFooter onOpenHelplines={() => setIsHelplineOpen(true)} />
+        <LandingFooter
+          onOpenHelplines={() => setIsHelplineOpen(true)}
+          onOpenGuidelines={() => setIsGuidelinesOpen(true)}
+        />
         <SignInModal
           key={authMode}
           isOpen={isSignInModalOpen}
@@ -109,6 +114,9 @@ export const App: React.FC = () => {
           isOpen={isHelplineOpen}
           onClose={() => setIsHelplineOpen(false)}
         />
+        {isGuidelinesOpen && (
+          <GuidelinesOverlay onClose={() => setIsGuidelinesOpen(false)} />
+        )}
       </div>
     );
   }
@@ -261,7 +269,10 @@ export const App: React.FC = () => {
         )}
       </main>
 
-      <LandingFooter onOpenHelplines={() => setIsHelplineOpen(true)} />
+      <LandingFooter
+          onOpenHelplines={() => setIsHelplineOpen(true)}
+          onOpenGuidelines={() => setIsGuidelinesOpen(true)}
+        />
 
       {/* Global Modals */}
       <SignInModal
@@ -275,13 +286,31 @@ export const App: React.FC = () => {
         isOpen={isHelplineOpen}
         onClose={() => setIsHelplineOpen(false)}
       />
+      {isGuidelinesOpen && (
+        <GuidelinesOverlay onClose={() => setIsGuidelinesOpen(false)} />
+      )}
     </div>
   );
 };
 
-const LandingFooter: React.FC<{ onOpenHelplines: () => void }> = ({
-  onOpenHelplines,
-}) => (
+/* Full-screen overlay for the Community Guidelines & Safety page. */
+const GuidelinesOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => (
+  <div className="fixed inset-0 z-[70] overflow-y-auto bg-[#0d0906]">
+    <button
+      onClick={onClose}
+      aria-label="Close guidelines"
+      className="fixed top-4 right-4 z-[80] px-4 py-2 rounded-full bg-wood-800/90 border border-amber-700/40 text-amber-100 font-serif text-xs hover:bg-wood-700 transition cursor-pointer"
+    >
+      Close
+    </button>
+    <GuidelinesPage />
+  </div>
+);
+
+const LandingFooter: React.FC<{
+  onOpenHelplines: () => void;
+  onOpenGuidelines: () => void;
+}> = ({ onOpenHelplines, onOpenGuidelines }) => (
   <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-[#9e9488] relative z-10 bg-[#0d0906]/80 backdrop-blur-sm">
     <div className="mx-auto max-w-xl space-y-4">
       <div className="flex items-center justify-center gap-2 text-xs font-serif text-[#9e9488]">
@@ -300,6 +329,18 @@ const LandingFooter: React.FC<{ onOpenHelplines: () => void }> = ({
         </button>
         .
       </p>
+
+      <div className="flex items-center justify-center gap-2 text-xs font-serif">
+        <button
+          onClick={onOpenGuidelines}
+          className="text-gold underline underline-offset-4 hover:text-gold-light transition cursor-pointer"
+        >
+          Community Guidelines &amp; Safety
+        </button>
+        <span className="text-[#9e9488]/60">
+          - how every letter is kept safe
+        </span>
+      </div>
 
       <p className="text-xs text-[#9e9488]/70">
         We only use your email to preserve your private library across devices.

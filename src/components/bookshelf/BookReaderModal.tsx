@@ -9,6 +9,7 @@ import {
   Type,
   Sparkles,
   Flame,
+  Flag,
   Volume2,
   VolumeX,
 } from "lucide-react";
@@ -33,6 +34,8 @@ interface BookReaderModalProps {
   onRespond?: (note: Note) => void;
   /** Reading-room flow: called when the reader finishes the last page. */
   onFinished?: (note: Note) => void;
+  /** Public letters: report for safety review (3 reports auto-hide). */
+  onReport?: (note: Note) => void;
 }
 
 const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
@@ -41,6 +44,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   onClose,
   onRespond,
   onFinished,
+  onReport,
 }) => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
@@ -373,6 +377,16 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                         >
                           <Heart className="w-3.5 h-3.5 text-red-200" />
                           <span>Send Response Letter</span>
+                        </button>
+                      )}
+                      {onReport && (
+                        <button
+                          onClick={() => onReport(note)}
+                          className="inline-flex items-center gap-1.5 text-sm font-serif text-wood-700 hover:text-red-900 transition cursor-pointer"
+                          title="Report this letter - 3 reports hide it from the library automatically"
+                        >
+                          <Flag className="w-4 h-4" />
+                          <span>Report</span>
                         </button>
                       )}
                     </div>

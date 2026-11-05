@@ -361,6 +361,11 @@ export const PublicFeedPage: React.FC = () => {
           setAisleNote(null);
           handleStartResponse(n);
         }}
+        onReport={
+          aisleNote && !isSampleNote(aisleNote.id)
+            ? (n) => setReportingNote(n)
+            : undefined
+        }
       />
 
       {/* Response Composer Modal */}

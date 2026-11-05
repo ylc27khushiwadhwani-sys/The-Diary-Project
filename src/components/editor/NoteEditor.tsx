@@ -403,6 +403,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           />
         </div>
 
+        <p className="mt-3 text-center font-body text-[11px] italic text-wood-600">
+          Letters released to the Grand Library are screened for safety before
+          they appear in public.
+        </p>
+
         {/* Bottom Scroll Roll */}
       </div>
 
