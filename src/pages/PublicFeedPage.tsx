@@ -332,6 +332,7 @@ export const PublicFeedPage: React.FC = () => {
             notes={visibleNotes}
             onWriteClick={openWriter}
             onRespondLetter={handleStartResponse}
+            onReportLetter={(n) => setReportingNote(n)}
           />
         )}
 

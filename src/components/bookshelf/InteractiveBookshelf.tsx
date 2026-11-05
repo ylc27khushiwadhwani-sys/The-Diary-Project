@@ -4,12 +4,15 @@ import { Note } from "../../types/database";
 import { BookItem } from "./BookItem";
 import { KeepsakeBox } from "./KeepsakeBox";
 import { BookReaderModal } from "./BookReaderModal";
+import { isSampleNote } from "../../services/publicFeed";
 import promptsData from "../../data/prompts.json";
 
 interface InteractiveBookshelfProps {
   notes: Note[];
   onWriteClick: () => void;
   onRespondLetter: (note: Note) => void;
+  /** Public shelf: report a real letter for safety review. */
+  onReportLetter?: (note: Note) => void;
 }
 
 // Shelf sections as filter tabs. Labels are kept to 3-4 words so the
@@ -69,6 +72,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   notes,
   onWriteClick,
   onRespondLetter,
+  onReportLetter,
 }) => {
   const [activeSectionId, setActiveSectionId] = useState("all");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
@@ -214,6 +218,14 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
           setSelectedNote(null);
           onRespondLetter(n);
         }}
+        onReport={
+          onReportLetter && selectedNote && !isSampleNote(selectedNote.id)
+            ? (n) => {
+                setSelectedNote(null);
+                onReportLetter(n);
+              }
+            : undefined
+        }
       />
     </section>
   );
