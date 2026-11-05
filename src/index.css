@@ -405,26 +405,24 @@
   transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
+/* Window light: soft, still, wide. The old sweeping bands sliced the wall
+   into moving dark wedges (the gaps between rays read as faulty shadows),
+   so the rays no longer sweep - three wide, dim, heavily blurred shafts
+   keep the volumetric feel without the moving bands. */
 .hall-ray {
   position: absolute;
   top: -10%;
   height: 130%;
-  width: 17%;
-  background: linear-gradient(180deg, rgba(255, 224, 160, 0.5) 0%, rgba(255, 205, 130, 0.2) 45%, rgba(255, 190, 110, 0) 92%);
-  filter: blur(14px);
+  width: 26%;
+  background: linear-gradient(180deg, rgba(255, 224, 160, 0.34) 0%, rgba(255, 205, 130, 0.14) 45%, rgba(255, 190, 110, 0) 92%);
+  filter: blur(26px);
   transform-origin: 50% 0;
   transform: rotate(-24deg);
-  animation: raySweep 26s ease-in-out infinite alternate;
-  opacity: 0.55;
+  opacity: 0.3;
 }
-.hall-ray.r1 { left: 12%; animation-duration: 29s; }
-.hall-ray.r2 { left: 42%; animation-duration: 34s; animation-delay: -9s; width: 21%; opacity: 0.42; }
-.hall-ray.r3 { left: 71%; animation-duration: 25s; animation-delay: -15s; }
-@keyframes raySweep {
-  0% { transform: rotate(-27deg) translateX(-2%); opacity: 0.35; }
-  50% { opacity: 0.7; }
-  100% { transform: rotate(-19deg) translateX(3%); opacity: 0.4; }
-}
+.hall-ray.r1 { left: 8%; }
+.hall-ray.r2 { left: 37%; width: 30%; opacity: 0.24; }
+.hall-ray.r3 { left: 66%; }
 
 /* Light pools: window glow landing on the floor, drifting slowly */
 .hall-pool {
