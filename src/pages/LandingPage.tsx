@@ -60,9 +60,17 @@ const fetchRecentTitles = async (): Promise<RecentTitle[]> => {
     }
     rows = retry.data;
   }
-  if (!rows) return [];
-  const rows2 = rows;
-  return rows2.map((row) => {
+  const source =
+    rows && rows.length > 0
+      ? rows
+      : INITIAL_PUBLIC_NOTES.slice(0, 5).map((n) => ({
+          id: n.id,
+          title: n.title || "Untitled Letter",
+          profiles: n.profiles
+            ? { pen_name: n.profiles.pen_name }
+            : undefined,
+        }));
+  return source.map((row) => {
     const p = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
     return {
       id: row.id,
