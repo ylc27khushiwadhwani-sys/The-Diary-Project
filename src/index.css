@@ -1962,3 +1962,73 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   transform: scale(0.82);
   transform-origin: top center;
 }
+
+/* --- Gift composer preview + ceremony --- */
+.gift-preview-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 190px;
+  padding: 8px 0;
+}
+.gift-preview-card {
+  transform: scale(0.72);
+}
+.gift-preview-letter {
+  width: min(360px, 100%);
+  padding: 26px 24px 22px;
+  transform: none;
+  text-align: left;
+}
+.gift-preview-title {
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-size: 1.15rem;
+  margin-bottom: 8px;
+  color: #241605;
+}
+.gift-preview-body {
+  font-family: var(--font-body, "EB Garamond", serif);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: #2b1d10;
+}
+.gift-preview-from {
+  margin-top: 10px;
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #6d5426;
+  text-align: right;
+}
+.gift-preview-object {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #6d5426;
+}
+.gift-preview-object span {
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-style: italic;
+  font-size: 0.8rem;
+}
+.gift-open-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.gift-open-stage .gift-object {
+  margin-bottom: -14px;
+  z-index: 2;
+}
+@media (max-width: 640px) {
+  .gift-letter {
+    padding: 34px 24px 28px;
+  }
+  .gift-title {
+    font-size: 1.3rem;
+  }
+  .gift-body {
+    font-size: 0.98rem;
+  }
+}

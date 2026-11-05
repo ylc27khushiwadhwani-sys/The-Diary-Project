@@ -5,7 +5,8 @@
  */
 
 export type GiftKind = "letter" | "postcard" | "gift";
-export type GiftObject = "flower" | "candle" | "star";
+// ids come from src/lib/giftCatalog.ts; string keeps old links decoding.
+export type GiftObject = string;
 
 export interface GiftPayload {
   t: string | null;
@@ -44,3 +45,37 @@ export const giftFromLocation = (): GiftPayload | null => {
 
 export const giftUrl = (payload: GiftPayload): string =>
   `${window.location.origin}${window.location.pathname}${giftHash(payload)}`;
+
+/** A record of every link the sender has minted, kept on this device.
+ *  Hash-links carry no server row, so "opened" state cannot be known -
+ *  the history is a memento, not a tracker. */
+export interface GiftRecord {
+  t: string | null;
+  k: GiftKind;
+  g?: GiftObject;
+  f: string;
+  at: string;
+  url: string;
+}
+
+const GIFT_HISTORY_KEY = "paper-vault:gifts";
+
+export const loadGiftRecords = (): GiftRecord[] => {
+  try {
+    const raw = localStorage.getItem(GIFT_HISTORY_KEY);
+    return raw ? (JSON.parse(raw) as GiftRecord[]) : [];
+  } catch {
+    return [];
+  }
+};
+
+export const saveGiftRecord = (record: GiftRecord): GiftRecord[] => {
+  const existing = loadGiftRecords();
+  const next = [record, ...existing].slice(0, 20);
+  try {
+    localStorage.setItem(GIFT_HISTORY_KEY, JSON.stringify(next));
+  } catch {
+    /* a full drawer should never lose a letter */
+  }
+  return next;
+};

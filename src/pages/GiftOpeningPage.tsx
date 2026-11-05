@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Flower2, Flame, Star } from "lucide-react";
 import { GiftPayload } from "../lib/giftLink";
+import { giftItemFor } from "../lib/giftCatalog";
+import { GiftArt } from "../components/gifts/GiftArt";
 import { WaxSeal } from "../components/library/WaxSeal";
 
 interface GiftOpeningPageProps {
@@ -9,22 +10,18 @@ interface GiftOpeningPageProps {
   onEnterVault: () => void;
 }
 
-const GIFT_OBJECTS = {
-  flower: { Icon: Flower2, label: "a pressed flower", tint: "#d95d68" },
-  candle: { Icon: Flame, label: "a candle that doesn't go out", tint: "#e2b17a" },
-  star: { Icon: Star, label: "a folded paper star", tint: "#f3d9a4" },
-} as const;
-
 /**
- * What the recipient sees: a sealed something, then the words. The whole
- * letter travelled inside the link - it was never anywhere else.
+ * What the recipient sees. The ceremony has three beats: the sealed
+ * thing arrives, the wax breaks, then the letter unfolds with whatever
+ * was folded inside. The whole letter travelled inside the link - it
+ * was never anywhere else.
  */
 export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
   gift,
   onEnterVault,
 }) => {
   const [opened, setOpened] = useState(false);
-  const object = gift.g ? GIFT_OBJECTS[gift.g] : null;
+  const item = gift.g ? giftItemFor(gift.g) : null;
 
   return (
     <div className="gift-scene">
@@ -42,7 +39,7 @@ export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
               onClick={() => setOpened(true)}
               initial={{ opacity: 0, y: 14 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -14 }}
+              exit={{ opacity: 0, y: -18, rotate: -2 }}
               className="gift-sealed group"
               aria-label="Break the seal to read what was left for you"
             >
@@ -64,28 +61,29 @@ export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
               </span>
             </motion.button>
           ) : (
-            <motion.div
-              key="open"
-              initial={{ opacity: 0, y: 18, rotate: -1 }}
-              animate={{ opacity: 1, y: 0, rotate: -0.6 }}
-              transition={{ duration: 0.7 }}
-              className="gift-letter"
-            >
-              {object && (
-                <div
+            <motion.div key="open" className="gift-open-stage">
+              {item && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: -8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 0.15, duration: 0.6, type: "spring" }}
                   className="gift-object"
-                  aria-label={`With ${object.label}`}
+                  aria-label={`With ${item.label.toLowerCase()}`}
                 >
-                  <object.Icon
-                    className="w-7 h-7"
-                    style={{ color: object.tint }}
-                  />
-                  <span>with {object.label}</span>
-                </div>
+                  <GiftArt id={gift.g ?? ""} size={52} />
+                  <span>with {item.label.toLowerCase()}</span>
+                </motion.div>
               )}
-              {gift.t && <h1 className="gift-title">"{gift.t}"</h1>}
-              <p className="gift-body">{gift.c}</p>
-              <p className="gift-from">- {gift.f}</p>
+              <motion.div
+                initial={{ opacity: 0, y: 22, rotate: -2, scaleY: 0.92 }}
+                animate={{ opacity: 1, y: 0, rotate: -0.6, scaleY: 1 }}
+                transition={{ delay: 0.3, duration: 0.7 }}
+                className="gift-letter"
+              >
+                {gift.t && <h1 className="gift-title">"{gift.t}"</h1>}
+                <p className="gift-body">{gift.c}</p>
+                <p className="gift-from">- {gift.f}</p>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -101,4 +99,3 @@ export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
     </div>
   );
 };
-
