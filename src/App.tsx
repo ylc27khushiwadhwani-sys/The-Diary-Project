@@ -9,6 +9,8 @@ import { ReadingRoomPage } from "./pages/ReadingRoomPage";
 import { PublicFeedPage } from "./pages/PublicFeedPage";
 import { LibraryPage } from "./pages/LibraryPage";
 import { DoorsPage } from "./pages/DoorsPage";
+import { GiftOpeningPage } from "./pages/GiftOpeningPage";
+import { giftFromLocation, GiftPayload } from "./lib/giftLink";
 import { PostboxPage, countUnseen } from "./pages/PostboxPage";
 import { loadAuthorResponses } from "./components/library/AuthorInbox";
 import { DustCanvas } from "./components/cinematic/DustCanvas";
@@ -22,6 +24,18 @@ type Tab = "reading" | "library" | "postbox" | "study";
 
 export const App: React.FC = () => {
   const { user, profile, loading, signOut, loginAsGuestDemo } = useAuth();
+  const [gift, setGift] = useState<GiftPayload | null>(() =>
+    giftFromLocation(),
+  );
+  useEffect(() => {
+    const onHash = () => setGift(giftFromLocation());
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+  const clearGift = () => {
+    window.location.hash = "";
+    setGift(null);
+  };
   const [activeTab, setActiveTabState] = useState<Tab>("reading");
   const setActiveTab = (tab: Tab) => {
     if (tab !== activeTab) burstEmbers();
@@ -59,6 +73,15 @@ export const App: React.FC = () => {
     const id = window.setInterval(apply, 10 * 60 * 1000);
     return () => window.clearInterval(id);
   }, []);
+
+  // A dedicated letter opens for whoever holds the link, signed in or not.
+  if (gift) {
+    return (
+      <div className="min-h-screen text-[#f3ece0] relative bg-[#0d0906]">
+        <GiftOpeningPage gift={gift} onEnterVault={clearGift} />
+      </div>
+    );
+  }
 
   // The flow: landing first; once inside (signed in or guest), the rooms.
   if (!user) {

@@ -16,6 +16,10 @@ import { NoteEditor } from "../components/editor/NoteEditor";
 import { usePublicNotes } from "../hooks/usePublicNotes";
 import { PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
 import { isSampleNote } from "../services/publicFeed";
+import {
+  LIBRARIAN_COLLECTIONS,
+  noteMatchesCollection,
+} from "../lib/collections";
 
 const DEMO_NOTES_KEY = PUBLIC_FEED_DEMO_KEY;
 
@@ -55,11 +59,18 @@ export const PublicFeedPage: React.FC = () => {
   // it narrows (never conflicts with) section browsing.
   const [feedSearch, setFeedSearch] = useState("");
   const [feedSort, setFeedSort] = useState<"latest" | "oldest">("latest");
+  // The Librarian's collections: one curated shelf at a time.
+  const [collectionId, setCollectionId] = useState<string | null>(null);
+  const activeCollection =
+    LIBRARIAN_COLLECTIONS.find((c) => c.id === collectionId) ?? null;
 
   const visibleNotes = useMemo(() => {
+    const shelf = activeCollection
+      ? notes.filter((n) => noteMatchesCollection(n, activeCollection))
+      : notes;
     const query = feedSearch.trim().toLowerCase();
     const filtered = query
-      ? notes.filter((n) =>
+      ? shelf.filter((n) =>
           [n.title ?? "", n.content ?? "", n.profiles?.pen_name ?? ""].some(
             (field) => field.toLowerCase().includes(query),
           ),
@@ -71,7 +82,7 @@ export const PublicFeedPage: React.FC = () => {
         ? byDate(b).localeCompare(byDate(a))
         : byDate(a).localeCompare(byDate(b)),
     );
-  }, [notes, feedSearch, feedSort]);
+  }, [notes, feedSearch, feedSort, activeCollection]);
 
   const handleStartResponse = (note: Note) => {
     if (isSupabaseConfigured && isSampleNote(note.id)) return;
@@ -202,6 +213,52 @@ export const PublicFeedPage: React.FC = () => {
           </div>
         </div>
 
+        {/* The Librarian's collections */}
+        <div className="mx-auto max-w-5xl px-4 mb-6">
+          <p className="label-caps text-center mb-3">
+            The Librarian's shelves
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={() => setCollectionId(null)}
+              aria-pressed={collectionId === null}
+              className={`px-4 py-1.5 rounded-full border text-xs font-serif cursor-pointer transition-all duration-200 ${
+                collectionId === null
+                  ? "border-gold bg-gold/15 text-gold-light shadow-candle"
+                  : "border-hairline bg-card/50 text-amber-200 hover:border-gold/40 hover:text-gold-light"
+              }`}
+            >
+              Every letter
+            </button>
+            {LIBRARIAN_COLLECTIONS.map((collection) => (
+              <button
+                key={collection.id}
+                type="button"
+                onClick={() =>
+                  setCollectionId(
+                    collectionId === collection.id ? null : collection.id,
+                  )
+                }
+                aria-pressed={collectionId === collection.id}
+                title={collection.line}
+                className={`px-4 py-1.5 rounded-full border text-xs font-serif cursor-pointer transition-all duration-200 ${
+                  collectionId === collection.id
+                    ? "border-gold bg-gold/15 text-gold-light shadow-candle"
+                    : "border-hairline bg-card/50 text-amber-200 hover:border-gold/40 hover:text-gold-light"
+                }`}
+              >
+                {collection.title}
+              </button>
+            ))}
+          </div>
+          {activeCollection && (
+            <p className="text-center font-body text-xs italic text-[#9e9488] mt-2.5">
+              {activeCollection.line}
+            </p>
+          )}
+        </div>
+
         {/* Search + sort control */}
         <div className="mx-auto max-w-5xl px-4 mb-6 flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
@@ -240,6 +297,17 @@ export const PublicFeedPage: React.FC = () => {
             <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
             <p className="font-body text-sm text-[#9e9488] italic">
               Unshelving the letters...
+            </p>
+          </div>
+        ) : activeCollection && !feedSearch.trim() && visibleNotes.length === 0 ? (
+          <div role="status" className="text-center py-20 px-4">
+            <Feather className="w-8 h-8 text-gold/50 mx-auto mb-3" />
+            <h3 className="font-serif text-2xl text-amber-100 mb-2">
+              This shelf is waiting for its first letter
+            </h3>
+            <p className="font-body text-sm text-[#9e9488] italic max-w-sm mx-auto">
+              "{activeCollection.title}" has nothing on it yet. Maybe yours is
+              the one that starts it.
             </p>
           </div>
         ) : feedSearch.trim() && visibleNotes.length === 0 ? (

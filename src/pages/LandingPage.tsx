@@ -22,7 +22,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   return (
     <div className="lp-scene" data-testid="landing-scene">
-      {/* the room: candlelight and drifting dust, nothing else */}
+      {/* the room: bookshelf spines at the edges, candlelight, drifting dust */}
+      <div className="lp-shelf-edge lp-shelf-left" aria-hidden="true" />
+      <div className="lp-shelf-edge lp-shelf-right" aria-hidden="true" />
       <div className="candle-glow absolute inset-0" aria-hidden="true" />
       <div className="lp-motes" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
@@ -36,13 +38,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <CandleLanternIcon className="h-6 w-4 text-gold" />
           <span className="font-serif italic">The Paper Vault</span>
         </span>
-        <button
-          type="button"
-          onClick={() => onAuth("signin")}
-          className="lp-signin"
-        >
-          Sign in
-        </button>
+        <nav className="lp-nav" aria-label="Enter the vault">
+          <button
+            type="button"
+            onClick={() => onAuth("signin")}
+            className="lp-nav-ghost"
+          >
+            Sign in
+          </button>
+          <button type="button" onClick={onGuest} className="lp-signin">
+            Step inside
+          </button>
+        </nav>
       </header>
 
       {/* one promise, one door */}
@@ -82,26 +89,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 2.8, duration: 0.8 }}
+          className="lp-letter-stage"
         >
           <SelfWritingLetter />
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 3.2, duration: 0.7 }}
-          className="lp-ctas"
-        >
-          <button type="button" onClick={onGuest} className="lp-cta-primary">
-            Step inside
-          </button>
-          <button
-            type="button"
-            onClick={() => onAuth("signin")}
-            className="lp-cta-ghost"
-          >
-            I already have a key
-          </button>
+          <span className="lp-keepsake lp-keepsake-left" aria-hidden="true">
+            I should have called.
+          </span>
+          <span className="lp-keepsake lp-keepsake-right" aria-hidden="true">
+            you were right about everything
+          </span>
         </motion.div>
 
         <motion.div

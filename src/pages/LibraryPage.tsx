@@ -6,6 +6,7 @@ import {
   KeyRound,
   Download,
   Sparkles,
+  Gift,
 } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
@@ -20,6 +21,7 @@ import {
   getSeenResponseIds,
 } from "../components/library/AuthorInbox";
 import { PaywallModal } from "../components/payments/PaywallModal";
+import { GiftComposer } from "../components/study/GiftComposer";
 import { fetchQuota, isLimitError, FREE_LETTER_LIMIT } from "../lib/payments";
 import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
 import { PasscodeModal } from "../components/library/PasscodeModal";
@@ -137,6 +139,7 @@ export const LibraryPage: React.FC = () => {
   const whisper = useMemo(() => pickDaily(promptsData as Prompt[]), []);
   const thread = useMemo(() => writingThread(notes), [notes]);
   const [seal, setSeal] = useState<SealChoice>(() => getSealChoice());
+  const [giftOpen, setGiftOpen] = useState(false);
   const chooseSeal = (next: Partial<SealChoice>) => {
     const choice = { ...seal, ...next };
     setSeal(choice);
@@ -158,7 +161,7 @@ export const LibraryPage: React.FC = () => {
           new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
       );
     return old[0] ?? null;
-  }, [notes]);
+  }, [notes, monthAgo]);
   const unsealedFutureCount = useMemo(
     () =>
       notes.filter(
@@ -490,6 +493,15 @@ export const LibraryPage: React.FC = () => {
           </button>
 
           <button
+            onClick={() => setGiftOpen(true)}
+            title="Dedicate a letter to one person - a link that opens only for them"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-gold/50 bg-card/60 hover:bg-card text-gold-light font-serif text-sm transition cursor-pointer"
+          >
+            <Gift className="w-4 h-4 text-gold" />
+            <span>For one person</span>
+          </button>
+
+          <button
             onClick={handleCreateNewBlank}
             className="flex items-center gap-2 px-6 py-2.5 bg-gold hover:bg-gold-light text-wood-950 rounded-full font-serif text-sm font-semibold transition shadow-candle cursor-pointer hover:-translate-y-0.5"
           >
@@ -772,6 +784,11 @@ export const LibraryPage: React.FC = () => {
       />
 
       <AuthorInbox isOpen={isInboxOpen} onClose={() => setIsInboxOpen(false)} />
+      <GiftComposer
+        isOpen={giftOpen}
+        notes={notes}
+        onClose={() => setGiftOpen(false)}
+      />
 
       {/* Read a future-self letter (sealed ones show their countdown) */}
       <BookReaderModal

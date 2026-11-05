@@ -33,24 +33,7 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
           className="justify-center mb-10"
         />
 
-        <div className="mb-12">
-          <LibraryCard penName={penName} avatarColor={avatarColor} />
-          <div
-            className="mt-3 flex items-center justify-center gap-1.5"
-            aria-label={`Stamped on ${visits} ${visits === 1 ? "visit" : "visits"}`}
-          >
-            {Array.from({ length: stamps }).map((_, i) => (
-              <span key={i} className="door-stamp" />
-            ))}
-            <span className="ml-2 font-body text-[11px] italic text-[#9e9488]">
-              {visits <= 1
-                ? "First stamp. The card is yours."
-                : `${visits} stamps - one for every visit`}
-            </span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-8">
+        <div className="doors-row grid grid-cols-1 sm:grid-cols-2 gap-5">
           <motion.button
             type="button"
             onClick={() => onOpen("reading")}
@@ -88,6 +71,23 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
               need somewhere to begin.
             </span>
           </motion.button>
+        </div>
+
+        <div className="doors-card">
+          <LibraryCard penName={penName} avatarColor={avatarColor} />
+          <div
+            className="mt-3 flex items-center justify-center gap-1.5"
+            aria-label={`Stamped on ${visits} ${visits === 1 ? "visit" : "visits"}`}
+          >
+            {Array.from({ length: stamps }).map((_, i) => (
+              <span key={i} className="door-stamp" />
+            ))}
+            <span className="ml-2 font-body text-[11px] italic text-[#9e9488]">
+              {visits <= 1
+                ? "First stamp. The card is yours."
+                : `${visits} stamps - one for every visit`}
+            </span>
+          </div>
         </div>
       </div>
     </div>

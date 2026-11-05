@@ -1705,3 +1705,260 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   color: #7d6647;
   text-align: right;
 }
+
+/* --- Dedicated gift links (GiftOpeningPage) --- */
+.gift-scene {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 420px;
+}
+
+.gift-sealed {
+  position: relative;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+}
+.gift-sealed:focus-visible {
+  outline: 2px solid var(--gold, #d4a94f);
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/* Reuses the letter-of-the-day flap and seal (.lotd-flap, .lotd-seal),
+   so this supplies the positioned envelope body. */
+.gift-envelope {
+  position: relative;
+  display: block;
+  width: min(320px, 78vw);
+  background: linear-gradient(160deg, #f0dcb0, #e2c48d);
+  border-radius: 10px;
+  padding: 84px 22px 30px;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.6),
+    inset 0 0 30px rgba(140, 105, 50, 0.3);
+  transform: rotate(-2.5deg);
+  transition: transform 0.35s ease;
+}
+.gift-sealed:hover .gift-envelope {
+  transform: rotate(0deg) translateY(-4px);
+}
+.gift-sealed:hover .lotd-flap {
+  transform: rotateX(38deg);
+}
+
+/* Postcard: cream card, stamp lines on the back */
+.gift-postcard-back {
+  width: min(320px, 78vw);
+  aspect-ratio: 3 / 2;
+  border-radius: 10px;
+  background:
+    linear-gradient(160deg, rgba(255, 250, 235, 0.04), transparent 40%),
+    repeating-linear-gradient(
+      0deg,
+      #efe4c8 0px,
+      #efe4c8 26px,
+      rgba(120, 96, 48, 0.22) 26px,
+      rgba(120, 96, 48, 0.22) 27px
+    );
+  background-color: #efe4c8;
+  border: 1px solid rgba(120, 96, 48, 0.4);
+  box-shadow:
+    0 24px 40px rgba(0, 0, 0, 0.55),
+    inset 0 0 40px rgba(120, 96, 48, 0.14);
+  transform: rotate(1.8deg);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s ease;
+}
+.gift-sealed:hover .gift-postcard-back {
+  transform: rotate(0deg) translateY(-4px);
+}
+.gift-postcard-lines {
+  position: absolute;
+  inset: 14% 10% auto auto;
+  width: 18%;
+  height: 24%;
+  border: 1.5px solid rgba(120, 96, 48, 0.5);
+  border-radius: 3px;
+}
+.gift-postcard-lines::after {
+  content: "";
+  position: absolute;
+  left: -240%;
+  top: 20%;
+  width: 220%;
+  height: 60%;
+  border-right: 1px dashed rgba(120, 96, 48, 0.35);
+}
+
+/* The revealed letter */
+.gift-letter {
+  position: relative;
+  width: min(420px, 88vw);
+  margin: 0 auto;
+  padding: 44px 36px 36px;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(255, 246, 220, 0.05), transparent 55%),
+    linear-gradient(180deg, #f4ead0 0%, #ece0c2 100%);
+  color: #2b1d10;
+  border-radius: 4px;
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.6),
+    inset 0 0 60px rgba(120, 96, 48, 0.12);
+  transform: rotate(-0.8deg);
+}
+.gift-title {
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-size: 1.55rem;
+  line-height: 1.25;
+  margin-bottom: 18px;
+  color: #241605;
+}
+.gift-body {
+  font-family: var(--font-body, "EB Garamond", serif);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  text-align: left;
+}
+.gift-from {
+  margin-top: 26px;
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-style: italic;
+  font-size: 1rem;
+  color: #6d5426;
+  text-align: right;
+}
+
+/* The small gift folded in with the letter */
+.gift-object {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px 18px;
+  margin: 0 auto 22px;
+  border-radius: 18px;
+  color: #d4a94f;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(212, 169, 79, 0.22), rgba(13, 9, 6, 0.6) 70%),
+    #1a1209;
+  border: 1px solid rgba(212, 169, 79, 0.45);
+  box-shadow:
+    0 0 44px rgba(212, 169, 79, 0.28),
+    0 16px 30px rgba(0, 0, 0, 0.5);
+  animation: giftObjectGlow 3.2s ease-in-out infinite;
+}
+.gift-object span {
+  font-family: var(--font-serif, "Cormorant Garamond", serif);
+  font-style: italic;
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  color: rgba(212, 169, 79, 0.85);
+}
+@keyframes giftObjectGlow {
+  0%, 100% { box-shadow: 0 0 34px rgba(212, 169, 79, 0.22), 0 16px 30px rgba(0, 0, 0, 0.5); }
+  50% { box-shadow: 0 0 58px rgba(212, 169, 79, 0.4), 0 16px 30px rgba(0, 0, 0, 0.5); }
+}
+
+/* --- Layout redo: landing chrome to the corners, tilted keepsakes --- */
+.lp-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lp-nav-ghost {
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 163, 115, 0.35);
+  background: transparent;
+  color: #e8c98f;
+  font-family: Inter, system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lp-nav-ghost:hover {
+  border-color: rgba(243, 217, 164, 0.6);
+  color: #fbf3e2;
+}
+
+/* keepsake scraps leaning against the self-writing letter - no grids,
+   just tilt, overlap and real shadow */
+.lp-letter-stage {
+  position: relative;
+}
+.lp-keepsake {
+  position: absolute;
+  width: 132px;
+  padding: 12px 14px 14px;
+  background: linear-gradient(180deg, #f4ead0 0%, #e7d8b4 100%);
+  color: #4a3520;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-align: left;
+  border-radius: 2px 3px 2px 4px;
+  box-shadow:
+    0 18px 34px rgba(0, 0, 0, 0.6),
+    inset 0 0 24px rgba(120, 96, 48, 0.16);
+  pointer-events: none;
+  z-index: 3;
+}
+.lp-keepsake-left {
+  left: -148px;
+  top: 14%;
+  transform: rotate(-7deg);
+}
+.lp-keepsake-right {
+  right: -148px;
+  bottom: 4%;
+  transform: rotate(5.5deg);
+}
+@media (max-width: 1120px) {
+  .lp-keepsake { display: none; }
+}
+
+/* --- Layout redo: the two doors as tall arches with a bare wall between --- */
+@media (min-width: 640px) {
+  .doors-row {
+    column-gap: clamp(72px, 13vw, 150px);
+  }
+}
+.door-card {
+  min-height: clamp(280px, 40vh, 370px);
+  justify-content: center;
+  position: relative;
+}
+.door-card::after {
+  /* the seam where two door leaves meet */
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(212, 163, 115, 0.22) 30%,
+    rgba(212, 163, 115, 0.22) 70%,
+    transparent
+  );
+  pointer-events: none;
+}
+.doors-card {
+  margin-top: 40px;
+  transform: scale(0.82);
+  transform-origin: top center;
+}
