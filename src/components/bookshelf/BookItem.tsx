@@ -95,6 +95,15 @@ export const BookItem: React.FC<BookItemProps> = ({ note, index, onOpen }) => {
       {/* 3D Book Spine */}
       <motion.div
         onClick={() => onOpen(note)}
+        role="button"
+        tabIndex={0}
+        aria-label={`Open letter: ${title}`}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onOpen(note);
+          }
+        }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         style={{
