@@ -242,7 +242,15 @@ export const LibraryPage: React.FC = () => {
     if (isNew) {
       const { data, error } = await supabase
         .from("notes")
-        .insert([{ ...noteData, user_id: user.id }])
+        // id generated client-side: an omitted id relies on a database
+        // default, which a drifted schema may not carry.
+        .insert([
+          {
+            ...noteData,
+            id: noteData.id ?? crypto.randomUUID(),
+            user_id: user.id,
+          },
+        ])
         .select()
         .single();
       if (isLimitError(error)) {
@@ -250,7 +258,11 @@ export const LibraryPage: React.FC = () => {
         setPaywallOpen(true);
         return;
       }
-      if (data) setNotes((prev) => [data, ...prev]);
+      if (error || !data) {
+        console.error("Letter failed to save:", error);
+        return; // keep the editor open so the words are not lost
+      }
+      setNotes((prev) => [data, ...prev]);
     } else {
       const { data } = await supabase
         .from("notes")

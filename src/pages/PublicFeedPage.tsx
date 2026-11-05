@@ -114,7 +114,13 @@ export const PublicFeedPage: React.FC = () => {
     if (user) {
       const { data, error } = await supabase
         .from("notes")
-        .insert([{ ...newNoteData, user_id: user.id }])
+        .insert([
+          {
+            ...newNoteData,
+            id: newNoteData.id ?? crypto.randomUUID(),
+            user_id: user.id,
+          },
+        ])
         .select()
         .single();
       if (isLimitError(error)) {
@@ -122,10 +128,12 @@ export const PublicFeedPage: React.FC = () => {
         setPaywallOpen(true);
         return;
       }
-      if (data) {
-        setIsEditorOpen(false);
-        refetch();
+      if (error || !data) {
+        console.error("Letter failed to save:", error);
+        return; // keep the editor open so the words are not lost
       }
+      setIsEditorOpen(false);
+      refetch();
     }
   };
 
