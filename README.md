@@ -1,8 +1,8 @@
-# The Library of Unsent Things 🕯️
+# The Paper Vault 🕯️
 
 > An anonymous sanctuary for the things you carry but never say out loud.
 
-*The Library of Unsent Things* is an anonymous digital sanctuary where writers carry their unspoken thoughts in quiet honesty. Writers authenticate with email magic link, receive a poetic pseudonymous pen name, organize their thoughts into private custom shelves, unlock reflective prompts, and selectively share notes publicly. 
+*The Paper Vault* is an anonymous digital sanctuary where writers carry their unspoken thoughts in quiet honesty. Writers authenticate with email magic link, receive a poetic pseudonymous pen name, organize their thoughts into private custom shelves, unlock reflective prompts, and selectively share notes publicly. 
 
 Every note submitted to the public library undergoes automated AI safety screening for self-harm language and personal identifying details. Notes touching upon crisis receive an empathetic, supportive hold and instant access to free, confidential helplines. Readers cannot post unvetted public comments; instead, they send thoughtful "letters in response" that land in the author's private inbox first—allowing the author to cherish them privately or pin them to their public letter.
 

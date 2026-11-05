@@ -80,16 +80,16 @@ export const ShareModal: React.FC<ShareModalProps> = ({
         <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
           <WaxSeal color="gold" size="md" icon="crest" />
           <div>
-            <h3 className="font-cinzel text-lg font-bold text-wood-950">
+            <h3 className="font-serif text-lg font-bold text-wood-950">
               Release to the Grand Library
             </h3>
-            <p className="font-cormorant text-xs text-wood-800 italic">Place your parchment in the public reading hall</p>
+            <p className="font-body text-xs text-wood-800 italic">Place your parchment in the public reading hall</p>
           </div>
         </div>
 
-        <p className="font-cormorant text-xs text-wood-800 leading-relaxed mb-4 italic">
+        <p className="font-body text-xs text-wood-800 leading-relaxed mb-4 italic">
           This letter will be placed on the grand reading tables under your pseudonymous pen name (
-          <span className="font-cinzel font-bold text-wood-950 not-italic">{profile?.pen_name}</span>). No reader will ever learn your email or real identity.
+          <span className="font-serif font-bold text-wood-950 not-italic">{profile?.pen_name}</span>). No reader will ever learn your email or real identity.
         </p>
 
         {errorWarning && (
@@ -108,18 +108,18 @@ export const ShareModal: React.FC<ShareModalProps> = ({
               className="mt-0.5 rounded border-amber-800 text-wax-crimson focus:ring-amber-500"
             />
             <div className="text-xs">
-              <span className="font-cinzel font-bold text-wood-950 flex items-center gap-1.5">
+              <span className="font-serif font-bold text-wood-950 flex items-center gap-1.5">
                 <MessageSquare className="w-3.5 h-3.5 text-amber-800" />
                 Allow reader response letters
               </span>
-              <p className="font-cormorant text-wood-800 text-xs mt-1 leading-relaxed italic">
+              <p className="font-body text-wood-800 text-xs mt-1 leading-relaxed italic">
                 Kind strangers can send handwritten replies. They arrive in your private letterbox first and only become public if you choose to pin them.
               </p>
             </div>
           </label>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-cinzel text-emerald-900 mb-5">
+        <div className="flex items-center gap-2 text-xs font-serif text-emerald-900 mb-5">
           <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-700" />
           <span>Screened for crisis & privacy safety prior to release.</span>
         </div>
@@ -128,13 +128,13 @@ export const ShareModal: React.FC<ShareModalProps> = ({
           <button
             onClick={handleConfirmShare}
             disabled={isScreening}
-            className="flex-1 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-cinzel font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
+            className="flex-1 py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
           >
             {isScreening ? 'Screening letter...' : 'Seal & Release to Grand Library'}
           </button>
           <button
             onClick={onClose}
-            className="px-4 py-2.5 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer"
+            className="px-4 py-2.5 bg-amber-900/10 text-wood-800 hover:bg-amber-900/20 rounded-xl text-xs font-serif font-semibold transition cursor-pointer"
           >
             Keep in Private Study
           </button>

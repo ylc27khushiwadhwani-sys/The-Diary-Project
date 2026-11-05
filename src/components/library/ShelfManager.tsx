@@ -51,24 +51,27 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between pb-2 border-b border-amber-900/40">
+      <div className="flex items-center justify-between pb-2 border-b border-hairline">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-amber-500" />
-          <h3 className="font-cinzel text-xs font-bold uppercase tracking-wider text-amber-200">
-            Library Shelves
-          </h3>
+          <BookOpen className="w-4 h-4 text-gold" />
+          <span className="label-caps text-[10px]">Library Shelves</span>
         </div>
         <button
           onClick={() => setIsCreating(!isCreating)}
-          className="text-xs font-cinzel text-amber-400 hover:text-amber-300 flex items-center gap-1 font-semibold transition cursor-pointer"
+          className="text-xs font-serif text-gold hover:text-gold-light flex items-center gap-1 font-semibold transition cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Carve Shelf</span>
         </button>
       </div>
 
+      <p className="font-body text-[11px] text-[#9e9488] italic leading-relaxed">
+        Shelves keep your letters sorted by the kind of silence they carry.
+        Pick one to see only its letters, or carve a new shelf of your own.
+      </p>
+
       {isCreating && (
-        <form onSubmit={handleCreate} className="p-3.5 bg-wood-950/90 border border-amber-800/40 rounded-xl space-y-2.5 animate-fade-in shadow-2xl text-left">
+        <form onSubmit={handleCreate} className="p-3.5 bg-wood-950/90 border border-hairline rounded-xl space-y-2.5 animate-fade-in shadow-2xl text-left">
           <input
             type="text"
             required
@@ -76,7 +79,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
             placeholder="Shelf name (e.g. Unsaid Apologies)"
             value={newShelfName}
             onChange={(e) => setNewShelfName(e.target.value)}
-            className="w-full px-3 py-1.5 text-xs font-cinzel bg-wood-900 text-amber-100 border border-amber-700/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="w-full px-3 py-1.5 text-xs font-serif bg-wood-900 text-[#f3ece0] border border-hairline rounded-lg focus:outline-none focus:ring-1 focus:ring-gold placeholder:text-[#9e9488]/70"
           />
           <div className="flex items-center gap-1.5 pt-1">
             {AVAILABLE_ICONS.map(({ name, Icon }) => (
@@ -86,8 +89,8 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
                 onClick={() => setSelectedIcon(name)}
                 className={`p-1.5 rounded-lg transition cursor-pointer ${
                   selectedIcon === name
-                    ? 'bg-amber-600 text-wood-950 shadow-xs'
-                    : 'text-amber-300/70 hover:bg-wood-800'
+                    ? 'bg-gold text-wood-950 shadow-xs'
+                    : 'text-[#9e9488] hover:bg-wood-800'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -98,14 +101,14 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-3 py-1 bg-amber-600 hover:bg-amber-500 text-wood-950 text-xs font-cinzel font-bold rounded-lg transition cursor-pointer"
+              className="px-3.5 py-1.5 bg-gold hover:bg-gold-light text-wood-950 text-xs font-serif font-semibold rounded-full transition cursor-pointer"
             >
               {loading ? 'Carving...' : 'Add Shelf'}
             </button>
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-2.5 py-1 text-xs font-cinzel text-amber-300/60 hover:text-amber-200 transition cursor-pointer"
+              className="px-2.5 py-1 text-xs font-serif text-[#9e9488] hover:text-[#f3ece0] transition cursor-pointer"
             >
               Cancel
             </button>
@@ -118,14 +121,14 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
         {/* All Letters / Full Sanctuary Option */}
         <button
           onClick={() => onSelectShelf(null)}
-          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer ${
+          className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-serif font-semibold transition cursor-pointer ${
             selectedShelfId === null
-              ? 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-candle'
-              : 'text-amber-200/70 hover:bg-wood-800/60 hover:text-amber-100'
+              ? 'bg-card text-gold border border-gold/40 shadow-candle'
+              : 'text-[#9e9488] hover:bg-card/60 hover:text-[#f3ece0]'
           }`}
         >
           <div className="flex items-center gap-2.5">
-            <Sparkles className="w-4 h-4 text-amber-400" />
+            <Sparkles className="w-4 h-4 text-gold" />
             <span>All Unsent Letters</span>
           </div>
         </button>
@@ -135,15 +138,15 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
           return (
             <div
               key={shelf.id}
-              className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-cinzel font-semibold transition cursor-pointer ${
+              className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-serif font-semibold transition cursor-pointer ${
                 isSelected
-                  ? 'bg-amber-600/20 text-amber-300 border border-amber-500/40 shadow-candle'
-                  : 'text-amber-200/70 hover:bg-wood-800/60 hover:text-amber-100'
+                  ? 'bg-card text-gold border border-gold/40 shadow-candle'
+                  : 'text-[#9e9488] hover:bg-card/60 hover:text-[#f3ece0]'
               }`}
               onClick={() => onSelectShelf(shelf.id)}
             >
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="text-amber-400 shrink-0">
+                <span className="text-gold shrink-0">
                   {getIconComponent(shelf.icon)}
                 </span>
                 <span className="truncate">{shelf.name}</span>
@@ -157,7 +160,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
                     onDeleteShelf(shelf.id);
                   }
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-amber-400/60 hover:text-red-400 transition"
+                className="opacity-0 group-hover:opacity-100 p-1 text-[#9e9488] hover:text-red-400 transition"
                 title="Remove Shelf"
               >
                 <X className="w-3.5 h-3.5" />

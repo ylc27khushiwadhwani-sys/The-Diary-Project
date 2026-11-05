@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0d0b09',
-        card: '#161311',
+        background: '#0a0705',
+        card: '#1a130c',
         hairline: 'rgba(212, 163, 115, 0.15)',
         gold: {
           DEFAULT: '#d4a373',
@@ -79,6 +79,7 @@ export default {
         cinzelDec: ['"Cinzel Decorative"', 'serif'],
         cormorant: ['"Cormorant Garamond"', 'serif'],
         script: ['"Alex Brush"', 'cursive'],
+        hand: ['"Great Vibes"', 'cursive'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {
