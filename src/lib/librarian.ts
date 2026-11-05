@@ -5,8 +5,8 @@ export const landingIntro =
 
 export const readingGreeting = (visits: number, hourLabel: string): string =>
   visits <= 1
-    ? "First time in the Reading Room. I set out one letter each day - today's is on the lectern, still sealed."
-    : `Visit number ${visits}. ${hourLabel} - and today's letter is still waiting for you.`;
+    ? "First time in the Reading Room. I left a letter on the lectern for you - sealed, because sealed things are worth opening slowly."
+    : `Visit number ${visits}. ${hourLabel} - and there's a letter on the lectern with your pen name on it.`;
 
 export const studyGreeting = (
   daysWritten: number,

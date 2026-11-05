@@ -5,7 +5,6 @@ import { Note } from "../types/database";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { usePublicNotes } from "../hooks/usePublicNotes";
-import { pickDaily } from "../lib/dailyPick";
 import { registerVisit } from "../lib/visits";
 import { currentHallHour, HALL_LABELS } from "../lib/timeOfDay";
 import { isCandleLit, lightCandle } from "../lib/candles";
@@ -30,9 +29,9 @@ interface ReadingRoomPageProps {
 }
 
 /**
- * The Reading Room: one letter a day, a small shelf to wander, and the
- * Librarian. The whole Grand Library is one door away, never a grid dumped
- * on arrival.
+ * The Reading Room: a letter the Librarian left out for you, a small shelf
+ * to wander, and the Librarian. The whole Grand Library is one door away,
+ * never a grid dumped on arrival.
  */
 export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   onEnterLibrary,
@@ -55,11 +54,19 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
     [notes],
   );
 
-  const letterOfTheDay = useMemo(() => pickDaily(readable), [readable]);
+  // The Librarian's pick: a different letter left out each visit, no scarcity
+  const [pickSeed] = useState(() => Math.random());
+  const featuredLetter = useMemo(
+    () =>
+      readable.length
+        ? readable[Math.floor(pickSeed * readable.length)]
+        : null,
+    [readable, pickSeed],
+  );
 
   const todaysShelf = useMemo(
-    () => readable.filter((n) => n.id !== letterOfTheDay?.id).slice(0, 7),
-    [readable, letterOfTheDay],
+    () => readable.filter((n) => n.id !== featuredLetter?.id).slice(0, 7),
+    [readable, featuredLetter],
   );
 
   // The Librarian's next pull: whatever followed the finished letter
@@ -68,12 +75,12 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
     return idx >= 0 ? (readable[(idx + 1) % readable.length] ?? null) : null;
   };
 
-  const openLetterOfTheDay = () => {
-    if (!letterOfTheDay) return;
+  const openFeaturedLetter = () => {
+    if (!featuredLetter) return;
     setSealBreaking(true);
     window.setTimeout(() => {
       setSealBreaking(false);
-      setSelectedNote(letterOfTheDay);
+      setSelectedNote(featuredLetter);
     }, 700);
   };
 
@@ -102,32 +109,32 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
           <div role="status" className="text-center py-20">
             <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
             <p className="font-body text-sm text-[#9e9488] italic">
-              Unsealing today's letter...
+              Setting a letter out for you...
             </p>
           </div>
         ) : (
           <>
-            {/* Letter of the day - one sealed envelope on the lectern */}
-            {letterOfTheDay && (
+            {/* The Librarian's pick - one sealed envelope on the lectern */}
+            {featuredLetter && (
               <section className="text-center mb-14">
                 <span className="label-caps block mb-5">
-                  Today's letter - one a day, gone tomorrow
+                  The Librarian's pick - left out for you
                 </span>
                 <motion.button
                   type="button"
-                  onClick={openLetterOfTheDay}
+                  onClick={openFeaturedLetter}
                   whileHover={{ y: -4 }}
                   whileTap={{ scale: 0.98 }}
                   className={`lotd-envelope ${sealBreaking ? "lotd-breaking" : ""}`}
-                  aria-label={`Break the seal and read today's letter: ${letterOfTheDay.title || "Untitled Letter"}`}
+                  aria-label={`Break the seal and read: ${featuredLetter.title || "Untitled Letter"}`}
                 >
                   <span className="lotd-flap" />
                   <span className="lotd-body">
                     <span className="lotd-title">
-                      "{letterOfTheDay.title || "Untitled Letter"}"
+                      "{featuredLetter.title || "Untitled Letter"}"
                     </span>
                     <span className="lotd-by">
-                      {letterOfTheDay.profiles?.pen_name || "Anonymous Writer"}
+                      {featuredLetter.profiles?.pen_name || "Anonymous Writer"}
                     </span>
                   </span>
                   <span className="lotd-seal">
