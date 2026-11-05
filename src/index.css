@@ -405,24 +405,23 @@
   transform: translate3d(var(--px, 0px), var(--py, 0px), 0);
   transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* Window light: soft, still, wide. The old sweeping bands sliced the wall
-   into moving dark wedges (the gaps between rays read as faulty shadows),
-   so the rays no longer sweep - three wide, dim, heavily blurred shafts
-   keep the volumetric feel without the moving bands. */
+/* Window light: soft ambient glows instead of hard-edged shafts. The rotated
+   rectangle rays left visible straight diagonal edges across the wall (the
+   "faulty background"); overlapping radial glows keep the warm volumetric
+   feel with no straight edges at all. */
 .hall-ray {
   position: absolute;
-  top: -10%;
-  height: 130%;
-  width: 26%;
-  background: linear-gradient(180deg, rgba(255, 224, 160, 0.34) 0%, rgba(255, 205, 130, 0.14) 45%, rgba(255, 190, 110, 0) 92%);
-  filter: blur(26px);
-  transform-origin: 50% 0;
-  transform: rotate(-24deg);
-  opacity: 0.3;
+  top: -8%;
+  width: 46%;
+  height: 95%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 20%, rgba(255, 224, 160, 0.3) 0%, rgba(255, 205, 130, 0.11) 48%, rgba(255, 190, 110, 0) 74%);
+  filter: blur(22px);
+  opacity: 0.85;
 }
-.hall-ray.r1 { left: 8%; }
-.hall-ray.r2 { left: 37%; width: 30%; opacity: 0.24; }
-.hall-ray.r3 { left: 66%; }
+.hall-ray.r1 { left: -8%; }
+.hall-ray.r2 { left: 27%; opacity: 0.7; }
+.hall-ray.r3 { left: 62%; }
 
 /* Light pools: window glow landing on the floor, drifting slowly */
 .hall-pool {
