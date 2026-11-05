@@ -14,7 +14,7 @@ interface InteractiveBookshelfProps {
 
 // Shelf sections as filter tabs. Labels are kept to 3-4 words so the
 // header row stays compact instead of printing long joined prompt titles.
-const SHELF_SECTIONS = [
+export const SHELF_SECTIONS = [
   { id: "all", label: "All Shelves", category: "All" },
   { id: "miss", label: "To Someone I Miss", category: "Nostalgia" },
   { id: "sorry", label: "Things I'm Sorry For", category: "Forgiveness" },
@@ -43,7 +43,7 @@ const SECTION_KEYWORDS: Record<string, string[]> = {
   misc: ["misc"],
 };
 
-const matchesSection = (note: Note, sectionId: string): boolean => {
+export const matchesSection = (note: Note, sectionId: string): boolean => {
   if (sectionId === "all") return true;
 
   const section = SHELF_SECTIONS.find((s) => s.id === sectionId);

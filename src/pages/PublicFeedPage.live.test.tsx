@@ -3,7 +3,7 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { PublicFeedPage } from "./PublicFeedPage";
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
 
-const { from, order } = vi.hoisted(() => ({ from: vi.fn(), order: vi.fn() }));
+const { from, range } = vi.hoisted(() => ({ from: vi.fn(), range: vi.fn() }));
 vi.mock("../lib/supabase", () => ({
   isSupabaseConfigured: true,
   supabase: { from },
@@ -15,11 +15,12 @@ vi.mock("../contexts/AuthContext", () => ({
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
-  const query = { select: vi.fn(), eq: vi.fn(), order };
+  const query = { select: vi.fn(), eq: vi.fn(), order: vi.fn(), range };
   query.select.mockReturnValue(query);
   query.eq.mockReturnValue(query);
+  query.order.mockReturnValue(query);
   from.mockReturnValue(query);
-  order.mockResolvedValue({ data: [], error: null });
+  range.mockResolvedValue({ data: [], error: null });
 });
 
 describe("configured public feed sample fallback", () => {
@@ -36,7 +37,7 @@ describe("configured public feed sample fallback", () => {
   });
 
   it("keeps real public letters without mixing in samples", async () => {
-    order.mockResolvedValue({
+    range.mockResolvedValue({
       data: [
         {
           ...INITIAL_PUBLIC_NOTES[0],
@@ -55,7 +56,7 @@ describe("configured public feed sample fallback", () => {
   });
 
   it("does not disguise a database failure with sample content", async () => {
-    order.mockResolvedValue({ data: null, error: { message: "Unavailable" } });
+    range.mockResolvedValue({ data: null, error: { message: "Unavailable" } });
     render(<PublicFeedPage />);
     expect(
       await screen.findByText("This shelf is currently quiet."),

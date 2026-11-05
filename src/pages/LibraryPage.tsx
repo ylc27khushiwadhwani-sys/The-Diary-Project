@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { BookOpen, Feather, Mail, KeyRound, Download } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import {
+  BookOpen,
+  Feather,
+  Mail,
+  KeyRound,
+  Download,
+  Sparkles,
+} from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { Note, Shelf, Prompt } from "../types/database";
@@ -19,6 +26,17 @@ import { PasscodeModal } from "../components/library/PasscodeModal";
 import { WaxSeal } from "../components/library/WaxSeal";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 import { useCancellableLoad } from "../hooks/useCancellableLoad";
+import { Librarian } from "../components/library/Librarian";
+import {
+  FutureSelfDesk,
+  isFutureSelfNote,
+} from "../components/study/FutureSelfDesk";
+import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
+import { studyGreeting, unsealNotice } from "../lib/librarian";
+import { writingThread } from "../lib/writingDays";
+import { pickDaily } from "../lib/dailyPick";
+import { isDateSealed, getUnsealDate } from "../utils/unseal";
+import promptsData from "../data/prompts.json";
 import { DEMO_NOTES_KEY, loadNotes, searchNotes } from "../services/notes";
 import { downloadNotesExport } from "../services/export";
 
@@ -82,6 +100,8 @@ export const LibraryPage: React.FC = () => {
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
   const [exportSummary, setExportSummary] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [futureSelfMode, setFutureSelfMode] = useState(false);
+  const [fsReading, setFsReading] = useState<Note | null>(null);
   const { loading } = useCancellableLoad(
     () =>
       user
@@ -107,7 +127,35 @@ export const LibraryPage: React.FC = () => {
     };
   }, [user, isInboxOpen]);
 
+  const whisper = useMemo(() => pickDaily(promptsData as Prompt[]), []);
+  const thread = useMemo(() => writingThread(notes), [notes]);
+  const unsealedFutureCount = useMemo(
+    () =>
+      notes.filter(
+        (n) =>
+          isFutureSelfNote(n) &&
+          getUnsealDate(n.tags) !== null &&
+          !isDateSealed(n),
+      ).length,
+    [notes],
+  );
+
+  const openFutureSelf = async () => {
+    if (await reachedLimit()) {
+      setPaywallOpen(true);
+      return;
+    }
+    setFutureSelfMode(true);
+    setActiveEditingNote({
+      content: "",
+      is_public: false,
+      allow_responses: false,
+    });
+    setIsEditorOpen(true);
+  };
+
   const openForEditing = (selected: Note) => {
+    setFutureSelfMode(false);
     setActiveEditingNote(selected);
     setIsEditorOpen(true);
   };
@@ -240,6 +288,7 @@ export const LibraryPage: React.FC = () => {
       setPaywallOpen(true);
       return;
     }
+    setFutureSelfMode(false);
     setActiveEditingNote({
       title: prompt.title,
       prompt_id: prompt.id,
@@ -254,6 +303,7 @@ export const LibraryPage: React.FC = () => {
       setPaywallOpen(true);
       return;
     }
+    setFutureSelfMode(false);
     setActiveEditingNote({
       shelf_id: selectedShelfId,
       content: "",
@@ -332,8 +382,12 @@ export const LibraryPage: React.FC = () => {
       <NoteEditor
         note={activeEditingNote}
         shelves={shelves}
+        futureSelf={futureSelfMode}
         onSave={handleSaveNote}
-        onClose={() => setIsEditorOpen(false)}
+        onClose={() => {
+          setFutureSelfMode(false);
+          setIsEditorOpen(false);
+        }}
       />
     );
   }
@@ -401,6 +455,46 @@ export const LibraryPage: React.FC = () => {
             <span>Write an Unsent Letter</span>
           </button>
         </div>
+      </div>
+
+      {/* The desk ritual: the Librarian, today's whisper, future-self letters */}
+      <div className="mb-8 space-y-6">
+        <Librarian
+          line={
+            unsealedFutureCount > 0
+              ? unsealNotice(unsealedFutureCount)
+              : studyGreeting(thread.daysWritten, thread.thread)
+          }
+        />
+
+        {/* Daily whisper: one prompt a day, no streak pressure */}
+        {whisper && (
+          <div className="bg-card/60 border border-hairline rounded-2xl p-5 backdrop-blur-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <span className="label-caps block mb-1">Today's whisper</span>
+              <p className="font-serif italic text-lg text-[#f3ece0]">
+                "{whisper.title}"
+              </p>
+              <p className="font-body text-xs text-[#9e9488] italic mt-1">
+                {whisper.description}
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => handleStartFromPrompt(whisper)}
+              className="shrink-0 inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-gold/50 bg-card/70 hover:bg-card font-serif text-sm text-gold-light transition cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Write from this whisper</span>
+            </button>
+          </div>
+        )}
+
+        <FutureSelfDesk
+          notes={notes}
+          onWriteFutureSelf={openFutureSelf}
+          onOpen={(n) => setFsReading(n)}
+        />
       </div>
 
       {/* Export summary / error (always shown after an export attempt) */}
@@ -572,6 +666,13 @@ export const LibraryPage: React.FC = () => {
       />
 
       <AuthorInbox isOpen={isInboxOpen} onClose={() => setIsInboxOpen(false)} />
+
+      {/* Read a future-self letter (sealed ones show their countdown) */}
+      <BookReaderModal
+        note={fsReading}
+        isOpen={!!fsReading}
+        onClose={() => setFsReading(null)}
+      />
     </div>
   );
 };

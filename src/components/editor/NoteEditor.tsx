@@ -27,6 +27,8 @@ interface NoteEditorProps {
   shelves: Shelf[];
   onSave: (noteData: Partial<Note>) => Promise<void>;
   onClose: () => void;
+  /** Future-self ritual: date seal required, private always, tagged. */
+  futureSelf?: boolean;
 }
 
 export const NoteEditor: React.FC<NoteEditorProps> = ({
@@ -34,6 +36,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   shelves,
   onSave,
   onClose,
+  futureSelf = false,
 }) => {
   const [title, setTitle] = useState(note?.title || "");
   const [content, setContent] = useState(note?.content || "");
@@ -51,11 +54,16 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     visibleTags(note?.tags).map((tag) => tag.toLowerCase()),
   );
   const [tagDraft, setTagDraft] = useState("");
-  const [unsealOn, setUnsealOn] = useState<string>(
-    getUnsealDate(note?.tags) ?? "",
-  );
   const [todayIso] = useState(() => {
     const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  });
+  const [unsealOn, setUnsealOn] = useState<string>(() => {
+    const existing = getUnsealDate(note?.tags);
+    if (existing) return existing;
+    if (!futureSelf) return "";
+    const d = new Date();
+    d.setFullYear(d.getFullYear() + 1);
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
   });
 
@@ -94,7 +102,9 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
 
   const handleManualSave = async () => {
     if (!content.trim()) return;
+    if (futureSelf && !unsealOn) return;
     setSaving(true);
+    const sealedTags = withUnsealTag(tags, unsealOn || null);
     await onSave({
       id: note?.id,
       title: title.trim() || null,
@@ -102,10 +112,12 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       shelf_id: shelfId,
       is_locked: isLocked,
       passcode_hash: passcodeHash,
-      is_public: isPublic,
-      allow_responses: allowResponses,
+      is_public: futureSelf ? false : isPublic,
+      allow_responses: futureSelf ? false : allowResponses,
       prompt_id: note?.prompt_id || null,
-      tags: withUnsealTag(tags, unsealOn || null),
+      tags: futureSelf
+        ? [...sealedTags.filter((t) => t !== "futureself"), "futureself"]
+        : sealedTags,
     });
     setSaving(false);
   };
@@ -197,7 +209,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
               htmlFor="unseal-date"
             >
               <span aria-hidden="true">&#128367;</span>
-              <span>Let this letter wait until a date</span>
+              <span>
+                {futureSelf
+                  ? "Choose the morning your future self opens it"
+                  : "Let this letter wait until a date"}
+              </span>
             </label>
             <div className="flex items-center gap-2 mt-1.5">
               <input
@@ -225,8 +241,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             </p>
           </div>
 
-          {/* Public Sharing Toggle */}
-          {isPublic ? (
+          {/* Public Sharing Toggle (future-self letters never go public) */}
+          {futureSelf ? null : isPublic ? (
             <button
               onClick={handleUnpublish}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-amber-900/40 text-amber-300 hover:bg-amber-900/60 border border-amber-700/50 rounded-lg text-xs font-serif transition cursor-pointer"
@@ -268,11 +284,17 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           {/* Save & Seal Button */}
           <button
             onClick={handleManualSave}
-            disabled={saving || !content.trim()}
+            disabled={saving || !content.trim() || (futureSelf && !unsealOn)}
             className="flex items-center gap-1.5 px-4 py-1.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-lg text-xs font-serif font-bold shadow-candle border border-red-500/30 transition disabled:opacity-40 cursor-pointer"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>{saving ? "Sealing..." : "Seal & Store"}</span>
+            <span>
+              {saving
+                ? "Sealing..."
+                : futureSelf
+                  ? "Seal for the Future"
+                  : "Seal & Store"}
+            </span>
           </button>
         </div>
       </div>
@@ -300,11 +322,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
                   The Paper Vault
                 </span>
                 <span className="font-body text-xs italic text-wood-900">
-                  {isLocked
-                    ? "Eyes-Only Confidential Letter"
-                    : isPublic
-                      ? "Archived for the Sanctuary"
-                      : "Private Library Parchment"}
+                  {futureSelf
+                    ? "A letter to your future self - sealed until the day you choose"
+                    : isLocked
+                      ? "Eyes-Only Confidential Letter"
+                      : isPublic
+                        ? "Archived for the Sanctuary"
+                        : "Private Library Parchment"}
                 </span>
               </div>
             </div>
@@ -325,7 +349,11 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           {/* Title Input */}
           <input
             type="text"
-            placeholder="A title for what remained unspoken..."
+            placeholder={
+              futureSelf
+                ? "To the me who opens this..."
+                : "A title for what remained unspoken..."
+            }
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full font-serif text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"

@@ -8,6 +8,7 @@ import {
   BookOpen,
   Type,
   Sparkles,
+  Flame,
 } from "lucide-react";
 import { Note } from "../../types/database";
 import { WaxSeal } from "../library/WaxSeal";
@@ -18,6 +19,7 @@ import {
   formatUnsealDate,
 } from "../../utils/unseal";
 import { paginate } from "../../utils/paginate";
+import { isCandleLit, lightCandle } from "../../lib/candles";
 import { PasscodeModal } from "../library/PasscodeModal";
 import { ThreadedResponses } from "../feed/ThreadedResponses";
 import promptsData from "../../data/prompts.json";
@@ -27,6 +29,8 @@ interface BookReaderModalProps {
   isOpen: boolean;
   onClose: () => void;
   onRespond?: (note: Note) => void;
+  /** Reading-room flow: called when the reader finishes the last page. */
+  onFinished?: (note: Note) => void;
 }
 
 const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
@@ -34,12 +38,16 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   isOpen,
   onClose,
   onRespond,
+  onFinished,
 }) => {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [isPasscodeModalOpen, setIsPasscodeModalOpen] = useState(false);
   const [handwritingFont, setHandwritingFont] = useState(true);
   const [showResponses, setShowResponses] = useState(false);
   const [pageIndex, setPageIndex] = useState(0);
+  const [candleLit, setCandleLit] = useState(() =>
+    note ? isCandleLit(note.id) : false,
+  );
 
   const mainPages = useMemo(
     () => paginate(note?.content ?? ""),
@@ -266,6 +274,34 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                     </span>
                     <div className="flex items-center gap-3">
                       <button
+                        type="button"
+                        onClick={() => {
+                          if (!candleLit) {
+                            lightCandle(note.id);
+                            setCandleLit(true);
+                          }
+                        }}
+                        className={`inline-flex items-center gap-1.5 text-sm font-serif font-semibold cursor-pointer transition ${
+                          candleLit
+                            ? "text-amber-600"
+                            : "text-wood-800 hover:text-wood-950"
+                        }`}
+                        title={
+                          candleLit
+                            ? "You lit a candle for this letter"
+                            : "Light a candle for this letter - a quiet way to say these words found someone"
+                        }
+                      >
+                        <Flame
+                          className={`w-4 h-4 ${
+                            candleLit
+                              ? "text-amber-500 drop-shadow-[0_0_6px_rgba(245,180,90,0.9)]"
+                              : "text-amber-800"
+                          }`}
+                        />
+                        <span>{candleLit ? "Candle lit" : "Light a candle"}</span>
+                      </button>
+                      <button
                         onClick={() => setShowResponses(!showResponses)}
                         className="inline-flex items-center gap-1.5 text-sm font-serif text-wood-800 hover:text-wood-950 font-semibold cursor-pointer"
                       >
@@ -305,13 +341,22 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                 <span className="text-sm text-wood-700">
                   Page {pageIndex + 1} of {totalPages}
                 </span>
-                <button
-                  onClick={goNext}
-                  disabled={pageIndex === totalPages - 1}
-                  className="px-3 py-1 rounded-full bg-wood-800/60 text-amber-100 disabled:opacity-40"
-                >
-                  Next →
-                </button>
+                {pageIndex === totalPages - 1 && onFinished ? (
+                  <button
+                    onClick={() => onFinished(note)}
+                    className="px-4 py-1.5 rounded-full bg-gold hover:bg-gold-light text-wood-950 font-serif text-sm font-semibold shadow-candle transition"
+                  >
+                    Finish letter
+                  </button>
+                ) : (
+                  <button
+                    onClick={goNext}
+                    disabled={pageIndex === totalPages - 1}
+                    className="px-3 py-1 rounded-full bg-wood-800/60 text-amber-100 disabled:opacity-40"
+                  >
+                    Next →
+                  </button>
+                )}
               </div>
             </article>
           )}

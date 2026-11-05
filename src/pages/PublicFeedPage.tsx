@@ -1,34 +1,37 @@
 import React, { useMemo, useState } from "react";
-import { motion } from "framer-motion";
-import { Feather, Search, SlidersHorizontal } from "lucide-react";
+import { BookOpen, Feather, Search, SlidersHorizontal } from "lucide-react";
 import { Note } from "../types/database";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
-import { CoffeeButton } from "../components/payments/CoffeeButton";
-import { CommunityJoin } from "../components/payments/CommunityJoin";
 import { PaywallModal } from "../components/payments/PaywallModal";
 import { fetchQuota, isLimitError } from "../lib/payments";
-import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { InteractiveBookshelf } from "../components/bookshelf/InteractiveBookshelf";
-import { InkText } from "../components/cinematic/InkText";
+import { LibraryAisles } from "../components/library/LibraryAisles";
+import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
-import { CandleLanternIcon } from "../components/common/CandleLanternIcon";
-import { LibraryCard } from "../components/library/LibraryCard";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
 import { SignInModal } from "../components/auth/SignInModal";
 import { NoteEditor } from "../components/editor/NoteEditor";
-import { useCancellableLoad } from "../hooks/useCancellableLoad";
-import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
-import { isSampleNote, publicNotesOrSamples } from "../services/publicFeed";
+import { usePublicNotes } from "../hooks/usePublicNotes";
+import { PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
+import { isSampleNote } from "../services/publicFeed";
 
 const DEMO_NOTES_KEY = PUBLIC_FEED_DEMO_KEY;
 
+/**
+ * The Grand Library: the whole public collection as its own tab. Two ways to
+ * walk it - aisles (every section at once, shelves that scroll sideways) or
+ * the single big shelf with section filters. Search and sort narrow both.
+ */
 export const PublicFeedPage: React.FC = () => {
   const { user, profile } = useAuth();
-  const [notes, setNotes] = useState<Note[]>([]);
+  const { notes, loading, loadingMore, hasMore, refetch, loadMore } =
+    usePublicNotes();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
+  const [browseMode, setBrowseMode] = useState<"shelf" | "aisles">("shelf");
+  const [aisleNote, setAisleNote] = useState<Note | null>(null);
 
   // Free writers hold a fixed number of letters; the ask only appears once it is reached.
   const openWriter = async () => {
@@ -48,47 +51,10 @@ export const PublicFeedPage: React.FC = () => {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
 
   // Discovery control (KTD8): free-text search over title/content/pen name
-  // plus a latest/oldest sort, applied to the same list InteractiveBookshelf
-  // renders so it narrows (never conflicts with) its shelf-section browsing.
+  // plus a latest/oldest sort, applied to the same list the shelf renders so
+  // it narrows (never conflicts with) section browsing.
   const [feedSearch, setFeedSearch] = useState("");
   const [feedSort, setFeedSort] = useState<"latest" | "oldest">("latest");
-
-  const loadPublicNotes = async (): Promise<Note[] | null> => {
-    if (!isSupabaseConfigured) {
-      const raw = localStorage.getItem(DEMO_NOTES_KEY);
-      let localNotes: Note[] = raw ? JSON.parse(raw) : [];
-
-      if (localNotes.length === 0) {
-        localStorage.setItem(
-          DEMO_NOTES_KEY,
-          JSON.stringify(INITIAL_PUBLIC_NOTES),
-        );
-        localNotes = INITIAL_PUBLIC_NOTES;
-      }
-
-      return localNotes.filter(
-        (n) => n.is_public && n.moderation_status === "clean",
-      );
-    }
-
-    const { data, error } = await supabase
-      .from("notes")
-      .select("*, profiles:user_id(id, pen_name, avatar_color)")
-      .eq("is_public", true)
-      .eq("moderation_status", "clean")
-      .order("published_at", { ascending: false });
-
-    if (error || !data) return null;
-    return publicNotesOrSamples(data as Note[]);
-  };
-
-  // Initial load runs under the shared cancellation guard; every refresh below
-  // goes through refetch() so it shares the same guard.
-  const { loading, refetch } = useCancellableLoad(
-    loadPublicNotes,
-    [],
-    setNotes,
-  );
 
   const visibleNotes = useMemo(() => {
     const query = feedSearch.trim().toLowerCase();
@@ -98,7 +64,7 @@ export const PublicFeedPage: React.FC = () => {
             (field) => field.toLowerCase().includes(query),
           ),
         )
-      : notes;
+        : notes;
     const byDate = (n: Note) => n.published_at || n.created_at || "";
     return [...filtered].sort((a, b) =>
       feedSort === "latest"
@@ -178,134 +144,57 @@ export const PublicFeedPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
-      {/* 1. Hero Section (Design & Aesthetic from thediaryproject.lovable.app) */}
-      <section className="relative flex min-h-[82vh] items-center justify-center overflow-hidden px-6 py-20 text-center">
-        <CoffeeButton />
-        {/* Candle Glow Ambient Gradient */}
-        <div className="candle-glow absolute inset-0" />
-        <GrandHallBackdrop />
+      <GrandHallBackdrop />
+      <div id="bookshelf" className="scroll-mt-16 py-10 relative z-10">
+        {/* Library header */}
+        <div className="text-center mb-6 px-4">
+          <div className="flex items-center justify-center gap-2 mb-1.5">
+            <BookOpen className="w-4 h-4 text-gold" />
+            <span className="label-caps">The Grand Library</span>
+          </div>
+          <h1 className="font-serif text-3xl sm:text-4xl text-[#fbf3e2] tracking-tight">
+            Every shelf, every section, every unsent thing
+          </h1>
+          {!loading && visibleNotes.length > 0 && (
+            <p className="font-body text-xs text-[#9e9488] italic mt-2">
+              {isSupabaseConfigured &&
+              notes.length > 0 &&
+              notes.every((note) => isSampleNote(note.id))
+                ? `${visibleNotes.length} sample letters rest on these shelves. Explore them while the community begins writing.`
+                : `${visibleNotes.length} ${visibleNotes.length === 1 ? "letter rests" : "letters rest"} on these shelves, each left by an anonymous pen name.`}
+            </p>
+          )}
 
-        <div className="relative z-10 max-w-3xl mx-auto">
-          {/* Hanging Candle Lantern Icon */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+          {/* Browse mode: the single shelf or the full aisles */}
+          <div
+            className="mt-4 inline-flex items-center gap-1 rounded-full border border-hairline bg-card/60 p-1"
+            role="group"
+            aria-label="How to walk the library"
           >
-            <CandleLanternIcon className="h-28 w-14 text-gold mb-3" />
-          </motion.div>
-
-          {/* Subtitle Badge */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8 }}
-            className="label-caps mt-2 text-gold/90"
-          >
-            Anonymous Literary Sanctuary
-          </motion.p>
-
-          {/* Main Hero Header */}
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="mt-4 text-5xl sm:text-7xl font-serif tracking-tight text-[#f3ece0] [text-shadow:0_0_38px_rgba(212,163,115,0.35)]"
-          >
-            <InkText
-              text="Say what you couldn't say."
-              startDelay={0.6}
-              perLetter={0.05}
-            />
-          </motion.h1>
-
-          {/* Description */}
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mx-auto mt-6 max-w-lg font-body text-base sm:text-lg text-[#9e9488] leading-relaxed italic"
-          >
-            An anonymous library for the things you carry and never told anyone.
-            Write them down. Shelve them. Be known by no one.
-          </motion.p>
-
-          {/* Action Buttons */}
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.75, duration: 0.8 }}
-            className="mt-10 flex flex-wrap items-center justify-center gap-4"
-          >
-            <button
-              onClick={openWriter}
-              className="rounded-full bg-gold hover:bg-gold-light px-8 py-3.5 font-serif text-lg text-wood-950 font-semibold shadow-candle transition-all duration-200 hover:-translate-y-0.5 cursor-pointer flex items-center gap-2"
-            >
-              <Feather className="w-5 h-5" />
-              <span>Write an Unsent Letter</span>
-            </button>
-
-            <a
-              href="#bookshelf"
-              className="rounded-full border border-hairline bg-card/80 hover:bg-wood-850 px-8 py-3.5 font-serif text-lg text-amber-100 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
-            >
-              Browse the Bookshelf
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                window.dispatchEvent(new CustomEvent("paper-vault:open-box"));
-                document
-                  .getElementById("bookshelf")
-                  ?.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="rounded-full border border-red-400/30 bg-wax-crimson/80 hover:bg-wax-crimson px-8 py-3.5 font-serif text-lg text-amber-50 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer"
-            >
-              Open the Keepsake Box
-            </button>
-          </motion.div>
-
-          <RoomMemory />
-
-          {/* First-visit guidance: what this place is and how to begin */}
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.9, duration: 0.8 }}
-            className="mx-auto mt-6 max-w-md font-body text-sm text-[#9e9488] italic leading-relaxed"
-          >
-            No account is needed to read. Touch any book below to unroll its
-            letter, or write one of your own - you will appear only as a pen
-            name.
-          </motion.p>
+            {(
+              [
+                { id: "shelf", label: "The Big Shelf" },
+                { id: "aisles", label: "Walk the Aisles" },
+              ] as const
+            ).map((mode) => (
+              <button
+                key={mode.id}
+                type="button"
+                onClick={() => setBrowseMode(mode.id)}
+                aria-pressed={browseMode === mode.id}
+                className={`px-4 py-1.5 rounded-full text-xs font-serif tracking-wide cursor-pointer transition-all duration-200 ${
+                  browseMode === mode.id
+                    ? "bg-gold text-wood-950 shadow-candle"
+                    : "text-amber-200 hover:text-gold-light"
+                }`}
+              >
+                {mode.label}
+              </button>
+            ))}
+          </div>
         </div>
-      </section>
 
-      {/* 2. Poetic Quote Divider */}
-      <section className="px-6 py-20 border-y border-hairline/60 bg-wood-950/40">
-        <div className="mx-auto max-w-2xl text-center">
-          <p className="font-serif text-3xl leading-snug sm:text-4xl text-[#f3ece0]">
-            Some things are too heavy to carry and too hard to say. So they sit
-            in your chest.{" "}
-            <em className="text-gold not-italic">
-              Here, they can sit on a shelf instead.
-            </em>
-          </p>
-        </div>
-      </section>
-
-      {/* 3. The Interactive Bookshelf (Letters are opened by touching a book) */}
-      <div id="bookshelf" className="scroll-mt-16 py-10">
-        {!loading && visibleNotes.length > 0 && (
-          <p className="text-center font-body text-xs text-[#9e9488] italic mb-4">
-            {isSupabaseConfigured &&
-            notes.length > 0 &&
-            notes.every((note) => isSampleNote(note.id))
-              ? `${visibleNotes.length} sample letters rest on these shelves. Explore them while the community begins writing.`
-              : `${visibleNotes.length} ${visibleNotes.length === 1 ? "letter rests" : "letters rest"} on these shelves, each left by an anonymous pen name.`}
-          </p>
-        )}
-        {/* Search + sort control: lives above the bookshelf and narrows what it renders */}
+        {/* Search + sort control */}
         <div className="mx-auto max-w-5xl px-4 mb-6 flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
             <Search className="w-4 h-4 text-gold absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -325,7 +214,7 @@ export const PublicFeedPage: React.FC = () => {
               onChange={(e) =>
                 setFeedSort(e.target.value as "latest" | "oldest")
               }
-              aria-label="Sort letters by date"
+              aria-label="Sort letters"
               className="bg-transparent text-xs font-serif text-amber-100 focus:outline-none cursor-pointer"
             >
               <option value="latest" className="bg-wood-900 text-amber-100">
@@ -355,6 +244,13 @@ export const PublicFeedPage: React.FC = () => {
               Try a different phrase, or search by pen name.
             </p>
           </div>
+        ) : browseMode === "aisles" ? (
+          <div className="mx-auto max-w-5xl px-4">
+            <LibraryAisles
+              notes={visibleNotes}
+              onOpen={(n) => setAisleNote(n)}
+            />
+          </div>
         ) : (
           <InteractiveBookshelf
             notes={visibleNotes}
@@ -362,51 +258,34 @@ export const PublicFeedPage: React.FC = () => {
             onRespondLetter={handleStartResponse}
           />
         )}
+
+        {/* Scale: unshelve the next page of the archive */}
+        {!loading && hasMore && !feedSearch.trim() && (
+          <div className="text-center mt-8">
+            <button
+              type="button"
+              onClick={loadMore}
+              disabled={loadingMore}
+              className="rounded-full border border-gold/50 bg-card/70 hover:bg-card px-8 py-3 font-serif text-sm text-gold-light transition cursor-pointer disabled:opacity-50"
+            >
+              {loadingMore
+                ? "Unshelving..."
+                : "Unshelve more of the archive"}
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* 4. Library Card & Sample Letter Quote Section (Clean and focused, four rooms removed) */}
-      <section className="px-6 py-24 border-t border-hairline bg-wood-950/40">
-        <div className="mx-auto max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-          {/* Library Card */}
-          <div className="text-center md:text-left">
-            <span className="label-caps block mb-2">Anonymous Identity</span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-[#f3ece0] mb-4">
-              Your identity belongs to you alone
-            </h2>
-            <p className="font-body text-base text-[#9e9488] leading-relaxed mb-6 italic">
-              When you enter the library, you receive an anonymous pseudonym.
-              Nobody sees your email, location, or personal details.
-            </p>
-            <LibraryCard
-              penName={profile?.pen_name || "Quiet Heron"}
-              avatarColor="#d4a373"
-              className="mx-auto md:mx-0"
-            />
-          </div>
-
-          {/* Sample Unsent Parchment Note from the shelf */}
-          <div>
-            <p className="label-caps mb-4 text-center">From a shelf, someday</p>
-            <div className="letter-frame parchment-sheet letter-deckle rotate-[0.6deg] p-8 sm:p-12 pl-10 sm:pl-14 text-wood-950 relative">
-              <div className="letter-ribbon" />
-              <div className="letter-stamps">
-                <span className="letter-stamp" />
-              </div>
-              <div className="letter-botanical" />
-              <blockquote className="font-serif text-2xl sm:text-3xl italic leading-relaxed text-wood-950">
-                "To the friend I stopped calling:
-                <br />
-                <br />
-                I'm not angry anymore. I just didn't know how to say I missed
-                you."
-              </blockquote>
-              <div className="mt-8 text-right font-serif text-lg text-wood-800">
-                — Quiet Heron
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Aisle reader (the big shelf keeps its own internal reader) */}
+      <BookReaderModal
+        note={aisleNote}
+        isOpen={!!aisleNote}
+        onClose={() => setAisleNote(null)}
+        onRespond={(n) => {
+          setAisleNote(null);
+          handleStartResponse(n);
+        }}
+      />
 
       {/* Response Composer Modal */}
       {respondingNote && (
@@ -437,8 +316,6 @@ export const PublicFeedPage: React.FC = () => {
           }}
         />
       )}
-
-      <CommunityJoin />
 
       <PaywallModal
         isOpen={paywallOpen}

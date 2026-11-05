@@ -4,12 +4,12 @@
 
 @layer base {
   body {
-    background-color: #0a0705;
+    background-color: #0d0906;
     color: #f3ece0;
     font-family: 'Lora', Georgia, serif;
     background-image:
       linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, transparent 9%, transparent 91%, rgba(0, 0, 0, 0.5) 100%),
-      radial-gradient(ellipse at 50% 12%, rgba(212, 163, 115, 0.17) 0%, transparent 62%),
+      radial-gradient(ellipse at 50% 12%, rgba(212, 163, 115, 0.26) 0%, transparent 62%),
       radial-gradient(ellipse at 14% 45%, rgba(74, 48, 26, 0.5) 0%, transparent 55%),
       radial-gradient(ellipse at 86% 72%, rgba(58, 36, 19, 0.5) 0%, transparent 55%),
       radial-gradient(ellipse at 50% 105%, rgba(139, 74, 82, 0.1) 0%, transparent 60%);
@@ -37,7 +37,7 @@
 
 /* Candle Glow Background */
 .candle-glow {
-  background: radial-gradient(ellipse at 50% 20%, rgba(212, 163, 115, 0.18) 0%, rgba(13, 11, 9, 0) 70%);
+  background: radial-gradient(ellipse at 50% 20%, rgba(226, 177, 122, 0.26) 0%, rgba(13, 11, 9, 0) 70%);
   pointer-events: none;
 }
 
@@ -868,4 +868,335 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 @media (orientation: landscape) and (max-height: 520px) {
   .letter-stamps { transform: scale(0.62) rotate(2.5deg); transform-origin: top right; top: 6px; right: 8px; }
   .reader-scroll { padding-top: 3.4rem !important; }
+}
+
+/* ===== Re-vibe: same warm brand palette, brighter ===== */
+
+.landing-hero {
+  background:
+    radial-gradient(ellipse at 50% 16%, rgba(226, 177, 122, 0.30) 0%, transparent 62%),
+    radial-gradient(ellipse at 12% 82%, rgba(139, 74, 82, 0.18) 0%, transparent 55%),
+    radial-gradient(ellipse at 88% 68%, rgba(74, 48, 26, 0.55) 0%, transparent 55%);
+}
+
+/* The Librarian's medallion */
+.librarian-medallion {
+  width: 52px;
+  height: 52px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #4a3520, #241a10);
+  border: 2px solid rgba(212, 163, 115, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.6),
+    inset 0 2px 6px rgba(255, 220, 160, 0.15);
+  flex: none;
+}
+
+/* Letter of the day: one sealed envelope on the lectern */
+.lotd-envelope {
+  position: relative;
+  display: inline-block;
+  width: min(340px, 84vw);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.lotd-body {
+  display: block;
+  background: linear-gradient(160deg, #f0dcb0, #e2c48d);
+  border-radius: 10px;
+  padding: 44px 22px 26px;
+  box-shadow:
+    0 18px 40px rgba(0, 0, 0, 0.6),
+    inset 0 0 30px rgba(140, 105, 50, 0.3);
+}
+.lotd-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: linear-gradient(180deg, #e8cf9f, #d9b878);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 10px 10px 0 0;
+  z-index: 2;
+  transition: transform 0.5s ease;
+  transform-origin: top center;
+}
+.lotd-envelope:hover .lotd-flap {
+  transform: rotateX(38deg);
+}
+.lotd-seal {
+  position: absolute;
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+}
+.lotd-title {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 1.3rem;
+  line-height: 1.35;
+  color: #2a2118;
+}
+.lotd-by {
+  display: block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  font-style: italic;
+  color: #6b5334;
+}
+.lotd-breaking .lotd-seal {
+  animation: sealBreak 0.7s ease forwards;
+}
+.lotd-breaking .lotd-flap {
+  animation: flapOpen 0.7s ease forwards;
+}
+@keyframes sealBreak {
+  to {
+    transform: translateX(-50%) scale(1.7) rotate(26deg);
+    opacity: 0;
+  }
+}
+@keyframes flapOpen {
+  to {
+    transform: rotateX(130deg);
+    opacity: 0;
+  }
+}
+
+/* Future-self envelopes on the writing desk */
+.fs-envelope {
+  position: relative;
+  width: 152px;
+  padding: 0;
+  padding-top: 10px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+.fs-flap {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  height: 34px;
+  background: linear-gradient(180deg, #e8cf9f, #d9b878);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-radius: 8px 8px 0 0;
+  z-index: 1;
+}
+.fs-emboss {
+  display: block;
+  position: relative;
+  background: linear-gradient(160deg, #f0dcb0, #e2c48d);
+  border-radius: 8px;
+  padding: 34px 10px 14px;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.55),
+    inset 0 0 20px rgba(140, 105, 50, 0.3);
+}
+.fs-date {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: #8a6a42;
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5),
+    0 -1px 1px rgba(0, 0, 0, 0.25);
+}
+.fs-countdown {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.66rem;
+  font-style: italic;
+  color: #9c7c4e;
+}
+.fs-seal {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+.fs-unsealed .fs-emboss {
+  box-shadow:
+    0 0 26px rgba(226, 177, 122, 0.55),
+    0 10px 24px rgba(0, 0, 0, 0.55);
+}
+.fs-open-line {
+  display: block;
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: #7a4a12;
+  font-weight: 600;
+}
+
+/* Completion ceremony */
+.ceremony-card {
+  position: relative;
+  max-width: 430px;
+  width: 100%;
+  background: linear-gradient(170deg, #241a10, #171008);
+  border: 1px solid rgba(212, 163, 115, 0.35);
+  border-radius: 20px;
+  padding: 34px 28px 26px;
+  box-shadow:
+    0 0 80px rgba(226, 177, 122, 0.25),
+    0 24px 60px rgba(0, 0, 0, 0.7);
+}
+.ceremony-flame {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* Grand Library aisles: sideways-scrolling shelf rows */
+.aisle-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 163, 115, 0.4) transparent;
+}
+.aisle-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.aisle-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 163, 115, 0.35);
+  border-radius: 3px;
+}
+
+/* ===== Quill flight: the landing side-scene (desktop only) ===== */
+.quill-scene {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.qf-desk {
+  position: absolute;
+  right: 5%;
+  bottom: 12%;
+  width: 190px;
+  height: 190px;
+  display: none;
+}
+@media (min-width: 1024px) {
+  .qf-desk {
+    display: block;
+  }
+}
+.qf-glow {
+  position: absolute;
+  left: -30px;
+  bottom: -40px;
+  width: 200px;
+  height: 200px;
+  background: radial-gradient(circle, rgba(226, 177, 122, 0.4), transparent 70%);
+}
+.qf-letter {
+  position: absolute;
+  left: 12px;
+  bottom: 24px;
+  width: 88px;
+  height: 112px;
+  background: linear-gradient(160deg, #f0dcb0, #e2c48d);
+  border-radius: 3px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.55);
+  animation: qfFold 9s ease-in-out infinite;
+}
+.qf-line {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  height: 2px;
+  background: #8a6a42;
+  opacity: 0.75;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.qf-line-1 { top: 30px; animation: qfLine1 9s linear infinite; }
+.qf-line-2 { top: 48px; animation: qfLine2 9s linear infinite; }
+.qf-line-3 { top: 66px; animation: qfLine3 9s linear infinite; }
+.qf-quill {
+  position: absolute;
+  left: 46px;
+  bottom: 96px;
+  width: 62px;
+  animation: qfQuill 9s ease-in-out infinite;
+}
+.qf-plane {
+  position: absolute;
+}
+.qf-plane-hero {
+  left: 34px;
+  bottom: 70px;
+  width: 46px;
+  opacity: 0;
+  animation: qfFly 9s ease-in-out infinite;
+}
+.qf-plane-bg-1 {
+  top: 20%;
+  right: -6%;
+  width: 42px;
+  animation: qfDrift 17s linear infinite;
+}
+.qf-plane-bg-2 {
+  top: 38%;
+  right: -10%;
+  width: 30px;
+  animation: qfDrift 26s linear infinite;
+  animation-delay: -9s;
+}
+
+@keyframes qfLine1 {
+  0%, 6% { transform: scaleX(0); }
+  16%, 100% { transform: scaleX(1); }
+}
+@keyframes qfLine2 {
+  0%, 16% { transform: scaleX(0); }
+  26%, 100% { transform: scaleX(1); }
+}
+@keyframes qfLine3 {
+  0%, 26% { transform: scaleX(0); }
+  36%, 100% { transform: scaleX(1); }
+}
+@keyframes qfFold {
+  0%, 5% { transform: none; opacity: 0; }
+  10%, 46% { transform: none; opacity: 1; }
+  56% { transform: scale(0.72) rotate(-8deg); opacity: 0.9; }
+  62%, 100% { transform: scale(0.15) rotate(-22deg); opacity: 0; }
+}
+@keyframes qfQuill {
+  0%, 6% { transform: translateY(-8px) rotate(-4deg); opacity: 0; }
+  10% { opacity: 1; }
+  12%, 36% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  16% { transform: translateY(-3px) rotate(2deg); }
+  22% { transform: translateY(0) rotate(-2deg); }
+  30% { transform: translateY(-3px) rotate(2deg); }
+  44%, 100% { transform: translateY(-26px) rotate(-14deg); opacity: 0; }
+}
+@keyframes qfFly {
+  0%, 54% { transform: translate(0, 0) rotate(-10deg) scale(0.4); opacity: 0; }
+  58% { opacity: 1; }
+  82% { transform: translate(-34vw, -30vh) rotate(-14deg) scale(1); opacity: 1; }
+  92%, 100% { transform: translate(-44vw, -40vh) rotate(-16deg) scale(0.9); opacity: 0; }
+}
+@keyframes qfDrift {
+  from { transform: translateX(0) rotate(-10deg); }
+  to { transform: translateX(-115vw) rotate(-16deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .qf-letter, .qf-line, .qf-quill, .qf-plane-hero, .qf-plane-bg-1, .qf-plane-bg-2,
+  .lotd-breaking .lotd-seal, .lotd-breaking .lotd-flap {
+    animation: none;
+  }
+  .qf-plane-hero { display: none; }
 }
