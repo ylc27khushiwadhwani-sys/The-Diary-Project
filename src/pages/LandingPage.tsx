@@ -31,20 +31,38 @@ const fetchRecentTitles = async (): Promise<RecentTitle[]> => {
       penName: n.profiles?.pen_name || "Anonymous Writer",
     }));
   }
-  const { data } = await supabase
-    .from("notes")
-    .select("id, title, profiles:user_id(pen_name)")
-    .eq("is_public", true)
-    .eq("moderation_status", "clean")
-    .order("published_at", { ascending: false })
-    .limit(5);
-  if (!data) return [];
-  const rows = data as unknown as {
+  const base = () =>
+    supabase
+      .from("notes")
+      .select("id, title, profiles:user_id(pen_name)")
+      .eq("is_public", true)
+      .eq("moderation_status", "clean")
+      .order("published_at", { ascending: false })
+      .limit(5);
+  const { data: joined, error } = await base();
+  let rows: {
     id: string;
     title: string | null;
-    profiles: { pen_name: string } | { pen_name: string }[] | null;
-  }[];
-  return rows.map((row) => {
+    profiles?: { pen_name: string } | { pen_name: string }[] | null;
+  }[] | null = joined;
+  if (error) {
+    console.error("Recent-shelf fetch failed, retrying without pen names:", error);
+    const retry = await supabase
+      .from("notes")
+      .select("id, title")
+      .eq("is_public", true)
+      .eq("moderation_status", "clean")
+      .order("published_at", { ascending: false })
+      .limit(5);
+    if (retry.error) {
+      console.error("Recent-shelf fetch failed outright:", retry.error);
+      return [];
+    }
+    rows = retry.data;
+  }
+  if (!rows) return [];
+  const rows2 = rows;
+  return rows2.map((row) => {
     const p = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
     return {
       id: row.id,
@@ -53,7 +71,6 @@ const fetchRecentTitles = async (): Promise<RecentTitle[]> => {
     };
   });
 };
-
 /**
  * The front door. One screen, one promise, one door - in the shape of a
  * quiet scene: shelves at the edges, a quill writing at a small desk, the
