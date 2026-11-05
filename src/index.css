@@ -909,7 +909,7 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   display: block;
   background: linear-gradient(160deg, #f0dcb0, #e2c48d);
   border-radius: 10px;
-  padding: 44px 22px 26px;
+  padding: 64px 22px 26px;
   box-shadow:
     0 18px 40px rgba(0, 0, 0, 0.6),
     inset 0 0 30px rgba(140, 105, 50, 0.3);
