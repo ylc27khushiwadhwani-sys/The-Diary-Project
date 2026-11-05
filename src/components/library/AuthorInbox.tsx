@@ -36,7 +36,7 @@ export const getSeenResponseIds = (userId: string): Set<string> => {
     return new Set();
   }
 };
-const markSeen = (userId: string, ids: Set<string>) => {
+export const markSeen = (userId: string, ids: Set<string>) => {
   try {
     localStorage.setItem(seenKey(userId), JSON.stringify([...ids]));
   } catch {

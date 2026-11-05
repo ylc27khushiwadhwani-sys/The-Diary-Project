@@ -1535,3 +1535,81 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   .swl-quill { animation: none; }
   .lp-mote { animation: none; display: none; }
 }
+
+/* ===== The two doors ===== */
+.door-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 34px 26px 30px;
+  border-radius: 130px 130px 18px 18px;
+  border: 1px solid rgba(212, 163, 115, 0.35);
+  background:
+    radial-gradient(ellipse 80% 45% at 50% 0%, rgba(226, 177, 122, 0.16) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, rgba(46, 29, 16, 0.92) 0%, rgba(26, 16, 9, 0.95) 100%);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(243, 217, 164, 0.12);
+  cursor: pointer;
+  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+}
+.door-card:hover {
+  border-color: rgba(243, 217, 164, 0.65);
+  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.65), 0 0 34px rgba(226, 177, 122, 0.18);
+}
+.door-arch {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 9999px;
+  border: 1px solid rgba(212, 163, 115, 0.45);
+  background: rgba(14, 9, 6, 0.7);
+  transition: transform 0.25s;
+}
+.door-card:hover .door-arch { transform: scale(1.07); }
+.door-name {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.6rem;
+  color: #fbf3e2;
+}
+.door-desc {
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: #cbbfa8;
+  max-width: 24ch;
+}
+.door-stamp {
+  width: 12px;
+  height: 12px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, #e2b17a 0%, #a5692e 65%, #6e4119 100%);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.6), inset 0 0 2px rgba(255, 240, 200, 0.5);
+}
+
+/* ===== The Postbox ===== */
+.postbox-envelope {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  padding: 18px 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(212, 163, 115, 0.3);
+  background: linear-gradient(150deg, rgba(46, 29, 16, 0.9) 0%, rgba(26, 16, 9, 0.94) 100%);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.postbox-envelope:hover { border-color: rgba(243, 217, 164, 0.6); transform: translateY(-2px); }
+.postbox-letter {
+  padding: 22px 24px;
+  border-radius: 4px;
+  background: linear-gradient(160deg, rgba(243, 231, 205, 0.98) 0%, rgba(231, 213, 178, 0.98) 100%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55);
+}
+.postbox-letter p { color: #3a2a17; }
+.postbox-letter .font-body:first-child { color: #8a5a2b; }
+.postbox-letter p:last-child { color: #7d6647; }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { BookOpen, Feather, Library, LogOut, ShieldCheck } from "lucide-react";
+import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 import { PenNameBadge } from "./components/auth/PenNameBadge";
 import { SignInModal } from "./components/auth/SignInModal";
@@ -8,6 +8,9 @@ import { LandingPage } from "./pages/LandingPage";
 import { ReadingRoomPage } from "./pages/ReadingRoomPage";
 import { PublicFeedPage } from "./pages/PublicFeedPage";
 import { LibraryPage } from "./pages/LibraryPage";
+import { DoorsPage } from "./pages/DoorsPage";
+import { PostboxPage, countUnseen } from "./pages/PostboxPage";
+import { loadAuthorResponses } from "./components/library/AuthorInbox";
 import { DustCanvas } from "./components/cinematic/DustCanvas";
 import { EntrySequence } from "./components/cinematic/EntrySequence";
 import { InkText } from "./components/cinematic/InkText";
@@ -15,13 +18,14 @@ import { VisitBadge } from "./components/cinematic/VisitBadge";
 import { burstEmbers } from "./lib/motion";
 import { currentHallHour } from "./lib/timeOfDay";
 
-type Tab = "reading" | "library" | "study";
+type Tab = "reading" | "library" | "postbox" | "study";
 
 export const App: React.FC = () => {
   const { user, profile, loading, signOut, loginAsGuestDemo } = useAuth();
   const [activeTab, setActiveTabState] = useState<Tab>("reading");
   const setActiveTab = (tab: Tab) => {
     if (tab !== activeTab) burstEmbers();
+    setDoorChosen(true);
     setActiveTabState(tab);
   };
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
@@ -31,6 +35,21 @@ export const App: React.FC = () => {
     setIsSignInModalOpen(true);
   };
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
+
+  // After entering, the two doors come first; the rooms wait behind them.
+  const [doorChosen, setDoorChosen] = useState(false);
+  const [postboxUnseen, setPostboxUnseen] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    loadAuthorResponses(user.id).then((rows) => {
+      if (!cancelled && rows) setPostboxUnseen(countUnseen(user.id, rows));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   // The hall is lit for the visitor's local hour; re-checked every ten minutes
   useEffect(() => {
@@ -133,6 +152,29 @@ export const App: React.FC = () => {
             </button>
 
             <button
+              onClick={() => setActiveTab("postbox")}
+              className={`relative flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
+                activeTab === "postbox"
+                  ? "bg-card text-gold border border-gold/40 shadow-candle"
+                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
+              }`}
+            >
+              <Mail className="hidden sm:block w-3.5 h-3.5 text-gold" />
+              <span>
+                <span className="sm:hidden">Postbox</span>
+                <span className="hidden sm:inline">The Postbox</span>
+              </span>
+              {postboxUnseen > 0 && (
+                <span
+                  className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-wax-crimson px-1 text-[9px] font-bold text-amber-50"
+                  aria-label={`${postboxUnseen} sealed replies waiting`}
+                >
+                  {postboxUnseen}
+                </span>
+              )}
+            </button>
+
+            <button
               onClick={() => setActiveTab("study")}
               className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "study"
@@ -172,14 +214,25 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main key={activeTab} className="flex-1 relative z-10 room-enter">
-        {activeTab === "reading" ? (
+      <main key={doorChosen ? activeTab : "doors"} className="flex-1 relative z-10 room-enter">
+        {!doorChosen && profile ? (
+          <DoorsPage
+            penName={profile.pen_name}
+            avatarColor={profile.avatar_color}
+            onOpen={(room) => {
+              setDoorChosen(true);
+              setActiveTab(room);
+            }}
+          />
+        ) : activeTab === "reading" ? (
           <ReadingRoomPage
             onEnterLibrary={() => setActiveTab("library")}
             onOpenStudy={() => setActiveTab("study")}
           />
         ) : activeTab === "library" ? (
           <PublicFeedPage />
+        ) : activeTab === "postbox" ? (
+          <PostboxPage onUnseenChange={setPostboxUnseen} />
         ) : (
           <LibraryPage />
         )}
