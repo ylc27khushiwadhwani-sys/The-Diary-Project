@@ -61,7 +61,7 @@ const GUARDRAILS: GuardrailItem[] = [
 
 export const GuidelinesPage: React.FC = () => {
   return (
-    <div className="relative max-w-4xl mx-auto py-10 px-4">
+    <div className="relative max-w-4xl mx-auto pt-16 pb-10 px-4 sm:py-10">
       <GrandHallBackdrop />
 
       {/* Header */}
