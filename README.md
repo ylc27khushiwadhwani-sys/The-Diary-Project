@@ -4,7 +4,7 @@
 
 *The Paper Vault* is an anonymous digital sanctuary where writers carry their unspoken thoughts in quiet honesty. Writers authenticate with email magic link, receive a poetic pseudonymous pen name, organize their thoughts into private custom shelves, unlock reflective prompts, and selectively share notes publicly. 
 
-Every note submitted to the public library undergoes automated AI safety screening for self-harm language and personal identifying details. Notes touching upon crisis receive an empathetic, supportive hold and instant access to free, confidential helplines. Readers cannot post unvetted public comments; instead, they send thoughtful "letters in response" that land in the author's private inbox first—allowing the author to cherish them privately or pin them to their public letter.
+Every note submitted to the public library is checked by automated, rule-based screening (pattern matching) for self-harm language, personal contact details and links, and abusive or threatening phrases, enforced in the database as well as the app. It is not an AI classifier and not human review, so subtle or reworded harmful content can pass. Notes touching upon crisis receive an empathetic, supportive hold and instant access to free, confidential helplines. Readers cannot post unvetted public comments; instead, they send thoughtful "letters in response" that land in the author's private inbox first—allowing the author to cherish them privately or pin them to their public letter.
 
 ---
 
@@ -22,8 +22,8 @@ Every note submitted to the public library undergoes automated AI safety screeni
 - Notes default to private. Authors consciously toggle sharing on an individual note level.
 - Authors can unshare or delete their letters at any time.
 
-### 4. Empathetic AI Safety & Supportive Holds
-- Public submissions pass through the `screen-content` moderation pipeline (Supabase Edge Function / local rule engine).
+### 4. Rule-Based Safety Screening & Supportive Holds
+- Public submissions pass through the `screen-content` moderation pipeline (Supabase Edge Function / local rule engine; the optional external classifier is not enabled) and database triggers on `notes` and `response_letters`.
 - If self-harm or crisis language is detected, the note is **never deleted or discarded** from the writer's private sanctuary. Instead, it is transitioned to `held_private`, and the author is immediately provided with a gentle, confidential **Helpline Modal** listing verified 24/7 crisis hotlines.
 
 ### 5. Author-Governed Response Letters

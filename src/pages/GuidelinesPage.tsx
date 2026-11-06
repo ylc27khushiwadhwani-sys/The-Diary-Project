@@ -122,7 +122,7 @@ export const GuidelinesPage: React.FC = () => {
           </li>
           <li>
             If a letter worries you, report it. Three reports hide a letter
-            automatically while it is reviewed.
+            automatically. Reports are counted by the app; there is no human moderator on call.
           </li>
         </ul>
       </div>

@@ -121,7 +121,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
 
         <div className="flex items-center gap-2 text-xs font-serif text-emerald-900 mb-5">
           <ShieldCheck className="w-4 h-4 shrink-0 text-emerald-700" />
-          <span>Screened for crisis & privacy safety prior to release.</span>
+          <span>Checked by automated rules (crisis, contact details, abuse) before release.</span>
         </div>
 
         <div className="flex gap-2.5">

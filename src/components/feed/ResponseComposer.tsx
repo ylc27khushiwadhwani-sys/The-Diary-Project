@@ -39,7 +39,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
     setSubmitting(true);
     setErrorWarning(null);
 
-    // 1. Screen response content through AI moderation
+    // 1. Screen response content (rule-based)
     const screenResult = await screenNoteContent(content);
     if (!screenResult.allowed) {
       setSubmitting(false);

@@ -439,8 +439,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           </p>
         )}
         <p className="mt-3 text-center font-body text-[11px] italic text-wood-600">
-          Letters released to the Grand Library are screened for safety before
-          they appear in public.
+          Letters released to the Grand Library are checked by automated rules
+          (not human review) before they appear in public.
         </p>
 
         {/* Bottom Scroll Roll */}

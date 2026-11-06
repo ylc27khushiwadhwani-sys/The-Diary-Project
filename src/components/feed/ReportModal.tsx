@@ -77,7 +77,7 @@ export const ReportModal: React.FC<ReportModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <p className="font-body text-xs text-wood-900 leading-relaxed italic">
-              Please specify the concern. Flagged notes are reviewed by automated moderation:
+              Please specify the concern. Reports are counted automatically, and three reports hide a letter. No one reads it in real time:
             </p>
 
             <div className="space-y-2">
