@@ -74,7 +74,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
       return;
     }
 
-    const { error } = await supabase.from('response_letters').insert([
+    const { data: sent, error } = await supabase.from('response_letters').insert([
       {
         note_id: targetNoteId,
         author_id: user.id,
@@ -82,11 +82,14 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
         is_approved_by_note_owner: false,
         moderation_status: 'clean',
       },
-    ]);
+    ]).select('moderation_status');
 
     setSubmitting(false);
     if (error) {
       setErrorWarning(error.message);
+    } else if (sent && sent.length > 0 && sent[0].moderation_status !== 'clean') {
+      // The database screen held it: do not look as though it was delivered.
+      setErrorWarning('This reply was not sent: the safety screen found contact details, links or language that is not permitted.');
     } else {
       setContent('');
       onResponseSent();

@@ -109,6 +109,7 @@ export const LibraryPage: React.FC = () => {
   const [unlockedIds, setUnlockedIds] = useState<Set<string>>(new Set());
   const [exportSummary, setExportSummary] = useState<string | null>(null);
   const [exportError, setExportError] = useState<string | null>(null);
+  const [heldNotice, setHeldNotice] = useState<string | null>(null);
   const [futureSelfMode, setFutureSelfMode] = useState(false);
   const [fsReading, setFsReading] = useState<Note | null>(null);
   const { loading } = useCancellableLoad(
@@ -236,6 +237,16 @@ export const LibraryPage: React.FC = () => {
 
   const handleSaveNote = async (noteData: Partial<Note>) => {
     if (!user) return;
+    setHeldNotice(null);
+    // The database screen is the last word: if it kept a letter private that
+    // the author asked to publish, say so instead of looking published.
+    const noteHeld = (saved: Note | null | undefined) => {
+      if (noteData.is_public && saved && saved.is_public === false) {
+        setHeldNotice(
+          "This letter was kept private: the safety screen found contact details, links, or abusive or self-harm language in it. It is saved on your shelf but not shared. Edit it to share it.",
+        );
+      }
+    };
     const isNew = !noteData.id;
 
     if (!isSupabaseConfigured) {
@@ -295,6 +306,7 @@ export const LibraryPage: React.FC = () => {
         console.error("Letter failed to save:", error);
         return; // keep the editor open so the words are not lost
       }
+      noteHeld(data as Note);
       setNotes((prev) => [data, ...prev]);
     } else {
       const { data } = await supabase
@@ -303,6 +315,7 @@ export const LibraryPage: React.FC = () => {
         .eq("id", noteData.id!)
         .select()
         .single();
+      noteHeld(data as Note | null);
       if (data)
         setNotes((prev) => prev.map((n) => (n.id === data.id ? data : n)));
     }
@@ -624,6 +637,12 @@ export const LibraryPage: React.FC = () => {
           }`}
         >
           {exportError ?? exportSummary}
+        </p>
+      )}
+
+      {heldNotice && (
+        <p role="status" className="-mt-6 mb-8 text-sm font-body italic text-amber-300">
+          {heldNotice}
         </p>
       )}
 
