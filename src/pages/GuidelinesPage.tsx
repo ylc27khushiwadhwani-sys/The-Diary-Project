@@ -25,12 +25,12 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <ShieldCheck className="w-5 h-5 text-gold" />,
     title: "Every letter is screened before it can go public",
-    body: "When a letter is released, or a whisper is pinned, it is checked first. The same check runs again inside our database on every save, so it cannot be skipped by saving in a different way. A letter that does not pass stays private to its writer and never appears on a public shelf.",
+    body: "When a letter is released, or a whisper is pinned, it is checked first. The same check runs again inside our database on every save, so saving a different way does not skip it. A letter that does not pass stays private to its writer and is not shown on a public shelf.",
   },
   {
     icon: <HeartHandshake className="w-5 h-5 text-gold" />,
     title: "Crisis language is met with care, not an audience",
-    body: "If a letter contains self-harm or crisis language, it is held private and the writer is gently shown free, confidential helplines in their country. The letter is never published, and no one is ever shown such a letter on a public shelf.",
+    body: "If a letter contains self-harm or crisis language that the screening recognises, it is held private and the writer is gently shown free, confidential helplines in their country. It is not published. The screening only recognises common phrasings, so it can miss some.",
   },
   {
     icon: <EyeOff className="w-5 h-5 text-gold" />,
@@ -40,7 +40,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Flag className="w-5 h-5 text-gold" />,
     title: "Every public letter can be reported",
-    body: "Open any public letter and you will find a Report option beside it. A letter that gathers 3 reports is automatically hidden from the library at once, pending review.",
+    body: "Open any public letter and you will find a Report option beside it. A letter that gathers 3 reports is automatically hidden from the library automatically.",
   },
   {
     icon: <Mail className="w-5 h-5 text-gold" />,
