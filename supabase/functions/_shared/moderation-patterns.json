@@ -1,19 +1,120 @@
 {
   "selfHarmPatterns": [
-    { "pattern": "suicid", "flags": "i" },
-    { "pattern": "kill(?:ing)?\\s+myself", "flags": "i" },
-    { "pattern": "want(?:ing)?\\s+to\\s+die", "flags": "i" },
-    { "pattern": "end(?:ing)?\\s+(?:my|this)\\s+life", "flags": "i" },
-    { "pattern": "self[- ]harm", "flags": "i" },
-    { "pattern": "cut(?:ting)?\\s+myself", "flags": "i" },
-    { "pattern": "take\\s+my\\s+(?:own\\s+)?life", "flags": "i" },
-    { "pattern": "hang(?:ing)?\\s+myself", "flags": "i" },
-    { "pattern": "overdose", "flags": "i" },
-    { "pattern": "better\\s+off\\s+dead", "flags": "i" }
+    {
+      "pattern": "suicid",
+      "flags": "i"
+    },
+    {
+      "pattern": "kill(?:ing)?\\s+myself",
+      "flags": "i"
+    },
+    {
+      "pattern": "want(?:ing)?\\s+to\\s+die",
+      "flags": "i"
+    },
+    {
+      "pattern": "end(?:ing)?\\s+(?:my|this)\\s+life",
+      "flags": "i"
+    },
+    {
+      "pattern": "self[- ]harm",
+      "flags": "i"
+    },
+    {
+      "pattern": "cut(?:ting)?\\s+myself",
+      "flags": "i"
+    },
+    {
+      "pattern": "take\\s+my\\s+(?:own\\s+)?life",
+      "flags": "i"
+    },
+    {
+      "pattern": "hang(?:ing)?\\s+myself",
+      "flags": "i"
+    },
+    {
+      "pattern": "overdose",
+      "flags": "i"
+    },
+    {
+      "pattern": "better\\s+off\\s+dead",
+      "flags": "i"
+    },
+    {
+      "pattern": "harm(?:ing)?\\s+myself",
+      "flags": "i"
+    },
+    {
+      "pattern": "wish\\s+i\\s+(?:was|were)\\s+dead",
+      "flags": "i"
+    },
+    {
+      "pattern": "no\\s+reason\\s+to\\s+live",
+      "flags": "i"
+    },
+    {
+      "pattern": "want\\s+to\\s+disappear",
+      "flags": "i"
+    },
+    {
+      "pattern": "end\\s+it\\s+all",
+      "flags": "i"
+    },
+    {
+      "pattern": "(?:do\\s*not|don'?t)\\s+want\\s+to\\s+(?:be\\s+alive|live|exist)",
+      "flags": "i"
+    },
+    {
+      "pattern": "k[i1!]ll(?:ing)?\\s+my\\s*self",
+      "flags": "i"
+    }
   ],
   "piiPatterns": [
-    { "pattern": "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b", "flags": "" },
-    { "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b", "flags": "" },
-    { "pattern": "\\b\\d{10}\\b", "flags": "" }
+    {
+      "pattern": "\\b\\d{3}[-.]?\\d{3}[-.]?\\d{4}\\b",
+      "flags": ""
+    },
+    {
+      "pattern": "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b",
+      "flags": ""
+    },
+    {
+      "pattern": "\\b\\d{10}\\b",
+      "flags": ""
+    },
+    {
+      "pattern": "(?:\\d[\\s.\\-()]*){10,}",
+      "flags": ""
+    },
+    {
+      "pattern": "[a-z0-9._%+\\-]+\\s*(?:@|\\(at\\)|\\[at\\])\\s*[a-z0-9\\-]+(?:\\s*(?:\\.|\\(dot\\)|\\[dot\\])\\s*[a-z]{2,})+",
+      "flags": "i"
+    },
+    {
+      "pattern": "https?://|www\\.",
+      "flags": "i"
+    }
+  ],
+  "abusePatterns": [
+    {
+      "pattern": "kill\\s+yourself|\\bkys\\b|go\\s+die|you\\s+should\\s+die",
+      "flags": "i"
+    },
+    {
+      "pattern": "i\\s*(?:will|'ll|am\\s+going\\s+to|'m\\s+going\\s+to)\\s+(?:kill|hurt|rape|beat|find|murder)\\s+you",
+      "flags": "i"
+    },
+    {
+      "pattern": "everyone\\s+hates\\s+you|nobody\\s+(?:loves|likes)\\s+you",
+      "flags": "i"
+    },
+    {
+      "pattern": "you(?:\\s+are|'re|r)\\s+(?:a\\s+|an\\s+)?(?:worthless|pathetic|disgusting|stupid|ugly|idiot|moron|slut|whore|bitch|retard|loser|trash)",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:nigger|nigga|faggot|kike|chink|spic|tranny|retard|cunt)\\b",
+      "flags": "i"
+    }
   ]
 }

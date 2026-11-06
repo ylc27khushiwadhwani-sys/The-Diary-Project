@@ -12,6 +12,7 @@ import {
 import { Note, Shelf } from "../../types/database";
 import { LockNoteToggle } from "./LockNoteToggle";
 import { ShareModal } from "../library/ShareModal";
+import { screenNoteContent } from "../../services/moderation";
 import { HelplineModal } from "../safety/HelplineModal";
 import { WaxSeal } from "../library/WaxSeal";
 import {
@@ -70,6 +71,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   const [saving, setSaving] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
+  const [screenNotice, setScreenNotice] = useState<string | null>(null);
 
   // Tag chips: comma or Enter commits the draft, Backspace on an empty input
   // pops the last chip. Storage is normalized lowercase so dedup and matching
@@ -104,6 +106,31 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     if (!content.trim()) return;
     if (futureSelf && !unsealOn) return;
     setSaving(true);
+    setScreenNotice(null);
+    // Anything that would be public is screened first - Save is not a way
+    // around the release check.
+    if (isPublic && !futureSelf) {
+      const verdict = await screenNoteContent(content, title);
+      if (!verdict.allowed) {
+        setSaving(false);
+        setIsPublic(false);
+        if (verdict.categories.self_harm) {
+          setIsHelplineOpen(true);
+          setScreenNotice(
+            "This letter was not made public. It reads as though you may be hurting - free, confidential helplines are available. You can still keep it private: press Save again.",
+          );
+        } else if (verdict.categories.pii) {
+          setScreenNotice(
+            "This letter was not made public because it contains contact details or links. Remove them to share it, or press Save again to keep it private.",
+          );
+        } else {
+          setScreenNotice(
+            "This letter was not made public because it contains abusive or threatening language. Edit it to share it, or press Save again to keep it private.",
+          );
+        }
+        return;
+      }
+    }
     const sealedTags = withUnsealTag(tags, unsealOn || null);
     await onSave({
       id: note?.id,
@@ -403,6 +430,14 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
           />
         </div>
 
+        {screenNotice && (
+          <p
+            role="alert"
+            className="mt-3 rounded-lg border border-red-800/30 bg-red-900/10 px-3 py-2 text-center font-body text-xs text-red-900"
+          >
+            {screenNotice}
+          </p>
+        )}
         <p className="mt-3 text-center font-body text-[11px] italic text-wood-600">
           Letters released to the Grand Library are screened for safety before
           they appear in public.

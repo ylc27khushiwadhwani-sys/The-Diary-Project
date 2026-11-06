@@ -25,7 +25,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <ShieldCheck className="w-5 h-5 text-gold" />,
     title: "Every letter is screened before it can go public",
-    body: "Nothing reaches the public library unread by our safety checks. When a writer releases a letter, automated screening reviews it first. Letters that do not pass never appear on a public shelf - they simply remain private to their writer.",
+    body: "When a letter is released, or a whisper is pinned, it is checked first. The same check runs again inside our database on every save, so it cannot be skipped by saving in a different way. A letter that does not pass stays private to its writer and never appears on a public shelf.",
   },
   {
     icon: <HeartHandshake className="w-5 h-5 text-gold" />,
@@ -35,7 +35,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <EyeOff className="w-5 h-5 text-gold" />,
     title: "Personal details stay out of the public library",
-    body: "Letters containing personal contact details - phone numbers, email addresses, similar identifiers - are held private automatically, to protect the writer and anyone they mention.",
+    body: "Letters containing personal contact details - phone numbers, email addresses, links - are held private automatically, to protect the writer and anyone they mention.",
   },
   {
     icon: <Flag className="w-5 h-5 text-gold" />,
@@ -55,7 +55,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Scale className="w-5 h-5 text-gold" />,
     title: "How the screening works",
-    body: "Screening runs on automated classifiers that share a single rulebook between the app and our servers, so the same standard applies everywhere. Where configured, an independent AI moderation service adds a second pass. Screening looks for crisis language, personal contact details, and abusive or harassing content.",
+    body: "Screening is automated, rule-based pattern matching for crisis language, personal contact details and links, and abusive or threatening phrases. It is not human review and it is not perfect: unusual wording can slip past it, and no moderator reads every letter. That is why every public letter has a Report button, and three reports hide a letter automatically. An optional AI moderation pass is only active when it has been configured.",
   },
 ];
 

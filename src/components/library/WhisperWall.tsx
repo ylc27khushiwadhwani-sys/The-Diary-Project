@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Feather, Wind } from "lucide-react";
 import { Note } from "../../types/database";
 import { supabase, isSupabaseConfigured } from "../../lib/supabase";
+import { screenNoteContent } from "../../services/moderation";
 import { useAuth } from "../../contexts/AuthContext";
 import { useCancellableLoad } from "../../hooks/useCancellableLoad";
 import { isLimitError } from "../../lib/payments";
@@ -64,6 +65,12 @@ export const WhisperWall: React.FC = () => {
     setNotice(null);
     const line = text.slice(0, MAX_LEN);
     if (!isSupabaseConfigured) {
+      const demoVerdict = await screenNoteContent(line);
+      if (!demoVerdict.allowed) {
+        setNotice("That whisper can't go on the wall. Try another line.");
+        setPinning(false);
+        return;
+      }
       const local: Note = {
         id: `whisper-${Date.now()}`,
         user_id: user?.id || "guest",
@@ -95,7 +102,17 @@ export const WhisperWall: React.FC = () => {
       setPinning(false);
       return;
     }
-    const { error } = await supabase.from("notes").insert([
+    const verdict = await screenNoteContent(line);
+    if (!verdict.allowed) {
+      setNotice(
+        verdict.categories.self_harm
+          ? "That one sounds heavy. It stays with you, not on the wall - free, confidential helplines are listed in the footer."
+          : "That whisper can't go on the wall (contact details, links or harsh language). Try another line.",
+      );
+      setPinning(false);
+      return;
+    }
+    const { data: pinned, error } = await supabase.from("notes").insert([
       {
         id: crypto.randomUUID(),
         user_id: user.id,
@@ -106,7 +123,12 @@ export const WhisperWall: React.FC = () => {
         moderation_status: "clean",
         tags: [WHISPER_TAG],
       },
-    ]);
+    ]).select("id, is_public");
+    if (!error && pinned && pinned.length > 0 && !pinned[0].is_public) {
+      setNotice("That whisper was held back by the safety screen.");
+      setPinning(false);
+      return;
+    }
     if (error) {
       setNotice(
         isLimitError(error)
