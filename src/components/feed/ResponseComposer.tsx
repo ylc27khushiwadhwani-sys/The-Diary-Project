@@ -151,7 +151,7 @@ export const ResponseComposer: React.FC<ResponseComposerProps> = ({
             <div className="flex items-center justify-between text-[11px] font-serif text-wood-700 pt-1">
               <span className="flex items-center gap-1.5 text-emerald-800">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Screened by AI moderation</span>
+                <span>Screened by automated safety rules</span>
               </span>
               <span>{content.length} characters</span>
             </div>

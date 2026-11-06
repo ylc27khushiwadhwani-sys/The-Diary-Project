@@ -93,6 +93,10 @@
     {
       "pattern": "https?://|www\\.",
       "flags": "i"
+    },
+    {
+      "pattern": "(?:whatsapp|telegram|snapchat|instagram|insta)\\s*(?:me|number|id|handle)?\\s*[:@]",
+      "flags": "i"
     }
   ],
   "abusePatterns": [
