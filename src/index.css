@@ -2920,3 +2920,5 @@ body[data-view="landing"] .vault-site-footer { padding-bottom:180px; }
 
 .flower-studio-overlay {z-index:110;}
 .flower-studio-intro h2,.flower-studio-header h1,.flower-recipient h1 {font-family:"Cormorant Garamond",Georgia,serif;}
+
+.flower-delete-confirm {position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:22px;background:#0008;}.flower-delete-confirm>div {max-width:420px;padding:28px;border:1px solid rgb(var(--hairline));border-radius:18px;background:rgb(var(--card));}.flower-delete-confirm h2 {font-size:24px;margin-bottom:14px;}.flower-delete-confirm p {font-size:14px;line-height:1.7;margin-bottom:24px;}.flower-delete-confirm button {padding:12px;margin-right:12px;border:1px solid rgb(var(--hairline));border-radius:10px;margin-top:8px;}
