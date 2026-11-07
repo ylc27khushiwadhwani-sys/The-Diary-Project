@@ -2915,5 +2915,8 @@ html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#e
 .landing-garden-stem { flex-basis:6%; margin:0 -1.4%; }
 @media(max-width:640px) { .landing-garden-stem {flex-basis:16%;margin:0 -4%;} }
 /* Footer copy can scroll fully above the fixed decorative border. */
-body[data-view="landing"] footer { padding-bottom:180px; }
-@media(max-width:640px) {body[data-view="landing"] footer {padding-bottom:125px;}}
+body[data-view="landing"] .vault-site-footer { padding-bottom:180px; }
+@media(max-width:640px) {body[data-view="landing"] .vault-site-footer {padding-bottom:125px;}}
+
+.flower-studio-overlay {z-index:110;}
+.flower-studio-intro h2,.flower-studio-header h1,.flower-recipient h1 {font-family:"Cormorant Garamond",Georgia,serif;}

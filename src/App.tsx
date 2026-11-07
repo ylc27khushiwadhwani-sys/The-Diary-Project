@@ -331,7 +331,7 @@ const LandingFooter: React.FC<{
   onOpenHelplines: () => void;
   onOpenGuidelines: () => void;
 }> = ({ onOpenHelplines, onOpenGuidelines }) => (
-  <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-muted relative z-10 bg-background/80 backdrop-blur-sm">
+  <footer className="vault-site-footer border-t border-hairline px-6 py-12 text-center text-sm text-muted relative z-10 bg-background/80 backdrop-blur-sm">
     <div className="mx-auto max-w-xl space-y-4">
       <div className="flex items-center justify-center gap-2 text-xs font-serif text-muted">
         <ShieldCheck className="w-4 h-4 text-gold/70" />
