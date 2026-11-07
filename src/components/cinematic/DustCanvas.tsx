@@ -35,7 +35,7 @@ export const DustCanvas: React.FC = () => {
     let raf = 0;
     let last = 0;
     let motes: Mote[] = [];
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.25);
 
     const spawn = (ember = false, x?: number): Mote => ({
       x: x ?? rand(0, w),
@@ -57,7 +57,7 @@ export const DustCanvas: React.FC = () => {
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const target = w < 640 ? 38 : 85;
+      const target = w < 640 ? 22 : 40;
       const ambient = motes.filter((m) => m.life < 0);
       const embers = motes.filter((m) => m.life >= 0);
       while (ambient.length < target) ambient.push(spawn());
@@ -87,7 +87,7 @@ export const DustCanvas: React.FC = () => {
 
     const frame = (t: number) => {
       raf = requestAnimationFrame(frame);
-      if (t - last < 16) return;
+      if (t - last < 33) return;
       const dt = Math.min((t - last) / 1000, 0.05);
       last = t;
       ctx.clearRect(0, 0, w, h);

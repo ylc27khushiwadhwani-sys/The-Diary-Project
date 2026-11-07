@@ -28,9 +28,8 @@ describe('garden letter composer', () => {
     expect(screen.getByLabelText('Your message')).not.toHaveAttribute('maxlength');
     fireEvent.change(screen.getByLabelText('From'), {target:{value:'Quiet Q'}});
     fireEvent.click(screen.getByLabelText('Reenie Beanie'));
-    fireEvent.click(screen.getByLabelText('Flower bouquet 4'));
     fireEvent.click(screen.getByRole('tab', {name:/Preview/}));
-    expect(screen.getByText(/Preview of your envelope/)).toBeInTheDocument();
+    expect(screen.getByText(/Preview of your book/)).toBeInTheDocument();
     fireEvent.click(screen.getByRole('tab', {name:/Write/}));
     expect(screen.getByLabelText('Your message')).toHaveValue(long);
     fireEvent.click(screen.getByText('Save letter privately'));
@@ -39,6 +38,6 @@ describe('garden letter composer', () => {
     expect(saved.content).toBe(long);
     expect(saved.is_public).toBe(false);
     expect(saved.tags).toContain('hope');
-    expect(getLetterStyle(saved.tags)).toEqual({font:2, flowers:3, from:'Quiet Q'});
+    expect(getLetterStyle(saved.tags)).toEqual({font:2, flowers:0, from:'Quiet Q'});
   });
 });

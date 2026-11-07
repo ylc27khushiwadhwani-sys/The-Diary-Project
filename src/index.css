@@ -2823,3 +2823,18 @@ html.light .is-writing .gc-preview { background:#f0e8d8f5; }
 .reading-book-pagination button:disabled { opacity:.35; }
 @media(max-width:760px) { .reading-books-stage { width:100%; margin-top:32px; } .reading-books-row { grid-template-columns:1fr; gap:28px; } .reading-open-book { aspect-ratio:1.35; } .rob-excerpt {font-size:17px;-webkit-line-clamp:6;} .rob-dedication {font-size:24px;} .reading-book-pagination {font-size:11px;gap:6px;} .reading-book-pagination button {padding:10px 14px;} }
 .pv-auth-google { display:block; width:100%; margin:10px 0 24px; border:1px solid #b6a184; background:#fffc; color:#332b22; padding:13px; border-radius:99px; font:500 14px Lora,serif; }
+
+/* Preserve the warm hall while avoiding repeated full-screen noise painting. */
+.grand-hall-windows { object-fit:cover; animation:none !important; transform:none; left:0; width:100%; }
+.grand-hall-backdrop .hall-dapple { animation:none; background-image:radial-gradient(ellipse at 30% 80%,#30200b44,transparent 60%); }
+.grand-hall-backdrop .hall-pool,.grand-hall-backdrop .grand-hall-dust,.grand-hall-backdrop .hall-vignette { animation:none; }
+.grand-hall-backdrop .hall-ray { filter:none !important; }
+.reader-open-volume { background:#fbf3e2; border:7px solid #674b32; border-bottom-width:13px; border-radius:9px 19px 19px 9px; box-shadow:0 18px 50px #0007; }
+.reader-open-volume .letter-liner { display:none; }
+.reader-open-volume .book-leaf-left { background:linear-gradient(90deg,#e7dac0,#fbf3e2 80%,#d5c7ac); }
+.reader-open-volume .book-leaf-right { background:linear-gradient(90deg,#d3c5a8,#fff9eb 7%,#f3e8d0); }
+.reader-letter-text { font-size:22px !important; line-height:1.85 !important; }
+@media(max-width:640px) { .reader-letter-text { font-size:21px !important; } .reader-open-volume {border-width:4px;border-bottom-width:9px;} }
+.gc-preview > .reading-open-book { width:100%; max-width:420px; flex-shrink:0; cursor:default; }
+.is-writing .gc-preview > .reading-open-book { width:100%; }
+@media(max-width:760px) { .is-writing .gc-preview > .reading-open-book {width:100px;aspect-ratio:1.05;} .is-writing .gc-preview .rob-left,.is-writing .gc-preview .rob-right {padding:7px 4px;} .is-writing .gc-preview .rob-dedication {font-size:9px;} .is-writing .gc-preview .rob-author {font-size:6px;margin-top:5px;} .is-writing .gc-preview .rob-excerpt {font-size:7px;-webkit-line-clamp:6;} .is-writing .gc-preview .rob-read {display:none;} }

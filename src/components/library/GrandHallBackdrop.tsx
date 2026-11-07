@@ -4,105 +4,7 @@ import { CandleFlame } from "../cinematic/CandleFlame";
 // A warm wall of library bookshelves, volumetric light beams and drifting
 // dust motes - the grand-hall atmosphere that sits behind the reading room
 // and the private study. Pure SVG + CSS, painted once, no image assets.
-const SPINES = [
-  "#5b2a22",
-  "#3f4a3a",
-  "#6b4a2a",
-  "#2f3a4f",
-  "#7a3b2e",
-  "#4a3326",
-  "#8a6a3a",
-  "#33262b",
-  "#55623f",
-  "#6a2f3a",
-];
-const rand = (n: number) => {
-  const x = Math.sin(n * 127.1 + 311.7) * 43758.5453;
-  return x - Math.floor(x);
-};
-
-// Rows of book spines on dark wooden shelves, generated once (deterministic, crisp at any size).
-const BookWall: React.FC = () => {
-  const rows = 6;
-  const rowH = 136;
-  const items: React.ReactNode[] = [];
-  for (let r = 0; r < rows; r++) {
-    const baseY = 40 + (r + 1) * rowH;
-    let x = 0;
-    let i = 0;
-    while (x < 1200) {
-      const k = r * 100 + i++;
-      const w = 15 + Math.floor(rand(k) * 22);
-      const h = 78 + Math.floor(rand(k + 0.5) * 40);
-      const lean = rand(k + 0.9) > 0.97;
-      items.push(
-        <g
-          key={k}
-          transform={
-            lean ? "rotate(-6 " + (x + w) + " " + baseY + ")" : undefined
-          }
-        >
-          <rect
-            x={x}
-            y={baseY - h}
-            width={w}
-            height={h}
-            fill={SPINES[Math.floor(rand(k + 0.2) * SPINES.length)]}
-          />
-          <rect
-            x={x}
-            y={baseY - h + 10}
-            width={w}
-            height="3"
-            fill="#d9b66a"
-            opacity="0.55"
-          />
-          <rect
-            x={x}
-            y={baseY - 14}
-            width={w}
-            height="3"
-            fill="#d9b66a"
-            opacity="0.4"
-          />
-          <rect
-            x={x + w - 2}
-            y={baseY - h}
-            width="2"
-            height={h}
-            fill="#000"
-            opacity="0.28"
-          />
-        </g>,
-      );
-      x += w + 1;
-    }
-    items.push(
-      <rect
-        key={"s" + r}
-        x="0"
-        y={baseY}
-        width="1200"
-        height="14"
-        fill="#2a1810"
-      />,
-    );
-  }
-  return (
-    <svg
-      className="grand-hall-windows hall-parallax-far"
-      viewBox="0 0 1200 900"
-      preserveAspectRatio="xMidYMid slice"
-      aria-hidden="true"
-    >
-      <rect width="1200" height="900" fill="#1a0f0a" />
-      {items}
-      {[0, 400, 800, 1186].map((x) => (
-        <rect key={x} x={x} y="0" width="14" height="900" fill="#24140d" />
-      ))}
-    </svg>
-  );
-};
+const BookWall = React.memo(() => <img src="/art/library-wall.svg" alt="" className="grand-hall-windows" aria-hidden="true" />);
 
 export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
   variant = "hall",
@@ -111,7 +13,7 @@ export const GrandHallBackdrop: React.FC<{ variant?: "hall" | "study" }> = ({
   // owner's request; the hall keeps its candlelight, rays and drift.)
   return (
     <div
-      className={`grand-hall-backdrop hall-pushin ${variant === "study" ? "grand-hall-study" : ""}`}
+      className={`grand-hall-backdrop ${variant === "study" ? "grand-hall-study" : ""}`}
       aria-hidden="true"
     >
       <BookWall />

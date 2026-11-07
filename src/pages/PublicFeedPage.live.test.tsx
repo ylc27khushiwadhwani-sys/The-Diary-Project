@@ -86,7 +86,7 @@ describe("configured public feed sample fallback", () => {
     expect(
       await screen.findByText("Volume retrieved from the shelf"),
     ).toBeInTheDocument();
-    expect(document.querySelector("article.parchment-sheet")).not.toBeNull();
+    expect(document.querySelector("article.reader-open-volume")).not.toBeNull();
     expect(
       screen.queryByRole("button", { name: "Send Response Letter" }),
     ).not.toBeInTheDocument();

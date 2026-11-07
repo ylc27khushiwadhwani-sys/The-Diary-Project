@@ -11,8 +11,7 @@ import { LockNoteToggle } from "./LockNoteToggle";
 import { ShareModal } from "../library/ShareModal";
 import { screenNoteContent } from "../../services/moderation";
 import { HelplineModal } from "../safety/HelplineModal";
-import { EnvelopeLetter } from "../bookshelf/EnvelopeLetter";
-import { FlowerSpray } from "../common/GardenFlowers";
+import { OpenBookCard } from "../bookshelf/OpenBookCard";
 import { getLetterStyle, withLetterStyle, LETTER_FONTS } from "../../utils/letterStyle";
 import {
   getUnsealDate,
@@ -182,7 +181,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     });
   };
 
-  const letterPreview = (<aside className="gc-preview" aria-label="Live letter preview" aria-live="off"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Updates as you write. Your full letter is kept intact.</p>
+  const letterPreview = (<aside className="gc-preview" aria-label="Live letter preview" aria-live="off"><OpenBookCard note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} onOpen={() => {}} /><p>Preview of your book. Updates as you write. Your full letter is kept intact.</p>
         <article className="gc-full-preview" aria-label="Full letter preview" style={{fontFamily: LETTER_FONTS[letterStyle.font].family}}>
           <h2>To: {title || "whoever needs this"}</h2>
           <p>{content || "Your words will appear here..."}</p>
@@ -210,9 +209,6 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         <p>What do you want to say?</p>
         <textarea id="letter-message" value={content} onChange={e => setContent(e.target.value)} placeholder="Write what you have carried in silence. No judgment reaches this shelf..." style={{fontFamily: LETTER_FONTS[letterStyle.font].family}} />
         <div className="gc-count">{content.length} characters</div>
-        <fieldset><legend>Flowers</legend><p>Choose the flowers that grow behind your envelope.</p>
-          <div className="gc-flowers">{[-1, 0, 1, 2, 3].map(seed => <button type="button" key={seed} aria-label={seed < 0 ? "No flowers" : `Flower bouquet ${seed + 1}`} aria-pressed={letterStyle.flowers === seed} onClick={() => setLetterStyle({...letterStyle, flowers: seed})}>{seed < 0 ? "None" : <FlowerSpray seed={seed} />}</button>)}</div>
-        </fieldset>
         <fieldset><legend>Handwriting</legend><p>The handwriting on your letter.</p>
           <div className="gc-fonts">{LETTER_FONTS.map((font, index) => <button type="button" key={font.name} aria-label={font.name} aria-pressed={letterStyle.font === index} onClick={() => setLetterStyle({...letterStyle, font: index})} style={{fontFamily: font.family}}>A little of what my heart carries...</button>)}</div>
         </fieldset>

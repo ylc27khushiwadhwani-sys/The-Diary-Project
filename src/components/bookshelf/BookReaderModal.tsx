@@ -1,3 +1,4 @@
+import { getLetterStyle, LETTER_FONTS } from "../../utils/letterStyle";
 import React, { useState, useMemo, useRef, useEffect, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -100,7 +101,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
   if (!isOpen || !note) return null;
 
   const prompt = promptsData.find((p) => p.id === note.prompt_id);
-  const authorPenName = note.profiles?.pen_name || "Anonymous Writer";
+  const letterStyle = getLetterStyle(note.tags);
+  const authorPenName = letterStyle.from || note.profiles?.pen_name || "Anonymous Writer";
 
   const formattedDate = new Date(
     note.published_at || note.created_at,
@@ -219,7 +221,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
             // leaf shows, with a compact header.
             <article
               key={note.id}
-              className="letter-frame parchment-sheet letter-deckle letter-unfold reader-ivory text-wood-950 relative flex flex-col sm:flex-row max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
+              className="letter-frame reader-open-volume reader-ivory text-wood-950 relative flex flex-col sm:flex-row max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
             >
               <div
                 className="letter-liner"
@@ -336,7 +338,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                       style={{ backfaceVisibility: "hidden" }}
                     >
                       <div
-                        className={`text-wood-950 whitespace-pre-wrap break-words select-text mb-6 ${
+                        style={{fontFamily:handwritingFont ? LETTER_FONTS[letterStyle.font].family : 'Lora, Georgia, serif'}}
+                        className={`reader-letter-text text-wood-950 whitespace-pre-wrap break-words select-text mb-6 ${
                           handwritingFont
                             ? "font-serif text-[1.05rem] sm:text-xl font-normal leading-[1.85] text-[#2a2118]"
                             : "font-garden text-xl sm:text-2xl font-normal leading-[1.9]"
