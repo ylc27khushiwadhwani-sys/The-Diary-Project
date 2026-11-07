@@ -2719,3 +2719,12 @@ html.light .gc-fonts button[aria-pressed=true],html.light .gc-flowers button[ari
   .env-excerpt { -webkit-line-clamp:3; }
   .env-sign { margin-top:4px; font-size:9px; }
 }
+/* Leave a real line for the signature, above the envelope opening. */
+.env-excerpt { -webkit-line-clamp:4; }
+.env-sign { max-width:100%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+body[data-view=rooms]::after { top:144px; }
+.lp-guest-link { flex-basis:100%; }
+@media(max-width:640px) {
+  .env-excerpt { -webkit-line-clamp:3; }
+  body[data-view=rooms]::after { top:150px; }
+}
