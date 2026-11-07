@@ -92,9 +92,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           transition={{ delay: 2.1, duration: 0.9 }}
           className="lp-quiet"
         >
-          Say what you couldn't say. Write the letter you'll never send, keep
-          it safe under a pen name, or leave it on the shelf for someone who
-          needs it - and read the words others couldn't send either.
+          Say what you couldn't say. Let the words you never sent find a
+          home on paper. Write under a pen name, keep your letter just for
+          you, or leave it on the shelf for a stranger who might need it.
         </motion.p>
 
         <motion.div
