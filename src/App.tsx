@@ -1,3 +1,4 @@
+import { isAuthReturn } from "./utils/authReturn";
 import React, { useEffect, useState } from "react";
 import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
@@ -54,7 +55,14 @@ export const App: React.FC = () => {
   // After entering, the two doors come first; the rooms wait behind them.
   // The landing is the first page on every visit, signed in or not; the
   // brand leads back to it. "Step inside" enters the rooms.
-  const [showLanding, setShowLanding] = useState(true);
+  const [showLanding, setShowLanding] = useState(() => !isAuthReturn(window.location));
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (url.searchParams.get('auth') === 'complete' && user && !user.is_anonymous) {
+      url.searchParams.delete('auth');
+      window.history.replaceState(null, '', url.pathname + url.search + url.hash);
+    }
+  }, [user]);
 
   // Lets the sky (moon) sit lower inside the rooms on phones, clear of the
   // visit badge, while the landing keeps it high.
@@ -120,6 +128,7 @@ export const App: React.FC = () => {
           isOpen={isSignInModalOpen}
           onClose={() => setIsSignInModalOpen(false)}
           initialMode={authMode}
+          onAuthenticated={() => setShowLanding(false)}
         />
         <HelplineModal
           isOpen={isHelplineOpen}

@@ -6,12 +6,13 @@ import { WaxSeal } from '../library/WaxSeal';
 interface SignInModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onAuthenticated?: () => void;
   initialMode?: 'signin' | 'signup';
 }
 
 // App remounts this modal with `key={authMode}` whenever the chosen mode
 // changes, so initialMode always applies on open.
-export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initialMode = 'signin' }) => {
+export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initialMode = 'signin', onAuthenticated }) => {
   const { signInWithMagicLink, loginAsGuestDemo } = useAuth();
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [email, setEmail] = useState('');
@@ -43,24 +44,34 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initi
     setLoading(true);
     setErrorMessage('');
 
-    const { error } = await signInWithMagicLink(email);
-    setLoading(false);
-
-    if (error) {
-      setErrorMessage(error.message);
-    } else {
-      setSent(true);
+    try {
+      const { error } = await signInWithMagicLink(email.trim());
+      if (error) setErrorMessage(error.message);
+      else setSent(true);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not send your sign-in link. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleGuestEntry = async () => {
-    await loginAsGuestDemo(chosenName || undefined);
-    onClose();
+    setLoading(true);
+    setErrorMessage('');
+    try {
+      await loginAsGuestDemo(chosenName || undefined);
+      onAuthenticated?.();
+      onClose();
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not enter as a guest. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-md parchment-sheet border border-amber-900/40 rounded-2xl p-7 shadow-2xl text-left text-wood-950">
+    <div role="dialog" aria-modal="true" aria-label={mode === 'signup' ? 'Create a library card' : 'Sign in to your library'} className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="relative w-full max-w-md max-h-[calc(100dvh-32px)] overflow-y-auto parchment-sheet border border-amber-900/40 rounded-2xl p-7 shadow-2xl text-left text-wood-950">
         <div className="scroll-roll-top -mx-4 -mt-5 mb-4" />
 
         <button
@@ -111,13 +122,15 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initi
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-serif font-bold text-wood-800 mb-1">
+                <label htmlFor="auth-email" className="block text-xs font-serif font-bold text-wood-800 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
                   <Mail className="w-4 h-4 text-amber-800 absolute left-3 top-3" />
                   <input
+                    id="auth-email"
                     type="email"
+                    autoComplete="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -169,6 +182,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initi
 
             <button
               onClick={handleGuestEntry}
+              disabled={loading}
               className="w-full py-2.5 bg-wood-900 hover:bg-wood-850 text-amber-200 border border-amber-700/50 rounded-xl text-xs font-serif font-semibold transition cursor-pointer flex items-center justify-center gap-2"
             >
               <KeyRound className="w-3.5 h-3.5 text-amber-400" />

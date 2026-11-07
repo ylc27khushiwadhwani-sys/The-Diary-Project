@@ -147,7 +147,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/?auth=complete`,
       },
     });
     return { error };
@@ -210,10 +210,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return;
     }
 
+    // Reusing a guest session keeps its private letters attached to the same id.
+    if (user) return;
     const { data, error } = await supabase.auth.signInAnonymously();
     if (error || !data.user) {
-      console.error('Anonymous sign-in failed:', error);
-      return;
+      throw error || new Error('Could not start a guest session. Please try again.');
     }
     setSession(data.session);
     setUser(data.user);
