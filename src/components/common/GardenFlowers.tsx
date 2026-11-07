@@ -113,9 +113,11 @@ export const GardenFlowers: React.FC<{ className?: string }> = ({
   </div>
 );
 
-/** Continuous landing border, separate from the room's spaced bouquets. */
+/** Fixed, decorative landing garden. Kept out of room views. */
+const GARDEN_TYPES = ['rose','daisy','iris','tulip','cosmos','delphinium','poppy','peony'];
 export const LandingFlowerBorder: React.FC = () => (
   <div className="landing-flower-border" aria-hidden="true">
-    {Array.from({length:40}, (_, i) => <Flower key={i} type="iris" variant={`gf-v${i % 4 + 1}`} height={[128, 102, 142, 116, 134, 108][i % 6]} delay={-(i % 7) * .7} duration={4.8 + (i % 4) * .4} />)}
+    <div className="landing-garden-stems">{Array.from({length:32}, (_,i)=><span key={i} className="landing-garden-stem" style={{height:[132,110,148,124,118,140,126,138][i%8],animationDelay:`${-i*.65}s`,animationDuration:`${5+i%4}s`}}><img src={`/art/garden-${GARDEN_TYPES[i%8]}.webp`} alt="" draggable={false}/></span>)}</div>
+    {[0,1,2].map(i=><span key={i} className={`landing-butterfly landing-butterfly-${i}`}><svg viewBox="0 0 40 32"><path className="butterfly-left" d="M20 16C7-4-3 2 4 16c-7 10 7 18 16 3Z"/><path className="butterfly-right" d="M20 16C33-4 43 2 36 16c7 10-7 18-16 3Z"/><path d="M20 11v14m0-13-4-6m4 6 4-6" fill="none" stroke="currentColor" strokeWidth="1.4"/></svg></span>)}
   </div>
 );
