@@ -82,6 +82,7 @@
   html.light body::before, html.light body::after { display: none; }
   @media (max-width: 640px) {
     body::after { top: 72px; right: 3%; width: 50px; height: 50px; }
+    body[data-view="rooms"]::after { top: 128px; }
   }
 
   ::selection {
@@ -2535,9 +2536,11 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
   display: -webkit-box;
   -webkit-line-clamp: 6;
   -webkit-box-orient: vertical;
+  flex: none;
 }
 .env-sign {
-  margin-top: auto;
+  margin-top: 8px;
+  flex: none;
   align-self: flex-end;
   font-size: clamp(10px, 0.9vw, 14px);
   color: rgba(35, 25, 15, 0.48);
@@ -2585,13 +2588,14 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
 
 /* phones: two by two, never four tiny columns */
 @media (max-width: 640px) {
+  .garden-flowers { transform: scale(0.8); opacity: 0.92; }
   .env-row {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px 14px;
     padding: 0 18px;
   }
   .env-flowers .flower-spray { transform: scale(0.9); }
-  .env-excerpt { font-size: 11px; -webkit-line-clamp: 5; }
+  .env-excerpt { font-size: 11px; -webkit-line-clamp: 4; }
   .env-sign { font-size: 10px; }
   .env-to { font-size: 12px; }
 }

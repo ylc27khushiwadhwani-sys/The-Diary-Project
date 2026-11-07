@@ -55,6 +55,12 @@ export const App: React.FC = () => {
   // The landing is the first page on every visit, signed in or not; the
   // brand leads back to it. "Step inside" enters the rooms.
   const [showLanding, setShowLanding] = useState(true);
+
+  // Lets the sky (moon) sit lower inside the rooms on phones, clear of the
+  // visit badge, while the landing keeps it high.
+  useEffect(() => {
+    document.body.dataset.view = showLanding || !user ? "landing" : "rooms";
+  }, [showLanding, user]);
   const [postboxUnseen, setPostboxUnseen] = useState(0);
 
   useEffect(() => {
