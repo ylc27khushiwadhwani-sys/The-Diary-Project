@@ -78,7 +78,7 @@ export const PostboxPage: React.FC<PostboxPageProps> = ({
           <button
             type="button"
             onClick={refetch}
-            className="inline-flex items-center gap-1.5 font-body text-xs text-[#9e9488] hover:text-gold transition cursor-pointer"
+            className="inline-flex items-center gap-1.5 font-body text-xs text-muted hover:text-gold transition cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             Check for new letters
@@ -86,16 +86,16 @@ export const PostboxPage: React.FC<PostboxPageProps> = ({
         </div>
 
         {loading ? (
-          <p className="text-center py-16 font-body text-sm italic text-[#9e9488]">
+          <p className="text-center py-16 font-body text-sm italic text-muted">
             Checking the postbox...
           </p>
         ) : responses.length === 0 ? (
           <div className="text-center py-16 rounded-2xl border border-hairline bg-card/60">
             <MailOpen className="w-6 h-6 text-gold/50 mx-auto mb-3" />
-            <p className="font-serif italic text-lg text-[#cbbfa8]">
+            <p className="font-serif italic text-lg text-muted">
               An empty postbox is just a promise not yet kept.
             </p>
-            <p className="mt-2 font-body text-xs text-[#9e9488]">
+            <p className="mt-2 font-body text-xs text-muted">
               Release a letter to the public shelf and leave the door open for
               replies.
             </p>
@@ -117,10 +117,10 @@ export const PostboxPage: React.FC<PostboxPageProps> = ({
                       <p className="font-body text-[11px] uppercase tracking-[0.18em] text-gold/80 mb-2">
                         Answering "{r.note_title}"
                       </p>
-                      <p className="font-serif text-lg leading-relaxed text-[#f3ece0] whitespace-pre-line">
+                      <p className="font-serif text-lg leading-relaxed text-cream whitespace-pre-line">
                         {r.content}
                       </p>
-                      <p className="mt-3 font-body text-xs italic text-[#9e9488]">
+                      <p className="mt-3 font-body text-xs italic text-muted">
                         - {r.profiles?.pen_name || "A stranger"}
                       </p>
                     </div>
@@ -137,10 +137,10 @@ export const PostboxPage: React.FC<PostboxPageProps> = ({
                         icon="quill"
                       />
                       <span className="text-left">
-                        <span className="block font-serif text-base text-[#f3ece0]">
+                        <span className="block font-serif text-base text-cream">
                           A sealed reply to "{r.note_title}"
                         </span>
-                        <span className="block font-body text-xs italic text-[#9e9488]">
+                        <span className="block font-body text-xs italic text-muted">
                           from {r.profiles?.pen_name || "a stranger"} - break
                           the seal to read
                         </span>

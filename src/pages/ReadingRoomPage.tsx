@@ -111,7 +111,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
         {loading ? (
           <div role="status" className="text-center py-20">
             <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
-            <p className="font-body text-sm text-[#9e9488] italic">
+            <p className="font-body text-sm text-muted italic">
               Setting a letter out for you...
             </p>
           </div>
@@ -144,7 +144,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                     <WaxSeal color="crimson" size="lg" icon="quill" />
                   </span>
                 </motion.button>
-                <p className="mt-4 font-body text-xs text-[#9e9488] italic">
+                <p className="mt-4 font-body text-xs text-muted italic">
                   Break the seal to read it.
                 </p>
               </section>
@@ -153,7 +153,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
             {/* A small shelf to wander - not the whole library */}
             {todaysShelf.length > 0 && (
               <section className="mb-12">
-                <p className="text-center font-body text-xs text-[#9e9488] italic mb-4">
+                <p className="text-center font-body text-xs text-muted italic mb-4">
                   A few more the Librarian left out. Touch a book to unroll its
                   letter.
                 </p>
@@ -184,7 +184,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 <span>Wander the whole Grand Library</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
-              <p className="font-body text-xs text-[#9e9488] italic">
+              <p className="font-body text-xs text-muted italic">
                 Carrying something yourself?{" "}
                 <button
                   type="button"
@@ -244,7 +244,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
               <div className="ceremony-flame">
                 <CandleFlame size={2.6} />
               </div>
-              <p className="font-serif italic text-xl sm:text-2xl text-[#fbf3e2] text-center leading-relaxed mb-6">
+              <p className="font-serif italic text-xl sm:text-2xl text-cream text-center leading-relaxed mb-6">
                 {completionLine}
               </p>
               <div className="flex flex-col items-center gap-3">
@@ -278,7 +278,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 <button
                   type="button"
                   onClick={() => setFinishedNote(null)}
-                  className="font-body text-xs text-[#9e9488] hover:text-amber-100 underline underline-offset-4 transition cursor-pointer"
+                  className="font-body text-xs text-muted hover:text-amber-100 underline underline-offset-4 transition cursor-pointer"
                 >
                   Rest a moment
                 </button>

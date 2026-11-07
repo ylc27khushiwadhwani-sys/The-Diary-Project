@@ -261,7 +261,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
                 </button>
               )}
             </div>
-            <p className="mt-2 text-[11px] font-body italic leading-snug text-[#b9a98a] max-w-xs">
+            <p className="mt-2 text-[11px] font-body italic leading-snug text-muted max-w-xs">
               {unsealOn
                 ? `It stays sealed on the shelf, with a countdown, and opens for everyone on ${formatUnsealDate(unsealOn)} (${daysUntilUnseal(unsealOn)} days from now).`
                 : "Pick a birthday, an anniversary or a someday. Until that morning the letter shows only a sealed envelope and a countdown. After it, anyone can read it. It hides the letter on this site; it is not encryption."}

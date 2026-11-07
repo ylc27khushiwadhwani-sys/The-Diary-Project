@@ -134,10 +134,10 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
       >
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="font-serif text-2xl text-[#fbf3e2]">
+            <h2 className="font-serif text-2xl text-cream">
               For one person only
             </h2>
-            <p className="font-body text-xs italic text-[#9e9488] mt-1">
+            <p className="font-body text-xs italic text-muted mt-1">
               The letter travels inside the link. Whoever holds it, reads it.
               Nobody else - not even the library.
             </p>
@@ -146,7 +146,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
             type="button"
             onClick={onClose}
             aria-label="Close"
-            className="p-1.5 text-[#9e9488] hover:text-amber-100 transition cursor-pointer"
+            className="p-1.5 text-muted hover:text-amber-100 transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -155,7 +155,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
         <span className="label-caps block mb-2">1. Choose the letter</span>
         <div className="max-h-32 overflow-y-auto space-y-1.5 mb-5 pr-1">
           {candidates.length === 0 && (
-            <p className="font-body text-xs italic text-[#9e9488] py-3">
+            <p className="font-body text-xs italic text-muted py-3">
               Write a letter first - then you can dedicate it.
             </p>
           )}
@@ -168,7 +168,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
               className={`w-full text-left rounded-lg border px-3.5 py-2.5 font-serif text-sm transition cursor-pointer ${
                 noteId === n.id
                   ? "border-gold bg-card text-gold-light"
-                  : "border-hairline bg-card/50 text-[#e8dab2] hover:border-gold/40"
+                  : "border-hairline bg-card/50 text-gold-light hover:border-gold/40"
               }`}
             >
               "{n.title || "Untitled Letter"}"
@@ -190,10 +190,10 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                   : "border-hairline bg-card/50 hover:border-gold/40"
               }`}
             >
-              <span className="block font-serif text-sm text-[#f3ece0]">
+              <span className="block font-serif text-sm text-cream">
                 {k.label}
               </span>
-              <span className="block font-body text-[10px] italic text-[#9e9488] mt-0.5">
+              <span className="block font-body text-[10px] italic text-muted mt-0.5">
                 {k.line}
               </span>
             </button>
@@ -220,7 +220,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                   }`}
                 >
                   <GiftArt id={flower.id} size={44} />
-                  <span className="font-serif text-[11px] text-[#e8dab2] leading-tight text-center">
+                  <span className="font-serif text-[11px] text-gold-light leading-tight text-center">
                     {flower.label}
                   </span>
                 </button>
@@ -242,14 +242,14 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                   }`}
                 >
                   <GiftArt id={keepsake.id} size={44} />
-                  <span className="font-serif text-[11px] text-[#e8dab2] leading-tight text-center">
+                  <span className="font-serif text-[11px] text-gold-light leading-tight text-center">
                     {keepsake.label}
                   </span>
                 </button>
               ))}
             </div>
             {item && (
-              <p className="font-body text-[11px] italic text-[#9e9488] mt-2 text-center">
+              <p className="font-body text-[11px] italic text-muted mt-2 text-center">
                 {item.label} - {item.line}
               </p>
             )}
@@ -293,7 +293,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                       </span>
                     </span>
                   )}
-                  <span className="mt-3 font-body text-[11px] italic text-[#9e9488]">
+                  <span className="mt-3 font-body text-[11px] italic text-muted">
                     It arrives sealed. They break the wax to read.
                   </span>
                 </motion.div>
@@ -364,10 +364,10 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                   className="flex items-center gap-2.5 rounded-lg border border-hairline bg-card/40 px-3 py-2"
                 >
                   {record.g && <GiftArt id={record.g} size={22} />}
-                  <span className="flex-1 min-w-0 font-serif text-xs text-[#e8dab2] truncate">
+                  <span className="flex-1 min-w-0 font-serif text-xs text-gold-light truncate">
                     "{record.t || "Untitled Letter"}"
                   </span>
-                  <span className="font-body text-[10px] italic text-[#9e9488] shrink-0">
+                  <span className="font-body text-[10px] italic text-muted shrink-0">
                     {record.k === "gift"
                       ? (giftItemFor(record.g ?? "")?.label ?? "gift")
                       : record.k}{" "}
@@ -377,7 +377,7 @@ export const GiftComposer: React.FC<GiftComposerProps> = ({
                     type="button"
                     onClick={() => copyLink(record.url)}
                     aria-label="Copy this gift link again"
-                    className="p-1 text-[#9e9488] hover:text-gold transition cursor-pointer shrink-0"
+                    className="p-1 text-muted hover:text-gold transition cursor-pointer shrink-0"
                   >
                     <Copy className="w-3.5 h-3.5" />
                   </button>

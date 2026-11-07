@@ -65,7 +65,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
         </button>
       </div>
 
-      <p className="font-body text-[11px] text-[#9e9488] italic leading-relaxed">
+      <p className="font-body text-[11px] text-muted italic leading-relaxed">
         Shelves keep your letters sorted by the kind of silence they carry.
         Pick one to see only its letters, or carve a new shelf of your own.
       </p>
@@ -79,7 +79,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
             placeholder="Shelf name (e.g. Unsaid Apologies)"
             value={newShelfName}
             onChange={(e) => setNewShelfName(e.target.value)}
-            className="w-full px-3 py-1.5 text-xs font-serif bg-wood-900 text-[#f3ece0] border border-hairline rounded-lg focus:outline-none focus:ring-1 focus:ring-gold placeholder:text-[#9e9488]/70"
+            className="w-full px-3 py-1.5 text-xs font-serif bg-wood-900 text-cream border border-hairline rounded-lg focus:outline-none focus:ring-1 focus:ring-gold placeholder:text-muted/70"
           />
           <div className="flex items-center gap-1.5 pt-1">
             {AVAILABLE_ICONS.map(({ name, Icon }) => (
@@ -90,7 +90,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
                 className={`p-1.5 rounded-lg transition cursor-pointer ${
                   selectedIcon === name
                     ? 'bg-gold text-wood-950 shadow-xs'
-                    : 'text-[#9e9488] hover:bg-wood-800'
+                    : 'text-muted hover:bg-wood-800'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -108,7 +108,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
             <button
               type="button"
               onClick={() => setIsCreating(false)}
-              className="px-2.5 py-1 text-xs font-serif text-[#9e9488] hover:text-[#f3ece0] transition cursor-pointer"
+              className="px-2.5 py-1 text-xs font-serif text-muted hover:text-cream transition cursor-pointer"
             >
               Cancel
             </button>
@@ -124,7 +124,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
           className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-serif font-semibold transition cursor-pointer ${
             selectedShelfId === null
               ? 'bg-card text-gold border border-gold/40 shadow-candle'
-              : 'text-[#9e9488] hover:bg-card/60 hover:text-[#f3ece0]'
+              : 'text-muted hover:bg-card/60 hover:text-cream'
           }`}
         >
           <div className="flex items-center gap-2.5">
@@ -141,7 +141,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
               className={`group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-serif font-semibold transition cursor-pointer ${
                 isSelected
                   ? 'bg-card text-gold border border-gold/40 shadow-candle'
-                  : 'text-[#9e9488] hover:bg-card/60 hover:text-[#f3ece0]'
+                  : 'text-muted hover:bg-card/60 hover:text-cream'
               }`}
               onClick={() => onSelectShelf(shelf.id)}
             >
@@ -160,7 +160,7 @@ export const ShelfManager: React.FC<ShelfManagerProps> = ({
                     onDeleteShelf(shelf.id);
                   }
                 }}
-                className="opacity-0 group-hover:opacity-100 p-1 text-[#9e9488] hover:text-red-400 transition"
+                className="opacity-0 group-hover:opacity-100 p-1 text-muted hover:text-red-400 transition"
                 title="Remove Shelf"
               >
                 <X className="w-3.5 h-3.5" />

@@ -156,7 +156,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
               {sec.label}
               <span
                 className={`ml-1.5 text-[10px] font-sans ${
-                  isActive ? "text-wood-950/70" : "text-[#9e9488]"
+                  isActive ? "text-wood-950/70" : "text-muted"
                 }`}
               >
                 {count}
@@ -170,7 +170,7 @@ export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
       {sectionNotes.length === 0 ? (
         <div className="text-center py-10 px-4">
           <BookOpen className="w-6 h-6 text-gold/50 mx-auto mb-3" />
-          <p className="font-body text-sm text-[#9e9488] italic mb-4">
+          <p className="font-body text-sm text-muted italic mb-4">
             This shelf is currently quiet.
           </p>
           <button

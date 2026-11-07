@@ -171,11 +171,11 @@ export const PublicFeedPage: React.FC = () => {
             <BookOpen className="w-4 h-4 text-gold" />
             <span className="label-caps">The Grand Library</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[#fbf3e2] tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl text-cream tracking-tight">
             Every shelf, every section, every unsent thing
           </h1>
           {!loading && visibleNotes.length > 0 && (
-            <p className="font-body text-xs text-[#9e9488] italic mt-2">
+            <p className="font-body text-xs text-muted italic mt-2">
               {isSupabaseConfigured &&
               notes.length > 0 &&
               notes.every((note) => isSampleNote(note.id))
@@ -253,7 +253,7 @@ export const PublicFeedPage: React.FC = () => {
             ))}
           </div>
           {activeCollection && (
-            <p className="text-center font-body text-xs italic text-[#9e9488] mt-2.5">
+            <p className="text-center font-body text-xs italic text-muted mt-2.5">
               {activeCollection.line}
             </p>
           )}
@@ -269,7 +269,7 @@ export const PublicFeedPage: React.FC = () => {
               onChange={(e) => setFeedSearch(e.target.value)}
               placeholder="Search letters by title, words, or pen name..."
               aria-label="Search letters"
-              className="w-full pl-10 pr-4 py-2.5 bg-card/80 border border-hairline rounded-xl text-sm text-amber-100 placeholder:text-[#9e9488]/70 font-serif focus:outline-none focus:ring-1 focus:ring-gold transition"
+              className="w-full pl-10 pr-4 py-2.5 bg-card/80 border border-hairline rounded-xl text-sm text-amber-100 placeholder:text-muted/70 font-serif focus:outline-none focus:ring-1 focus:ring-gold transition"
             />
           </div>
           <div className="flex items-center gap-2 text-xs text-amber-200 bg-card/80 border border-hairline rounded-xl px-3 py-2.5 shrink-0">
@@ -295,7 +295,7 @@ export const PublicFeedPage: React.FC = () => {
         {loading ? (
           <div role="status" className="text-center py-20 px-4">
             <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
-            <p className="font-body text-sm text-[#9e9488] italic">
+            <p className="font-body text-sm text-muted italic">
               Unshelving the letters...
             </p>
           </div>
@@ -305,7 +305,7 @@ export const PublicFeedPage: React.FC = () => {
             <h3 className="font-serif text-2xl text-amber-100 mb-2">
               This shelf is waiting for its first letter
             </h3>
-            <p className="font-body text-sm text-[#9e9488] italic max-w-sm mx-auto">
+            <p className="font-body text-sm text-muted italic max-w-sm mx-auto">
               "{activeCollection.title}" has nothing on it yet. Maybe yours is
               the one that starts it.
             </p>
@@ -316,7 +316,7 @@ export const PublicFeedPage: React.FC = () => {
             <h3 className="font-serif text-2xl text-amber-100 mb-2">
               No letters match your search
             </h3>
-            <p className="font-body text-sm text-[#9e9488] italic max-w-sm mx-auto">
+            <p className="font-body text-sm text-muted italic max-w-sm mx-auto">
               Try a different phrase, or search by pen name.
             </p>
           </div>

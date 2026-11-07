@@ -2,6 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Theme tokens. The dark (candlelit) library is the default; `html.light`
+   re-tones these for the sunlit garden library. */
+:root {
+  --bg: 13 9 6;            /* #0d0906 */
+  --card: 26 19 12;        /* #1a130c */
+  --hairline: 212 163 115 / 0.15;
+  --cream: 243 236 224;    /* #f3ece0 - main reading text */
+  --muted: 158 148 136;    /* #9e9488 - secondary text */
+  --gold: 212 163 115;     /* #d4a373 */
+  --gold-light: 226 177 122;
+  --gold-dark: 179 125 78;
+}
+
 @layer base {
   html, body {
     /* Decorative hall layers (parallax windows, beams, rays) extend past the
@@ -1543,41 +1556,66 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 }
 
 /* ===== The two doors ===== */
+/* The two room doors: real arched wooden doors - plank grain, a heavy
+   frame, a brass ring handle and a small name plaque. */
 .door-card {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  padding: 34px 26px 30px;
-  border-radius: 130px 130px 18px 18px;
-  border: 1px solid rgba(212, 163, 115, 0.35);
+  justify-content: center;
+  gap: 16px;
+  min-height: clamp(320px, 50vh, 460px);
+  padding: 64px 34px 48px;
+  border-radius: 999px 999px 12px 12px / 300px 300px 12px 12px;
+  border: 5px solid #1c1109;
   background:
-    radial-gradient(ellipse 80% 45% at 50% 0%, rgba(226, 177, 122, 0.16) 0%, rgba(0, 0, 0, 0) 70%),
-    linear-gradient(180deg, rgba(46, 29, 16, 0.92) 0%, rgba(26, 16, 9, 0.95) 100%);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(243, 217, 164, 0.12);
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(226, 177, 122, 0.14) 0%, rgba(0, 0, 0, 0) 70%),
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.30) 0 2px, transparent 2px 68px),
+    linear-gradient(180deg, #43301c 0%, #322213 55%, #26180b 100%);
+  box-shadow:
+    0 24px 48px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 3px rgba(122, 82, 44, 0.35),
+    inset 0 2px 0 rgba(243, 217, 164, 0.14);
   cursor: pointer;
   transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
 }
 .door-card:hover {
-  border-color: rgba(243, 217, 164, 0.65);
-  box-shadow: 0 24px 52px rgba(0, 0, 0, 0.65), 0 0 34px rgba(226, 177, 122, 0.18);
+  border-color: #3a2712;
+  box-shadow:
+    0 30px 58px rgba(0, 0, 0, 0.68),
+    0 0 38px rgba(226, 177, 122, 0.2),
+    inset 0 0 0 3px rgba(160, 112, 60, 0.5),
+    inset 0 2px 0 rgba(243, 217, 164, 0.2);
 }
-.door-arch {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
+/* the brass ring handle */
+.door-card::after {
+  content: "";
+  position: absolute;
+  right: 30px;
+  top: 58%;
+  width: 22px;
+  height: 22px;
   border-radius: 9999px;
-  border: 1px solid rgba(212, 163, 115, 0.45);
-  background: rgba(14, 9, 6, 0.7);
-  transition: transform 0.25s;
+  border: 3px solid #b58a46;
+  background: radial-gradient(circle at 35% 30%, #e2b17a, #6e4119);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7), inset 0 0 4px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
 }
-.door-card:hover .door-arch { transform: scale(1.07); }
+.door-plaque {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 22px;
+  border-radius: 8px;
+  border: 1px solid rgba(212, 163, 115, 0.5);
+  background: linear-gradient(180deg, rgba(20, 12, 7, 0.88), rgba(36, 24, 13, 0.88));
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(243, 217, 164, 0.18);
+}
 .door-name {
   font-family: "Cormorant Garamond", Georgia, serif;
-  font-size: 1.6rem;
+  font-size: 1.45rem;
   color: #fbf3e2;
+  white-space: nowrap;
 }
 .door-desc {
   font-family: "Cormorant Garamond", Georgia, serif;
@@ -1942,29 +1980,11 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   }
 }
 .door-card {
-  min-height: clamp(280px, 40vh, 370px);
   justify-content: center;
   position: relative;
 }
-.door-card::after {
-  /* the seam where two door leaves meet */
-  content: "";
-  position: absolute;
-  top: 18px;
-  bottom: 18px;
-  left: 50%;
-  width: 1px;
-  background: linear-gradient(
-    180deg,
-    transparent,
-    rgba(212, 163, 115, 0.22) 30%,
-    rgba(212, 163, 115, 0.22) 70%,
-    transparent
-  );
-  pointer-events: none;
-}
 .doors-card {
-  margin-top: 40px;
+  margin-top: 28px;
   transform: scale(0.82);
   transform-origin: top center;
 }
@@ -2038,3 +2058,248 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
     font-size: 0.98rem;
   }
 }
+
+/* ==========================================================================
+   LIGHT THEME - the sunlit garden library.
+   Warm daylight cream, light oak shelves, leaf-green air, the same paper,
+   wax seals and book spines (physical things don't change with the hour).
+   Dark wood chrome (toolbars, pills, modals) becomes sunlit oak and cream.
+   ========================================================================== */
+html.light {
+  --bg: 243 236 219;       /* #f3ecdb warm daylight */
+  --card: 251 247 236;     /* #fbf7ec sunlit card */
+  --hairline: 133 100 58 / 0.28;
+  --cream: 61 47 30;       /* #3d2f1e warm ink */
+  --muted: 122 106 80;     /* #7a6a50 */
+  --gold: 160 108 44;      /* #a06c2c bronze, readable on cream */
+  --gold-light: 140 89 41; /* #8c5929 */
+  --gold-dark: 111 74 28;
+}
+
+html.light body {
+  background-color: #f3ecdb;
+  color: #3d2f1e;
+  background-image:
+    linear-gradient(to right, rgba(122, 96, 56, 0.07) 0%, transparent 9%, transparent 91%, rgba(122, 96, 56, 0.07) 100%),
+    radial-gradient(ellipse at 50% 8%, rgba(255, 241, 196, 0.7) 0%, transparent 60%),
+    radial-gradient(ellipse at 10% 42%, rgba(148, 178, 118, 0.30) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 66%, rgba(148, 178, 118, 0.26) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 108%, rgba(190, 150, 96, 0.20) 0%, transparent 60%);
+}
+
+/* --- chrome: dark-wood utility surfaces become sunlit oak/cream --------- */
+html.light .bg-wood-950 { background-color: #f6efdd; }
+html.light .bg-wood-950\/50 { background-color: rgb(246 239 221 / 0.5); }
+html.light .bg-wood-950\/80 { background-color: rgb(246 239 221 / 0.85); }
+html.light .bg-wood-950\/90 { background-color: rgb(246 239 221 / 0.92); }
+html.light .bg-wood-950\/95 { background-color: rgb(246 239 221 / 0.95); }
+html.light .bg-wood-900 { background-color: #efe5cb; }
+html.light .bg-wood-900\/80 { background-color: rgb(239 229 203 / 0.85); }
+html.light .bg-wood-900\/90 { background-color: rgb(239 229 203 / 0.9); }
+html.light .bg-wood-850 { background-color: #eadbb9; }
+html.light .bg-wood-800 { background-color: #e3d2ab; }
+html.light .bg-wood-800\/60 { background-color: rgb(227 210 171 / 0.6); }
+html.light .bg-wood-800\/90 { background-color: rgb(227 210 171 / 0.9); }
+html.light .bg-wood-700 { background-color: #d8c295; }
+html.light .hover\:bg-wood-900:hover { background-color: #efe5cb; }
+html.light .hover\:bg-wood-850:hover { background-color: #eadbb9; }
+html.light .hover\:bg-wood-800:hover { background-color: #e3d2ab; }
+html.light .hover\:bg-wood-700:hover { background-color: #d8c295; }
+
+/* --- chrome text: pale candlelight inks become warm browns -------------- */
+html.light .text-amber-100 { color: #4f3d22; }
+html.light .text-amber-200 { color: #655026; }
+html.light .text-amber-200\/90 { color: rgb(101 80 38 / 0.9); }
+html.light .text-amber-200\/80 { color: rgb(101 80 38 / 0.8); }
+html.light .text-amber-300 { color: #7d5f2c; }
+html.light .text-amber-300\/80 { color: rgb(125 95 44 / 0.8); }
+html.light .text-amber-400 { color: #8a6420; }
+html.light .text-amber-500 { color: #96691c; }
+html.light .hover\:text-amber-100:hover { color: #3a2c1e; }
+html.light .hover\:text-white:hover { color: #3a2c1e; }
+/* ...but the writing on a wax seal stays pale gold on crimson */
+html.light .wax-seal-badge.text-amber-200\/90 { color: rgb(253 230 138 / 0.9); }
+
+/* --- candles, motes, glows: softer in daylight --------------------------- */
+html.light .label-caps { color: #8c5929; }
+html.light .candle-glow {
+  background: radial-gradient(ellipse at 50% 20%, rgba(255, 228, 164, 0.4) 0%, rgba(255, 255, 255, 0) 70%);
+}
+html.light .mote, html.light .ember-particle { opacity: 0.55; }
+html.light .hall-vignette {
+  background: radial-gradient(ellipse at 50% 45%, transparent 52%, rgba(110, 82, 40, 0.22) 100%);
+}
+/* daylight pours through the hall whatever the hour */
+html.light .hall-tint {
+  opacity: 1;
+  mix-blend-mode: normal;
+  background: linear-gradient(to bottom, rgba(255, 246, 218, 0.20), transparent 42%);
+}
+html.light .hall-candle { filter: none; }
+html.light .grand-hall-dust { opacity: 0.35; }
+
+/* --- woodwork: dark walnut becomes light garden oak ---------------------- */
+html.light .wood-panel {
+  background-color: #e8dbbc;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='w'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.008 0.09' numOctaves='3' seed='5'/%3E%3CfeColorMatrix values='0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 0 0.07 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23w)'/%3E%3C/svg%3E"),
+    linear-gradient(to bottom, rgba(255, 250, 230, 0.5) 0%, transparent 30%),
+    linear-gradient(to bottom, #eee2c4 0%, #dfcfa8 100%);
+}
+html.light .wood-shelf-ledge {
+  background: linear-gradient(to bottom, #d9c49c 0%, #cbb383 45%, #b99d6d 85%, #a88a58 100%);
+  border-top: 2px solid #e8d9b4;
+  border-bottom: 3px solid #947642;
+  box-shadow:
+    0 12px 24px -2px rgba(90, 66, 30, 0.35),
+    inset 0 1px 0 rgba(255, 250, 230, 0.6);
+}
+
+/* --- landing scene: the open library by day ------------------------------ */
+html.light .landing-hero {
+  background:
+    radial-gradient(ellipse at 50% 14%, rgba(255, 238, 188, 0.75) 0%, transparent 62%),
+    radial-gradient(ellipse at 12% 80%, rgba(150, 180, 120, 0.35) 0%, transparent 55%),
+    radial-gradient(ellipse at 88% 66%, rgba(170, 190, 130, 0.3) 0%, transparent 55%);
+}
+html.light .lp-scene {
+  color: #3d2f1e;
+  background:
+    radial-gradient(ellipse 90% 55% at 50% 22%, rgba(255, 240, 192, 0.8) 0%, rgba(255, 240, 192, 0) 70%),
+    radial-gradient(ellipse 60% 45% at 8% 70%, rgba(150, 180, 118, 0.35) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 45% at 94% 60%, rgba(150, 180, 118, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, #f7f0dd 0%, #f1e7cd 46%, #eaddc0 78%, #e2d2ae 100%);
+}
+html.light .lp-shelf-edge {
+  background:
+    repeating-linear-gradient(180deg,
+      rgba(150, 122, 74, 0.30) 0 14px,
+      rgba(222, 203, 160, 0.9) 14px 20px,
+      rgba(188, 158, 106, 0.55) 20px 58px,
+      rgba(150, 122, 74, 0.30) 58px 64px,
+      rgba(206, 180, 128, 0.7) 64px 96px,
+      rgba(150, 122, 74, 0.32) 96px 128px);
+  opacity: 0.9;
+}
+html.light .lp-shelf-left { box-shadow: inset -18px 0 28px rgba(120, 92, 48, 0.35); }
+html.light .lp-shelf-right { box-shadow: inset 18px 0 28px rgba(120, 92, 48, 0.35); }
+html.light .lp-mote {
+  background: rgba(190, 150, 80, 0.5);
+  box-shadow: 0 0 8px rgba(220, 185, 110, 0.55);
+}
+html.light .lp-header {
+  border-color: rgba(133, 100, 58, 0.35);
+  background: rgba(251, 247, 236, 0.78);
+  box-shadow: 0 10px 30px rgba(110, 82, 40, 0.18);
+}
+html.light .lp-brand { color: #3d2f1e; }
+html.light .lp-eyebrow {
+  border-color: rgba(133, 100, 58, 0.4);
+  background: rgba(251, 247, 236, 0.7);
+  color: #8c5929;
+}
+html.light .lp-sub, html.light .lp-quiet { color: #6f5f42; }
+html.light .lp-cta-ghost {
+  background: rgba(251, 247, 236, 0.75);
+  color: #3d2f1e;
+  border-color: rgba(133, 100, 58, 0.45);
+}
+html.light .lp-cta-ghost:hover { border-color: rgba(133, 100, 58, 0.75); background: rgba(251, 247, 236, 0.95); }
+html.light .lp-honest { color: #7a6a50; }
+html.light .lp-honest .memory-line { color: #7a6a50; }
+html.light .lp-honest .memory-hour { color: rgba(140, 89, 41, 0.75); }
+html.light .lp-drift-label { color: rgba(140, 89, 41, 0.8); }
+html.light .lp-drift-pill {
+  border-color: rgba(133, 100, 58, 0.4);
+  background: rgba(251, 247, 236, 0.85);
+  color: #46331d;
+  box-shadow: 0 8px 22px rgba(110, 82, 40, 0.2);
+}
+html.light .lp-nav-ghost { border-color: rgba(133, 100, 58, 0.4); color: #8c5929; }
+html.light .lp-nav-ghost:hover { border-color: rgba(133, 100, 58, 0.7); color: #3d2f1e; }
+html.light .lp-highlight { color: inherit; }
+
+/* --- the Librarian's medallion, cards and boxes -------------------------- */
+html.light .librarian-medallion {
+  background: radial-gradient(circle at 35% 30%, #e8d9b4, #cdb383);
+  border-color: rgba(133, 100, 58, 0.55);
+  box-shadow:
+    0 6px 18px rgba(110, 82, 40, 0.3),
+    inset 0 2px 6px rgba(255, 250, 230, 0.5);
+}
+html.light .ceremony-card {
+  background: linear-gradient(170deg, #fbf5e6, #f0e4c8);
+  border-color: rgba(133, 100, 58, 0.4);
+  box-shadow:
+    0 0 80px rgba(255, 228, 160, 0.35),
+    0 24px 60px rgba(110, 82, 40, 0.3);
+}
+html.light .keepsake-box {
+  background: linear-gradient(180deg, #e2d0a8 0%, #d2ba8c 100%);
+  border-color: rgba(133, 100, 58, 0.35);
+  box-shadow: 0 22px 50px rgba(110, 82, 40, 0.35), inset 0 0 0 5px rgba(255, 250, 235, 0.3);
+}
+html.light .keepsake-lid { border-bottom-color: rgba(133, 100, 58, 0.3); background: linear-gradient(180deg, rgba(255, 248, 225, 0.5), transparent); }
+html.light .keepsake-tray { background: radial-gradient(ellipse at 50% 0%, rgba(255, 250, 235, 0), rgba(150, 118, 66, 0.18)); }
+html.light .date-seal-box { border-color: rgba(133, 100, 58, 0.4); background: rgba(255, 250, 235, 0.5); }
+
+/* --- the two doors -------------------------------------------------------- */
+html.light .door-card {
+  border-color: #8a6a3c;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 240, 200, 0.55) 0%, rgba(255, 240, 200, 0) 70%),
+    repeating-linear-gradient(90deg, rgba(120, 92, 50, 0.16) 0 2px, transparent 2px 68px),
+    linear-gradient(180deg, #e7d4a9 0%, #d9c391 55%, #c9ae77 100%);
+  box-shadow:
+    0 24px 48px rgba(110, 82, 40, 0.3),
+    inset 0 0 0 3px rgba(160, 128, 74, 0.3),
+    inset 0 2px 0 rgba(255, 252, 240, 0.7);
+}
+html.light .door-card:hover {
+  border-color: #75541f;
+  box-shadow:
+    0 30px 58px rgba(110, 82, 40, 0.35),
+    0 0 34px rgba(220, 190, 120, 0.35),
+    inset 0 0 0 3px rgba(160, 128, 74, 0.45),
+    inset 0 2px 0 rgba(255, 252, 240, 0.8);
+}
+html.light .door-plaque {
+  border-color: rgba(133, 100, 58, 0.5);
+  background: linear-gradient(180deg, rgba(251, 243, 222, 0.95), rgba(239, 226, 192, 0.95));
+  box-shadow: 0 4px 10px rgba(110, 82, 40, 0.28), inset 0 1px 0 rgba(255, 252, 240, 0.8);
+}
+html.light .door-name { color: #3d2f1e; }
+html.light .door-desc { color: #5f5138; }
+
+/* --- postbox, pickers, small chrome -------------------------------------- */
+html.light .postbox-envelope {
+  border-color: rgba(133, 100, 58, 0.35);
+  background: linear-gradient(150deg, rgba(251, 246, 232, 0.95) 0%, rgba(240, 229, 201, 0.97) 100%);
+  box-shadow: 0 10px 26px rgba(110, 82, 40, 0.22);
+}
+html.light .postbox-envelope:hover { border-color: rgba(140, 89, 41, 0.6); }
+html.light .seal-iconpick {
+  border-color: rgba(133, 100, 58, 0.35);
+  background: rgba(251, 247, 236, 0.75);
+  color: #6f5f42;
+}
+html.light .seal-iconpick-on { border-color: #a06c2c; color: #655026; }
+html.light .visit-badge {
+  border-color: rgba(133, 100, 58, 0.4);
+  background: rgba(251, 247, 236, 0.85);
+  color: rgba(101, 80, 38, 0.9);
+}
+html.light .coffee-btn {
+  border-color: rgba(133, 100, 58, 0.45);
+  background: rgba(251, 247, 236, 0.8);
+  color: #655026;
+}
+html.light .coffee-btn b { color: #8c5929; }
+html.light .coffee-btn:hover { border-color: rgba(133, 100, 58, 0.75); }
+html.light .coffee-note {
+  background: rgba(251, 247, 236, 0.92);
+  border-color: rgba(133, 100, 58, 0.35);
+  color: #655026;
+}
+html.light .memory-line { color: #655026; }
+html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }

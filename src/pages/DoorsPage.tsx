@@ -25,15 +25,16 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
   const stamps = Math.min(visits, 12);
 
   return (
-    <div className="relative min-h-[80vh] text-amber-100">
+    <div className="relative text-amber-100">
       <div className="candle-glow absolute inset-0 pointer-events-none" />
-      <div className="relative z-10 mx-auto max-w-3xl px-4 py-12 sm:py-16 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-4 pt-8 pb-6 sm:pt-10 text-center">
         <Librarian
-          line="Two rooms are lit for you tonight. The rest of the library can wait."
-          className="justify-center mb-10"
+          headline
+          line="Say it anyway."
+          className="justify-center mb-8"
         />
 
-        <div className="doors-row grid grid-cols-1 sm:grid-cols-2 gap-5">
+        <div className="doors-row grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
           <motion.button
             type="button"
             onClick={() => onOpen("reading")}
@@ -43,10 +44,10 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             whileHover={{ y: -5 }}
             className="door-card group"
           >
-            <span className="door-arch">
-              <BookOpen className="w-6 h-6 text-gold" />
+            <span className="door-plaque">
+              <BookOpen className="w-4 h-4 text-gold" />
+              <span className="door-name">The Reading Room</span>
             </span>
-            <span className="door-name">The Reading Room</span>
             <span className="door-desc">
               Sit with words someone else couldn't send. The Librarian left one
               out for you, still sealed.
@@ -62,10 +63,10 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             whileHover={{ y: -5 }}
             className="door-card group"
           >
-            <span className="door-arch">
-              <Feather className="w-6 h-6 text-gold" />
+            <span className="door-plaque">
+              <Feather className="w-4 h-4 text-gold" />
+              <span className="door-name">Your Study</span>
             </span>
-            <span className="door-name">Your Study</span>
             <span className="door-desc">
               Write the one you're carrying. A whisper waits on the desk if you
               need somewhere to begin.
@@ -82,7 +83,7 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             {Array.from({ length: stamps }).map((_, i) => (
               <span key={i} className="door-stamp" />
             ))}
-            <span className="ml-2 font-body text-[11px] italic text-[#9e9488]">
+            <span className="ml-2 font-body text-[11px] italic text-muted">
               {visits <= 1
                 ? "First stamp. The card is yours."
                 : `${visits} stamps - one for every visit`}

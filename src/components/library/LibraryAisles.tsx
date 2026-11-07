@@ -34,7 +34,7 @@ export const LibraryAisles: React.FC<LibraryAislesProps> = ({
     return (
       <div className="text-center py-10 px-4">
         <BookOpen className="w-6 h-6 text-gold/50 mx-auto mb-3" />
-        <p className="font-body text-sm text-[#9e9488] italic">
+        <p className="font-body text-sm text-muted italic">
           The aisles are quiet for now.
         </p>
       </div>
@@ -52,7 +52,7 @@ export const LibraryAisles: React.FC<LibraryAislesProps> = ({
             className="px-3 py-1.5 rounded-full text-xs font-serif tracking-wide bg-card/70 text-amber-200 border border-hairline hover:border-gold/60 hover:text-gold-light transition"
           >
             {section.label}
-            <span className="ml-1.5 text-[10px] font-sans text-[#9e9488]">
+            <span className="ml-1.5 text-[10px] font-sans text-muted">
               {books.length}
             </span>
           </a>
@@ -69,7 +69,7 @@ export const LibraryAisles: React.FC<LibraryAislesProps> = ({
             <h3 className="font-serif text-xl sm:text-2xl text-amber-100 tracking-tight">
               {section.label}
             </h3>
-            <span className="font-body text-[11px] text-[#9e9488] italic">
+            <span className="font-body text-[11px] text-muted italic">
               {books.length} {books.length === 1 ? "letter" : "letters"} -
               scroll the shelf sideways
             </span>

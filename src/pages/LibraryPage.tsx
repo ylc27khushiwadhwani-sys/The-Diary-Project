@@ -462,17 +462,17 @@ export const LibraryPage: React.FC = () => {
       <div className="bg-card/80 border border-hairline rounded-2xl p-6 sm:p-8 mb-8 backdrop-blur-md shadow-parchment flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <span className="label-caps block mb-1.5">Private Bookcase</span>
-          <h1 className="font-serif text-3xl sm:text-4xl text-[#f3ece0] tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl text-cream tracking-tight">
             {profile?.pen_name
               ? `${profile.pen_name}'s Sanctuary`
               : "Your Private Sanctuary"}
           </h1>
-          <p className="font-body text-sm text-[#9e9488] italic mt-1.5">
+          <p className="font-body text-sm text-muted italic mt-1.5">
             {filteredNotes.length}{" "}
             {filteredNotes.length === 1 ? "letter" : "letters"} resting upon
             these shelves
           </p>
-          <p className="font-body text-xs text-[#9e9488]/80 italic mt-1">
+          <p className="font-body text-xs text-muted/80 italic mt-1">
             Only you can see what rests here. Choose a prompt below, or write
             freely.
           </p>
@@ -482,7 +482,7 @@ export const LibraryPage: React.FC = () => {
           <button
             onClick={handleExport}
             title="Download all of your letters as a JSON file"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hairline bg-card/60 hover:bg-wood-850 text-[#e8dab2] font-serif text-sm transition cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hairline bg-card/60 hover:bg-wood-850 text-gold-light font-serif text-sm transition cursor-pointer"
           >
             <Download className="w-4 h-4 text-gold" />
             <span>Export my notes</span>
@@ -491,7 +491,7 @@ export const LibraryPage: React.FC = () => {
           <button
             onClick={() => setIsInboxOpen(true)}
             title="Gentle replies readers have left on your public letters"
-            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hairline bg-card/60 hover:bg-wood-850 text-[#e8dab2] font-serif text-sm transition cursor-pointer"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-hairline bg-card/60 hover:bg-wood-850 text-gold-light font-serif text-sm transition cursor-pointer"
           >
             <Mail className="w-4 h-4 text-gold" />
             <span>Postbox</span>
@@ -539,10 +539,10 @@ export const LibraryPage: React.FC = () => {
           <div className="bg-card/60 border border-hairline rounded-2xl p-5 backdrop-blur-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
               <span className="label-caps block mb-1">Today's whisper</span>
-              <p className="font-serif italic text-lg text-[#f3ece0]">
+              <p className="font-serif italic text-lg text-cream">
                 "{whisper.title}"
               </p>
-              <p className="font-body text-xs text-[#9e9488] italic mt-1">
+              <p className="font-body text-xs text-muted italic mt-1">
                 {whisper.description}
               </p>
             </div>
@@ -567,10 +567,10 @@ export const LibraryPage: React.FC = () => {
             <span className="label-caps block mb-1 text-gold">
               From your past self
             </span>
-            <p className="font-serif italic text-lg text-[#f3ece0]">
+            <p className="font-serif italic text-lg text-cream">
               "{pastSelfLetter.title || "Untitled Letter"}"
             </p>
-            <p className="font-body text-xs text-[#9e9488] italic mt-1">
+            <p className="font-body text-xs text-muted italic mt-1">
               You wrote this a while ago and let it rest. The Librarian thought
               you might want it back today.
             </p>
@@ -614,7 +614,7 @@ export const LibraryPage: React.FC = () => {
                 )}
               </div>
             </div>
-            <p className="font-body text-xs italic text-[#9e9488] ml-auto max-w-[200px]">
+            <p className="font-body text-xs italic text-muted ml-auto max-w-[200px]">
               The wax on everything you seal - strangers will learn it by
               sight.
             </p>
@@ -666,7 +666,7 @@ export const LibraryPage: React.FC = () => {
           <PromptSelector onSelectPrompt={handleStartFromPrompt} />
 
           {/* Wooden Shelf Ledge Header */}
-          <div className="wood-shelf-ledge px-5 py-3 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs font-serif text-[#e8dab2]">
+          <div className="wood-shelf-ledge px-5 py-3 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs font-serif text-gold-light">
             <div className="flex items-center gap-2">
               <BookOpen className="w-4 h-4 text-gold" />
               <span>
@@ -683,7 +683,7 @@ export const LibraryPage: React.FC = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 aria-label="Search notes"
-                className="w-40 sm:w-56 bg-card/80 border border-hairline rounded-xl px-3.5 py-2 text-xs font-serif text-[#f3ece0] placeholder:text-[#9e9488]/70 focus:outline-none focus:ring-1 focus:ring-gold transition"
+                className="w-40 sm:w-56 bg-card/80 border border-hairline rounded-xl px-3.5 py-2 text-xs font-serif text-cream placeholder:text-muted/70 focus:outline-none focus:ring-1 focus:ring-gold transition"
               />
               <div
                 className="flex items-center gap-1"
@@ -715,7 +715,7 @@ export const LibraryPage: React.FC = () => {
           {loading ? (
             <div role="status" className="py-16 text-center">
               <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
-              <p className="font-body text-sm text-[#9e9488] italic">
+              <p className="font-body text-sm text-muted italic">
                 Unlocking your private shelves...
               </p>
             </div>
@@ -725,10 +725,10 @@ export const LibraryPage: React.FC = () => {
               className="text-center py-16 bg-card/60 border border-dashed border-hairline rounded-2xl p-8"
             >
               <Feather className="w-8 h-8 text-gold/50 mx-auto mb-3" />
-              <h3 className="font-serif text-2xl text-[#f3ece0] mb-2">
+              <h3 className="font-serif text-2xl text-cream mb-2">
                 No letters match your search
               </h3>
-              <p className="font-body text-sm text-[#9e9488] italic max-w-sm mx-auto">
+              <p className="font-body text-sm text-muted italic max-w-sm mx-auto">
                 Nothing on these shelves answers "{searchQuery.trim()}". Try a
                 different word or tag.
               </p>
@@ -736,13 +736,13 @@ export const LibraryPage: React.FC = () => {
           ) : filteredNotes.length === 0 ? (
             <div className="text-center py-16 bg-card/60 border border-dashed border-hairline rounded-2xl p-8">
               <Feather className="w-10 h-10 text-gold/50 mx-auto mb-3" />
-              <h3 className="font-serif text-2xl text-[#f3ece0] mb-2">
+              <h3 className="font-serif text-2xl text-cream mb-2">
                 This shelf is empty
               </h3>
-              <p className="font-body text-sm text-[#9e9488] max-w-sm mx-auto mb-2 italic">
+              <p className="font-body text-sm text-muted max-w-sm mx-auto mb-2 italic">
                 No unsent letters rest here yet.
               </p>
-              <p className="font-body text-xs text-[#9e9488]/80 max-w-sm mx-auto mb-6 italic">
+              <p className="font-body text-xs text-muted/80 max-w-sm mx-auto mb-6 italic">
                 Choose a prompt above for a gentle first line, or begin with a
                 blank parchment.
               </p>

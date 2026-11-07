@@ -16,7 +16,7 @@ export const PromptSelector: React.FC<PromptSelectorProps> = ({ onSelectPrompt }
         <Sparkles className="w-4 h-4 text-gold" />
         <span className="label-caps text-[10px]">Whispers from the Archive • Writing Prompts</span>
       </div>
-      <p className="font-body text-xs text-[#9e9488] italic mb-3">
+      <p className="font-body text-xs text-muted italic mb-3">
         Not sure where to begin? Choose a whisper - it opens a blank letter with a title waiting for you.
       </p>
 

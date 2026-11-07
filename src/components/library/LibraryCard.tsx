@@ -56,7 +56,7 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
 
       <div className="my-4 h-px bg-hairline" />
 
-      <p className="text-xs uppercase tracking-widest text-[#9e9488] font-sans">
+      <p className="text-xs uppercase tracking-widest text-muted font-sans">
         Anonymous Pen Name
       </p>
       <p
@@ -68,7 +68,7 @@ export const LibraryCard: React.FC<LibraryCardProps> = ({
 
       <div className="my-4 h-px bg-hairline" />
 
-      <div className="flex items-center justify-center gap-1.5 text-[10px] tracking-widest uppercase text-[#9e9488] font-sans">
+      <div className="flex items-center justify-center gap-1.5 text-[10px] tracking-widest uppercase text-muted font-sans">
         <ShieldCheck className="w-3.5 h-3.5 text-gold/70" />
         <span>EMAIL • HIDDEN</span>
       </div>

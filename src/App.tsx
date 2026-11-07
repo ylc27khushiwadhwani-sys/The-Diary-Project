@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 import { PenNameBadge } from "./components/auth/PenNameBadge";
+import { ThemeToggle } from "./components/common/ThemeToggle";
 import { SignInModal } from "./components/auth/SignInModal";
 import { HelplineModal } from "./components/safety/HelplineModal";
 import { LandingPage } from "./pages/LandingPage";
@@ -79,7 +80,7 @@ export const App: React.FC = () => {
   // A dedicated letter opens for whoever holds the link, signed in or not.
   if (gift) {
     return (
-      <div className="min-h-screen text-[#f3ece0] relative bg-[#0d0906]">
+      <div className="min-h-screen text-cream relative bg-background">
         <GiftOpeningPage gift={gift} onEnterVault={clearGift} />
       </div>
     );
@@ -88,7 +89,7 @@ export const App: React.FC = () => {
   // The flow: landing first; once inside (signed in or guest), the rooms.
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0d0906]">
+      <div className="min-h-screen flex flex-col text-cream selection:bg-wax-crimson selection:text-white relative bg-background">
         <EntrySequence />
         <DustCanvas />
         {loading ? (
@@ -122,13 +123,13 @@ export const App: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col text-[#f3ece0] selection:bg-wax-crimson selection:text-white relative bg-[#0d0906]">
+    <div className="min-h-screen flex flex-col text-cream selection:bg-wax-crimson selection:text-white relative bg-background">
       <EntrySequence />
       {/* Drifting dust that glows in the light shafts, plus ember bursts */}
       <DustCanvas />
 
       {/* Top Header */}
-      <header className="sticky top-0 z-50 border-b border-hairline bg-[#0d0906]/85 backdrop-blur-md">
+      <header className="sticky top-0 z-50 border-b border-hairline bg-background/85 backdrop-blur-md">
         <VisitBadge />
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-2 sm:px-5 py-3.5">
           {/* Brand */}
@@ -137,7 +138,7 @@ export const App: React.FC = () => {
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div>
-              <span className="font-serif text-lg sm:text-2xl italic tracking-wide whitespace-nowrap text-[#f3ece0] block leading-tight group-hover:text-gold transition">
+              <span className="font-serif text-lg sm:text-2xl italic tracking-wide whitespace-nowrap text-cream block leading-tight group-hover:text-gold transition">
                 <InkText
                   text="The Paper Vault"
                   startDelay={0.2}
@@ -157,7 +158,7 @@ export const App: React.FC = () => {
               className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "reading"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
-                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
+                  : "text-muted hover:text-cream hover:bg-card/60"
               }`}
             >
               <BookOpen className="hidden sm:block w-3.5 h-3.5 text-gold" />
@@ -172,7 +173,7 @@ export const App: React.FC = () => {
               className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "library"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
-                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
+                  : "text-muted hover:text-cream hover:bg-card/60"
               }`}
             >
               <Library className="hidden sm:block w-3.5 h-3.5 text-gold" />
@@ -187,7 +188,7 @@ export const App: React.FC = () => {
               className={`relative flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "postbox"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
-                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
+                  : "text-muted hover:text-cream hover:bg-card/60"
               }`}
             >
               <Mail className="hidden sm:block w-3.5 h-3.5 text-gold" />
@@ -210,7 +211,7 @@ export const App: React.FC = () => {
               className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
                 activeTab === "study"
                   ? "bg-card text-gold border border-gold/40 shadow-candle"
-                  : "text-[#9e9488] hover:text-[#f3ece0] hover:bg-card/60"
+                  : "text-muted hover:text-cream hover:bg-card/60"
               }`}
             >
               <Feather className="hidden sm:block w-3.5 h-3.5 text-gold" />
@@ -221,8 +222,9 @@ export const App: React.FC = () => {
             </button>
           </nav>
 
-          {/* User Profile */}
+          {/* Daylight lamp + user profile */}
           <div className="flex items-center gap-2">
+            <ThemeToggle />
             {profile && (
               <div className="flex items-center gap-1 sm:gap-2 shrink-0 [&_.truncate]:max-w-[44px] sm:[&_.truncate]:max-w-none">
                 <PenNameBadge
@@ -232,7 +234,7 @@ export const App: React.FC = () => {
                 />
                 <button
                   onClick={signOut}
-                  className="p-1.5 text-[#9e9488] hover:text-red-400 hover:bg-card rounded-lg transition cursor-pointer"
+                  className="p-1.5 text-muted hover:text-red-400 hover:bg-card rounded-lg transition cursor-pointer"
                   title="Sign out of sanctuary"
                   aria-label="Sign out"
                 >
@@ -295,7 +297,7 @@ export const App: React.FC = () => {
 
 /* Full-screen overlay for the Community Guidelines & Safety page. */
 const GuidelinesOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => (
-  <div className="fixed inset-0 z-[70] overflow-y-auto bg-[#0d0906]">
+  <div className="fixed inset-0 z-[70] overflow-y-auto bg-background">
     <button
       onClick={onClose}
       aria-label="Close guidelines"
@@ -311,9 +313,9 @@ const LandingFooter: React.FC<{
   onOpenHelplines: () => void;
   onOpenGuidelines: () => void;
 }> = ({ onOpenHelplines, onOpenGuidelines }) => (
-  <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-[#9e9488] relative z-10 bg-[#0d0906]/80 backdrop-blur-sm">
+  <footer className="border-t border-hairline px-6 py-12 text-center text-sm text-muted relative z-10 bg-background/80 backdrop-blur-sm">
     <div className="mx-auto max-w-xl space-y-4">
-      <div className="flex items-center justify-center gap-2 text-xs font-serif text-[#9e9488]">
+      <div className="flex items-center justify-center gap-2 text-xs font-serif text-muted">
         <ShieldCheck className="w-4 h-4 text-gold/70" />
         <span>Encrypted at rest & in transit • Pseudonymous by default</span>
       </div>
@@ -337,12 +339,12 @@ const LandingFooter: React.FC<{
         >
           Community Guidelines &amp; Safety
         </button>
-        <span className="text-[#9e9488]/60">
+        <span className="text-muted/60">
           - how every letter is kept safe
         </span>
       </div>
 
-      <p className="text-xs text-[#9e9488]/70">
+      <p className="text-xs text-muted/70">
         We only use your email to preserve your private library across devices.
         We never share it.
       </p>

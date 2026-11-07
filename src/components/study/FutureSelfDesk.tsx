@@ -51,7 +51,7 @@ export const FutureSelfDesk: React.FC<FutureSelfDeskProps> = ({
           <span className="label-caps block mb-1.5 text-gold">
             A letter to your future self
           </span>
-          <p className="font-body text-sm text-[#c9bda9] italic leading-relaxed">
+          <p className="font-body text-sm text-muted italic leading-relaxed">
             Write to the person you will be. Choose the morning it opens -
             until then it sits here, sealed in wax with the date embossed, and
             even you can't peek.

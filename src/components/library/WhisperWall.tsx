@@ -146,7 +146,7 @@ export const WhisperWall: React.FC = () => {
     <section className="mt-14">
       <div className="text-center mb-6">
         <span className="label-caps">The Whisper Wall</span>
-        <p className="mt-2 font-body text-xs italic text-[#9e9488]">
+        <p className="mt-2 font-body text-xs italic text-muted">
           One line, no letter, no seal. Say it small and pin it up.
         </p>
       </div>
@@ -162,7 +162,7 @@ export const WhisperWall: React.FC = () => {
           }}
           placeholder="whisper something..."
           aria-label="Whisper one line"
-          className="flex-1 bg-card/70 border border-hairline rounded-full px-5 py-3 font-serif italic text-sm text-[#f3ece0] placeholder:text-[#9e9488]/70 focus:outline-none focus:ring-1 focus:ring-gold transition"
+          className="flex-1 bg-card/70 border border-hairline rounded-full px-5 py-3 font-serif italic text-sm text-cream placeholder:text-muted/70 focus:outline-none focus:ring-1 focus:ring-gold transition"
         />
         <button
           type="button"
@@ -181,7 +181,7 @@ export const WhisperWall: React.FC = () => {
       )}
 
       {loading ? (
-        <p className="text-center font-body text-xs italic text-[#9e9488] py-6">
+        <p className="text-center font-body text-xs italic text-muted py-6">
           <Feather className="inline w-3.5 h-3.5 mr-2 animate-pulse" />
           Listening for whispers...
         </p>

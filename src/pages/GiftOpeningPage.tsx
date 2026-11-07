@@ -56,7 +56,7 @@ export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
                   </span>
                 </span>
               )}
-              <span className="mt-5 block font-body text-xs italic text-[#9e9488] group-hover:text-gold transition">
+              <span className="mt-5 block font-body text-xs italic text-muted group-hover:text-gold transition">
                 Break the seal - this was made for one pair of eyes.
               </span>
             </motion.button>
@@ -91,7 +91,7 @@ export const GiftOpeningPage: React.FC<GiftOpeningPageProps> = ({
         <button
           type="button"
           onClick={onEnterVault}
-          className="mt-12 font-body text-xs text-[#9e9488] hover:text-gold underline underline-offset-4 decoration-hairline transition cursor-pointer"
+          className="mt-12 font-body text-xs text-muted hover:text-gold underline underline-offset-4 decoration-hairline transition cursor-pointer"
         >
           The Paper Vault - an anonymous library of unsent letters
         </button>

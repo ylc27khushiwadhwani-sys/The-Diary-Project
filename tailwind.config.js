@@ -9,13 +9,17 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#0a0705',
-        card: '#1a130c',
-        hairline: 'rgba(212, 163, 115, 0.15)',
+        // Theme tokens: driven by CSS variables in index.css so the light
+        // (sunlit garden) theme can re-tone them under `html.light`.
+        background: 'rgb(var(--bg) / <alpha-value>)',
+        card: 'rgb(var(--card) / <alpha-value>)',
+        hairline: 'rgb(var(--hairline))',
+        cream: 'rgb(var(--cream) / <alpha-value>)',
+        muted: 'rgb(var(--muted) / <alpha-value>)',
         gold: {
-          DEFAULT: '#d4a373',
-          light: '#e2b17a',
-          dark: '#b37d4e',
+          DEFAULT: 'rgb(var(--gold) / <alpha-value>)',
+          light: 'rgb(var(--gold-light) / <alpha-value>)',
+          dark: 'rgb(var(--gold-dark) / <alpha-value>)',
         },
         rose: {
           DEFAULT: '#994d58',

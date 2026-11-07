@@ -70,10 +70,10 @@ export const GuidelinesPage: React.FC = () => {
           <ShieldCheck className="w-4 h-4 text-gold" />
           <span className="label-caps">Community Guidelines &amp; Safety</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-5xl text-[#f3ece0] tracking-tight">
+        <h1 className="font-serif text-3xl sm:text-5xl text-cream tracking-tight">
           The Guardrails of the Vault
         </h1>
-        <p className="mx-auto mt-4 max-w-xl font-body text-sm sm:text-base text-[#9e9488] italic leading-relaxed">
+        <p className="mx-auto mt-4 max-w-xl font-body text-sm sm:text-base text-muted italic leading-relaxed">
           A library of unsent things only works if it is safe to leave heavy
           things here. These are the rules every letter lives under - and the
           machinery that enforces them.
@@ -91,11 +91,11 @@ export const GuidelinesPage: React.FC = () => {
               <div className="w-10 h-10 rounded-full bg-amber-900/15 border border-amber-800/30 flex items-center justify-center shrink-0">
                 {item.icon}
               </div>
-              <h2 className="font-serif text-lg text-[#f3ece0] leading-snug">
+              <h2 className="font-serif text-lg text-cream leading-snug">
                 {item.title}
               </h2>
             </div>
-            <p className="font-body text-sm text-[#c9bda9] leading-relaxed">
+            <p className="font-body text-sm text-muted leading-relaxed">
               {item.body}
             </p>
           </div>
@@ -129,7 +129,7 @@ export const GuidelinesPage: React.FC = () => {
 
       {/* Support note */}
       <div className="text-center bg-card/60 border border-hairline rounded-2xl p-6 backdrop-blur-sm">
-        <p className="font-body text-sm text-[#c9bda9] leading-relaxed max-w-xl mx-auto">
+        <p className="font-body text-sm text-muted leading-relaxed max-w-xl mx-auto">
           The Paper Vault is not a substitute for professional support. If you
           are struggling, please reach out to a{" "}
           <button

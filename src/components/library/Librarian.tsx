@@ -5,6 +5,8 @@ interface LibrarianProps {
   sub?: string;
   align?: "left" | "center";
   className?: string;
+  /** Render the line as the page's large first-read headline. */
+  headline?: boolean;
 }
 
 /**
@@ -16,11 +18,12 @@ export const Librarian: React.FC<LibrarianProps> = ({
   sub,
   align = "left",
   className = "",
+  headline = false,
 }) => (
   <div
-    className={`flex items-start gap-3 ${
-      align === "center" ? "justify-center text-left" : ""
-    } ${className}`}
+    className={`flex gap-3 ${
+      headline ? "flex-col items-center gap-4 text-center" : "items-start"
+    } ${align === "center" && !headline ? "justify-center text-left" : ""} ${className}`}
     data-testid="librarian"
   >
     <div className="librarian-medallion" aria-hidden="true">
@@ -42,12 +45,20 @@ export const Librarian: React.FC<LibrarianProps> = ({
       </svg>
     </div>
     <div className="min-w-0">
-      <span className="label-caps block text-[9px] mb-0.5">The Librarian</span>
-      <p className="font-serif italic text-sm sm:text-base text-[#e8dab2] leading-relaxed">
-        "{line}"
-      </p>
+      <span className={`label-caps block mb-0.5 ${headline ? "text-[11px]" : "text-[9px]"}`}>
+        The Librarian
+      </span>
+      {headline ? (
+        <h1 className="font-serif italic text-cream text-4xl sm:text-5xl md:text-6xl leading-tight">
+          {line}
+        </h1>
+      ) : (
+        <p className="font-serif italic text-sm sm:text-base text-gold-light leading-relaxed">
+          "{line}"
+        </p>
+      )}
       {sub && (
-        <p className="font-body text-xs text-[#9e9488] mt-1 italic">{sub}</p>
+        <p className="font-body text-xs text-muted mt-1 italic">{sub}</p>
       )}
     </div>
   </div>
