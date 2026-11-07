@@ -2914,3 +2914,6 @@ html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#e
 @media(prefers-reduced-motion:reduce) {.book-fireflies i,.reading-books-unfold {animation:none !important}.book-fireflies i {opacity:.7}}
 .landing-garden-stem { flex-basis:6%; margin:0 -1.4%; }
 @media(max-width:640px) { .landing-garden-stem {flex-basis:16%;margin:0 -4%;} }
+/* Footer copy can scroll fully above the fixed decorative border. */
+body[data-view="landing"] footer { padding-bottom:180px; }
+@media(max-width:640px) {body[data-view="landing"] footer {padding-bottom:125px;}}
