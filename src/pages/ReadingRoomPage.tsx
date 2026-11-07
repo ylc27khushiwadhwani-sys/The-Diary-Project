@@ -16,7 +16,6 @@ import {
 import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 import { Librarian } from "../components/library/Librarian";
-import { WaxSeal } from "../components/library/WaxSeal";
 import { BookItem } from "../components/bookshelf/BookItem";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
@@ -45,7 +44,6 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [hourLabel] = useState(() => HALL_LABELS[currentHallHour()]);
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
-  const [sealBreaking, setSealBreaking] = useState(false);
   const [finishedNote, setFinishedNote] = useState<Note | null>(null);
   const [respondingNote, setRespondingNote] = useState<Note | null>(null);
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
@@ -57,34 +55,14 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
     [notes],
   );
 
-  // The Librarian's pick: a different letter left out each visit, no scarcity
-  const [pickSeed] = useState(() => Math.random());
-  const featuredLetter = useMemo(
-    () =>
-      readable.length
-        ? readable[Math.floor(pickSeed * readable.length)]
-        : null,
-    [readable, pickSeed],
-  );
+  // A small shelf to wander - every reader picks their own, nothing is
+  // singled out or pushed.
+  const todaysShelf = useMemo(() => readable.slice(0, 7), [readable]);
 
-  const todaysShelf = useMemo(
-    () => readable.filter((n) => n.id !== featuredLetter?.id).slice(0, 7),
-    [readable, featuredLetter],
-  );
-
-  // The Librarian's next pull: whatever followed the finished letter
+  // The next shelf over: whatever followed the finished letter
   const nextAfter = (note: Note): Note | null => {
     const idx = readable.findIndex((n) => n.id === note.id);
     return idx >= 0 ? (readable[(idx + 1) % readable.length] ?? null) : null;
-  };
-
-  const openFeaturedLetter = () => {
-    if (!featuredLetter) return;
-    setSealBreaking(true);
-    window.setTimeout(() => {
-      setSealBreaking(false);
-      setSelectedNote(featuredLetter);
-    }, 700);
   };
 
   const handleStartResponse = (note: Note) => {
@@ -112,49 +90,16 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
           <div role="status" className="text-center py-20">
             <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
             <p className="font-body text-sm text-muted italic">
-              Setting a letter out for you...
+              Opening the Reading Room...
             </p>
           </div>
         ) : (
           <>
-            {/* The Librarian's pick - one sealed envelope on the lectern */}
-            {featuredLetter && (
-              <section className="text-center mb-14">
-                <span className="label-caps block mb-5">
-                  The Librarian's pick - left out for you
-                </span>
-                <motion.button
-                  type="button"
-                  onClick={openFeaturedLetter}
-                  whileHover={{ y: -4 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`lotd-envelope ${sealBreaking ? "lotd-breaking" : ""}`}
-                  aria-label={`Break the seal and read: ${featuredLetter.title || "Untitled Letter"}`}
-                >
-                  <span className="lotd-flap" />
-                  <span className="lotd-body">
-                    <span className="lotd-title">
-                      "{featuredLetter.title || "Untitled Letter"}"
-                    </span>
-                    <span className="lotd-by">
-                      {featuredLetter.profiles?.pen_name || "Anonymous Writer"}
-                    </span>
-                  </span>
-                  <span className="lotd-seal">
-                    <WaxSeal color="crimson" size="lg" icon="quill" />
-                  </span>
-                </motion.button>
-                <p className="mt-4 font-body text-xs text-muted italic">
-                  Break the seal to read it.
-                </p>
-              </section>
-            )}
-
             {/* A small shelf to wander - not the whole library */}
             {todaysShelf.length > 0 && (
               <section className="mb-12">
                 <p className="text-center font-body text-xs text-muted italic mb-4">
-                  A few more the Librarian left out. Touch a book to unroll its
+                  A few spines resting on the shelf. Touch a book to unroll its
                   letter.
                 </p>
                 <div className="relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
