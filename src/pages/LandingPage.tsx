@@ -6,6 +6,7 @@ import { ThemeToggle } from "../components/common/ThemeToggle";
 import { InkText } from "../components/cinematic/InkText";
 import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { SelfWritingLetter } from "../components/landing/SelfWritingLetter";
+import { GardenFlowers } from "../components/common/GardenFlowers";
 
 interface LandingPageProps {
   onAuth: (mode: "signin" | "signup") => void;
@@ -23,10 +24,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 }) => {
   return (
     <div className="lp-scene" data-testid="landing-scene">
-      {/* the room: bookshelf spines at the edges, candlelight, drifting dust */}
-      <div className="lp-shelf-edge lp-shelf-left" aria-hidden="true" />
-      <div className="lp-shelf-edge lp-shelf-right" aria-hidden="true" />
-      <div className="candle-glow absolute inset-0" aria-hidden="true" />
+      {/* the garden: theme sky overhead, drifting dust, flowers below */}
+      <GardenFlowers />
       <div className="lp-motes" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
           <span key={i} className={`lp-mote lp-mote-${(i % 7) + 1}`} />

@@ -1274,30 +1274,13 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   display: flex;
   flex-direction: column;
   color: #f3ece0;
-  background:
-    radial-gradient(ellipse 90% 60% at 50% 30%, rgba(96, 62, 30, 0.55) 0%, rgba(0, 0, 0, 0) 70%),
-    linear-gradient(180deg, #2a1a0e 0%, #1d1209 46%, #120b06 78%, #0b0705 100%);
+  /* the night-sky / day-garden body shows through; the landing is part of
+     the garden, not a separate brown room */
+  background: transparent;
 }
 
 /* bookshelf silhouettes framing the room */
-.lp-shelf-edge {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: clamp(46px, 7vw, 110px);
-  pointer-events: none;
-  background:
-    repeating-linear-gradient(180deg,
-      rgba(0, 0, 0, 0.55) 0 14px,
-      rgba(54, 34, 18, 0.85) 14px 20px,
-      rgba(122, 82, 44, 0.5) 20px 58px,
-      rgba(0, 0, 0, 0.55) 58px 64px,
-      rgba(84, 52, 26, 0.6) 64px 96px,
-      rgba(0, 0, 0, 0.6) 96px 128px);
-  opacity: 0.85;
-  filter: blur(0.4px);
-  z-index: 1;
-}
+.lp-shelf-edge { display: none; }
 .lp-shelf-left { left: 0; box-shadow: inset -18px 0 28px rgba(0, 0, 0, 0.75); }
 .lp-shelf-right { right: 0; box-shadow: inset 18px 0 28px rgba(0, 0, 0, 0.75); }
 
@@ -2308,25 +2291,9 @@ html.light .landing-hero {
 }
 html.light .lp-scene {
   color: #3d2f1e;
-  background:
-    radial-gradient(ellipse 90% 55% at 50% 22%, rgba(255, 240, 192, 0.8) 0%, rgba(255, 240, 192, 0) 70%),
-    radial-gradient(ellipse 60% 45% at 8% 70%, rgba(150, 180, 118, 0.35) 0%, transparent 70%),
-    radial-gradient(ellipse 60% 45% at 94% 60%, rgba(150, 180, 118, 0.3) 0%, transparent 70%),
-    linear-gradient(180deg, #f7f0dd 0%, #f1e7cd 46%, #eaddc0 78%, #e2d2ae 100%);
+  background: transparent;
 }
-html.light .lp-shelf-edge {
-  background:
-    repeating-linear-gradient(180deg,
-      rgba(150, 122, 74, 0.30) 0 14px,
-      rgba(222, 203, 160, 0.9) 14px 20px,
-      rgba(188, 158, 106, 0.55) 20px 58px,
-      rgba(150, 122, 74, 0.30) 58px 64px,
-      rgba(206, 180, 128, 0.7) 64px 96px,
-      rgba(150, 122, 74, 0.32) 96px 128px);
-  opacity: 0.9;
-}
-html.light .lp-shelf-left { box-shadow: inset -18px 0 28px rgba(120, 92, 48, 0.35); }
-html.light .lp-shelf-right { box-shadow: inset 18px 0 28px rgba(120, 92, 48, 0.35); }
+
 html.light .lp-mote {
   background: rgba(190, 150, 80, 0.5);
   box-shadow: 0 0 8px rgba(220, 185, 110, 0.55);
