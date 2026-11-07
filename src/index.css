@@ -2437,82 +2437,160 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
 .shelf-stage.books-closed .group > div[role="button"] {
   filter: saturate(0.82) brightness(0.9);
 }
-/* Open: every book lies open with facing pages (her reference), opening
-   with a staggered unfold, each tappable into the reader. */
-.open-book {
+/* Open: the letters themselves come out of their envelopes (her
+   gardenletters reference) - kraft envelope, flap folded back, a textured
+   white sheet rising with the first lines in real handwriting, watercolor
+   flowers behind, dedication in ink on the front. Four fill the reading
+   view on wide screens, two by two on phones. */
+.env-stage { width: 100%; }
+.env-row {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 2.6vw, 40px);
+  align-items: end;
+  width: 100vw;
+  max-width: 1500px;
   position: relative;
-  width: 96px;
-  height: 66px;
-  margin: 0 -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0 clamp(20px, 4.5vw, 72px);
+}
+.env-letter {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 10 / 15.5;
   padding: 0;
   border: none;
   background: none;
   cursor: pointer;
-  transform-origin: bottom center;
-  animation: obOpen 0.65s cubic-bezier(0.34, 1.3, 0.5, 1) backwards;
+  animation: envIn 0.7s cubic-bezier(0.3, 1.25, 0.5, 1) backwards;
   transition: translate 0.2s ease;
 }
-.open-book:hover { translate: 0 -4px; }
-@keyframes obOpen {
-  0% { transform: perspective(300px) rotateX(64deg) scale(0.55); opacity: 0; }
-  55% { opacity: 1; }
-  100% { transform: none; opacity: 1; }
+.env-letter:hover { translate: 0 -6px; }
+@keyframes envIn {
+  0% { opacity: 0; transform: translateY(26px) scale(0.92); }
+  100% { opacity: 1; transform: none; }
 }
-.ob-cover {
+/* the bouquet rising behind the envelope */
+.env-flowers {
   position: absolute;
-  inset: 3px -5px -4px;
-  background: var(--ob-cover, #6b3d3d);
-  border-radius: 4px 4px 7px 7px;
-  transform: perspective(220px) rotateX(10deg);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.45);
+  bottom: 42%;
+  left: 50%;
+  width: 88%;
+  transform: translateX(-50%);
+  transform-origin: bottom center;
+  z-index: 0;
+  filter: saturate(1.05);
 }
-.ob-pages {
+.env-flowers .gf-cluster { justify-content: center; gap: 4px; }
+.env-envelope {
   position: absolute;
   inset: 0;
+  display: block;
+}
+/* the opened flap, folded back behind the sheet */
+.env-flap {
+  position: absolute;
+  left: 3%;
+  right: 3%;
+  top: 33%;
+  height: 27%;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  background: linear-gradient(180deg, #b89468, #a07f52);
+  z-index: 1;
+}
+/* the risen sheet: textured white, tucked to a point */
+.env-paper {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  top: 5%;
+  bottom: 39%;
   display: flex;
-  border-radius: 3px;
+  flex-direction: column;
+  padding: 7% 8% 12%;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 9%), 50% 100%, 0 calc(100% - 9%));
+  background:
+    radial-gradient(ellipse 90% 55% at 30% 18%, rgba(255, 255, 255, 0.9), transparent 70%),
+    repeating-linear-gradient(37deg, rgba(120, 100, 60, 0.028) 0 2px, transparent 2px 5px),
+    linear-gradient(165deg, #fffdf4 0%, #faf4e2 58%, #f1e7cd 100%);
+  box-shadow: 0 -3px 14px rgba(40, 26, 8, 0.28);
+  color: rgba(35, 25, 15, 0.72);
+  text-align: left;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35);
+  z-index: 2;
 }
-.ob-pages::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  width: 6px;
-  transform: translateX(-50%);
-  background: linear-gradient(90deg, transparent, rgba(80, 55, 25, 0.3), transparent);
-}
-.ob-page { position: relative; flex: 1; }
-.ob-left { background: linear-gradient(100deg, #ece1c2 0%, #f6eeda 75%, #e0d2b0 100%); }
-.ob-right { background: linear-gradient(260deg, #ece1c2 0%, #faf3e2 75%, #e0d2b0 100%); }
-.ob-left::before {
-  content: "";
-  position: absolute;
-  left: 7px;
-  right: 6px;
-  top: 10px;
-  height: 65%;
-  background: repeating-linear-gradient(180deg, rgba(90, 65, 35, 0.3) 0 1px, transparent 1px 6px);
-}
-.ob-title {
-  position: absolute;
-  right: 5px;
-  top: 7px;
-  width: 40%;
-  font-size: 8.5px;
-  line-height: 1.5;
-  color: #4a3a26;
-  transform: rotate(-1.5deg);
+.env-tilt-0 .env-paper { transform: rotate(-1.5deg); }
+.env-tilt-1 .env-paper { transform: rotate(1.1deg); }
+.env-tilt-2 .env-paper { transform: rotate(-0.7deg); }
+.env-tilt-3 .env-paper { transform: rotate(1.7deg); }
+.env-excerpt {
+  font-size: clamp(11px, 1.05vw, 16px);
+  line-height: 1.65;
   overflow: hidden;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 7;
   -webkit-box-orient: vertical;
-  text-align: left;
 }
+.env-sign {
+  margin-top: auto;
+  align-self: flex-end;
+  font-size: clamp(10px, 0.9vw, 14px);
+  color: rgba(35, 25, 15, 0.48);
+  padding-bottom: 4%;
+}
+/* envelope front: kraft body whose V opening laps over the sheet's foot */
+.env-front {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 47%;
+  clip-path: polygon(0 16%, 50% 47%, 100% 16%, 100% 100%, 0 100%);
+  background:
+    linear-gradient(115deg, transparent 49.6%, rgba(94, 71, 39, 0.35) 50%, transparent 50.6%),
+    linear-gradient(245deg, transparent 49.6%, rgba(94, 71, 39, 0.35) 50%, transparent 50.6%),
+    linear-gradient(180deg, #dcc9a4 0%, #cfb689 55%, #c2a675 100%);
+  box-shadow: 0 10px 22px rgba(20, 12, 4, 0.5);
+  border-radius: 0 0 8px 8px;
+  z-index: 3;
+}
+.env-to {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 5%;
+  z-index: 4;
+  text-align: center;
+  font-family: 'Cedarville Cursive', cursive;
+  font-size: clamp(12px, 1.15vw, 17px);
+  color: #6d5836;
+  transform: rotate(-1deg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 6%;
+}
+.env-hint { margin-top: 22px; }
+
+/* night: deeper kraft, warm parchment sheets, gold ink dedications */
+.env-flap { box-shadow: inset 0 -6px 12px rgba(60, 42, 16, 0.35); }
 @media (prefers-reduced-motion: reduce) {
-  .open-book { animation: none; }
+  .env-letter { animation: none; }
+}
+
+/* phones: two by two, never four tiny columns */
+@media (max-width: 640px) {
+  .env-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px 14px;
+    padding: 0 18px;
+  }
+  .env-flowers .flower-spray { transform: scale(0.78); }
+  .env-excerpt { font-size: 11px; -webkit-line-clamp: 6; }
+  .env-sign { font-size: 10px; }
+  .env-to { font-size: 12px; }
 }
 
 

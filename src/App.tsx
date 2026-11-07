@@ -55,6 +55,8 @@ export const App: React.FC = () => {
 
   // After entering, the two doors come first; the rooms wait behind them.
   const [doorChosen, setDoorChosen] = useState(false);
+  // The brand leads back to the landing page, even once inside.
+  const [showLanding, setShowLanding] = useState(false);
   const [postboxUnseen, setPostboxUnseen] = useState(0);
 
   useEffect(() => {
@@ -87,7 +89,8 @@ export const App: React.FC = () => {
   }
 
   // The flow: landing first; once inside (signed in or guest), the rooms.
-  if (!user) {
+  // Clicking the brand brings the landing back without signing anyone out.
+  if (!user || showLanding) {
     return (
       <div className="min-h-screen flex flex-col text-cream selection:bg-wax-crimson selection:text-white relative bg-background">
         <EntrySequence />
@@ -98,7 +101,10 @@ export const App: React.FC = () => {
           </div>
         ) : (
           <main className="flex-1 relative z-10">
-            <LandingPage onAuth={openAuth} onGuest={loginAsGuestDemo} />
+            <LandingPage
+              onAuth={user ? () => setShowLanding(false) : openAuth}
+              onGuest={user ? () => setShowLanding(false) : loginAsGuestDemo}
+            />
           </main>
         )}
         <LandingFooter
@@ -134,7 +140,7 @@ export const App: React.FC = () => {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-2 sm:px-5 py-3.5">
           {/* Brand */}
           <div
-            onClick={() => setActiveTab("reading")}
+            onClick={() => setShowLanding(true)}
             className="flex items-center gap-3 cursor-pointer group"
           >
             <div>

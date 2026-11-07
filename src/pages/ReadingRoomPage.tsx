@@ -13,7 +13,7 @@ import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 import { Librarian } from "../components/library/Librarian";
 import { BookItem } from "../components/bookshelf/BookItem";
-import { OpenBookItem } from "../components/bookshelf/OpenBookItem";
+import { EnvelopeLetter } from "../components/bookshelf/EnvelopeLetter";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
@@ -46,7 +46,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [respondingNote, setRespondingNote] = useState<Note | null>(null);
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
-  // The shelf greets closed; "Read the letters" opens the books.
+  // The shelf greets closed; "Read the letters" opens the envelopes.
   const [readingOpen, setReadingOpen] = useState(false);
 
   // Letters you can actually open today (date-sealed ones are still waiting)
@@ -92,48 +92,51 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 until you ask to read them. */}
             {todaysShelf.length > 0 && (
               <section className="mb-12">
-                <div
-                  className={`shelf-stage relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto ${
-                    readingOpen ? "books-open" : "books-closed"
-                  }`}
-                >
-                  <div className="relative flex flex-wrap items-end justify-center gap-[3px] min-h-[136px] pb-1">
-                    {todaysShelf.map((note, idx) =>
-                      readingOpen ? (
-                        <OpenBookItem
+                {readingOpen ? (
+                  /* every letter out of its envelope, four across the view
+                     (two by two on phones) - her gardenletters reference */
+                  <div className="env-stage">
+                    <div className="env-row">
+                      {todaysShelf.slice(0, 4).map((note, idx) => (
+                        <EnvelopeLetter
                           key={note.id}
                           note={note}
                           index={idx}
                           onOpen={setSelectedNote}
                         />
-                      ) : (
-                        <BookItem
-                          key={note.id}
-                          note={note}
-                          index={idx}
-                          onOpen={() => {}}
-                        />
-                      ),
-                    )}
-                  </div>
-                  <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
-                </div>
-                <div className="text-center mt-6">
-                  {readingOpen ? (
-                    <p className="font-body text-xs text-muted italic">
-                      The books are open. Touch one to read its letter.
+                      ))}
+                    </div>
+                    <p className="env-hint font-body text-xs text-muted italic text-center">
+                      The letters are open. Touch one to read it in full.
                     </p>
-                  ) : (
-                    <button
-                      type="button"
-                      onClick={() => setReadingOpen(true)}
-                      className="inline-flex items-center gap-2 rounded-full bg-wax-crimson hover:bg-wax-crimsonBright px-8 py-3.5 font-serif text-base text-amber-50 font-semibold shadow-candle border border-red-500/30 transition hover:-translate-y-0.5 cursor-pointer"
-                    >
-                      <BookOpen className="w-4 h-4" />
-                      <span>Read the letters</span>
-                    </button>
-                  )}
-                </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="shelf-stage books-closed relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
+                      <div className="relative flex flex-wrap items-end justify-center gap-[3px] min-h-[136px] pb-1">
+                        {todaysShelf.map((note, idx) => (
+                          <BookItem
+                            key={note.id}
+                            note={note}
+                            index={idx}
+                            onOpen={() => {}}
+                          />
+                        ))}
+                      </div>
+                      <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
+                    </div>
+                    <div className="text-center mt-6">
+                      <button
+                        type="button"
+                        onClick={() => setReadingOpen(true)}
+                        className="inline-flex items-center gap-2 rounded-full bg-wax-crimson hover:bg-wax-crimsonBright px-8 py-3.5 font-serif text-base text-amber-50 font-semibold shadow-candle border border-red-500/30 transition hover:-translate-y-0.5 cursor-pointer"
+                      >
+                        <BookOpen className="w-4 h-4" />
+                        <span>Read the letters</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </section>
             )}
 
