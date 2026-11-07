@@ -5,9 +5,9 @@ import { AuthProvider } from "../contexts/AuthContext";
 import { PublicFeedPage } from "./PublicFeedPage";
 import type { Note } from "../types/database";
 
-vi.mock("../components/library/GrandLibraryRoom", async (importOriginal) => {
-  const actual=await importOriginal<typeof import("../components/library/GrandLibraryRoom")>();
-  return {GrandLibraryRoom:(props:React.ComponentProps<typeof actual.GrandLibraryRoom>)=><><actual.GrandLibraryRoom {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
+vi.mock("../components/library/GrandLibraryBooks", async (importOriginal) => {
+  const actual=await importOriginal<typeof import("../components/library/GrandLibraryBooks")>();
+  return {GrandLibraryBooks:(props:React.ComponentProps<typeof actual.GrandLibraryBooks>)=><><actual.GrandLibraryBooks {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
 });
 
 const PROFILE_KEY = "unsent_library_demo_profile";

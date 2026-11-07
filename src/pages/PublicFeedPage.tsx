@@ -7,7 +7,7 @@ import { PaywallModal } from "../components/payments/PaywallModal";
 import { fetchQuota, isLimitError } from "../lib/payments";
 import { InteractiveBookshelf, SHELF_SECTIONS, matchesSection } from "../components/bookshelf/InteractiveBookshelf";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
-import { GrandLibraryRoom } from "../components/library/GrandLibraryRoom";
+import { GrandLibraryBooks } from "../components/library/GrandLibraryBooks";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
@@ -177,7 +177,7 @@ export const PublicFeedPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
-      {roomSection === null ? <GrandLibraryRoom onChoose={(id) => {setRoomSection(id); setCollectionId(null); setFeedSearch("");}} onRandom={readRandom} randomDisabled={!randomEligible.length}/> : <>
+      {roomSection === null ? <GrandLibraryBooks notes={notes} loading={loading} onOpen={setAisleNote} onChoose={(id) => {setRoomSection(id); setCollectionId(null); setFeedSearch("");}} onRandom={readRandom} randomDisabled={!randomEligible.length}/> : <>
       <GrandHallBackdrop />
       <div id="bookshelf" className="scroll-mt-16 py-10 relative z-10">
         <div className="text-center mb-6"><button type="button" className="library-return-room" onClick={() => setRoomSection(null)}>← Return to the library room</button></div>

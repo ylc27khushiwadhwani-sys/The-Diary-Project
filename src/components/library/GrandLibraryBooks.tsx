@@ -1,0 +1,294 @@
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { ChevronLeft, ChevronRight, Feather, Lock } from "lucide-react";
+import { Note } from "../../types/database";
+import { prefersReducedMotion } from "../../lib/motion";
+import {
+  SHELF_SECTIONS,
+  matchesSection,
+} from "../bookshelf/InteractiveBookshelf";
+
+/**
+ * The Grand Library: every public letter stands on the desk as a physical
+ * book. The camera drifts slowly along the row; drag, scroll or use the
+ * arrows to walk it yourself. Choosing a book pulls it out of the row and
+ * opens it. Aesthetic follows the vault: aged bindings, gold tooling,
+ * candlelit wood.
+ */
+
+interface GrandLibraryBooksProps {
+  notes: Note[];
+  loading?: boolean;
+  /** Open a letter in the reader. */
+  onOpen: (note: Note) => void;
+  /** Jump to the classic shelf browse for a section ("all" included). */
+  onChoose: (sectionId: string) => void;
+  onRandom: () => void;
+  randomDisabled?: boolean;
+}
+
+// Antique bindings, shared spirit with the bookshelf spines.
+const BINDINGS = [
+  { bg: "linear-gradient(135deg,#4a151b 0%,#2e0d11 100%)", border: "#6b232c", ribbon: "#a3333d" },
+  { bg: "linear-gradient(135deg,#122820 0%,#0a1813 100%)", border: "#1f4536", ribbon: "#204a39" },
+  { bg: "linear-gradient(135deg,#152238 0%,#0c1422 100%)", border: "#23385d", ribbon: "#2a4365" },
+  { bg: "linear-gradient(135deg,#422918 0%,#29180d 100%)", border: "#633e24", ribbon: "#8c5027" },
+  { bg: "linear-gradient(135deg,#2e1c2b 0%,#1c111a 100%)", border: "#4a2c45", ribbon: "#522f4d" },
+  { bg: "linear-gradient(135deg,#22201d 0%,#151412 100%)", border: "#383530", ribbon: "#44403c" },
+];
+
+const hash = (value: string) => {
+  let h = 0;
+  for (let i = 0; i < value.length; i++) h = (h * 31 + value.charCodeAt(i)) | 0;
+  return Math.abs(h);
+};
+
+const BOOK_W = 132;
+const BOOK_GAP = 18;
+const SPACING = BOOK_W + BOOK_GAP;
+const STAGE_SIDE_PAD = 60;
+// Past this many letters the desk ends with a note pointing at the archive.
+const MAX_BOOKS = 400;
+const DRIFT_RESUME_MS = 6000;
+const OPEN_ANIMATION_MS = 620;
+
+export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
+  notes,
+  loading,
+  onOpen,
+  onChoose,
+  onRandom,
+  randomDisabled,
+}) => {
+  const [sectionId, setSectionId] = useState("all");
+  const [openingId, setOpeningId] = useState<string | null>(null);
+
+  const books = useMemo(
+    () =>
+      notes
+        .filter((note) => matchesSection(note, sectionId))
+        .slice(0, MAX_BOOKS),
+    [notes, sectionId],
+  );
+  const overflowCount = notes.filter((note) => matchesSection(note, sectionId)).length - books.length;
+
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const camera = useRef({ x: 0, target: 0, driftPhase: Math.PI / 2 });
+  const interaction = useRef({ dragging: false, dragged: false, startX: 0, startCam: 0, lastTouch: 0 });
+  const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const trackWidth = books.length * SPACING - BOOK_GAP + STAGE_SIDE_PAD * 2;
+
+  const clampTarget = useCallback((value: number) => {
+    const stage = stageRef.current;
+    const max = Math.max(0, trackWidth - (stage?.clientWidth ?? 0));
+    return Math.min(max, Math.max(0, value));
+  }, [trackWidth]);
+
+  // Camera loop: ease toward the target, and when nobody is steering,
+  // drift slowly along the row like the reference's gliding shot.
+  useEffect(() => {
+    const reduced = prefersReducedMotion();
+    let raf = 0;
+    const step = (now: number) => {
+      const cam = camera.current;
+      const idle = now - interaction.current.lastTouch > DRIFT_RESUME_MS;
+      if (!reduced && idle && !interaction.current.dragging && trackWidth > (stageRef.current?.clientWidth ?? 0)) {
+        cam.driftPhase += 0.0028;
+        // Ping-pong drift across the whole row, slowest at the ends.
+        const max = Math.max(0, trackWidth - (stageRef.current?.clientWidth ?? 0));
+        cam.target = (Math.sin(cam.driftPhase) * 0.5 + 0.5) * max;
+      }
+      cam.x += (cam.target - cam.x) * 0.06;
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${-cam.x}px,0,0)`;
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [trackWidth]);
+
+  // Recenter when the filter changes the row.
+  useEffect(() => {
+    camera.current.x = 0;
+    camera.current.target = 0;
+  }, [sectionId, notes.length]);
+
+  useEffect(
+    () => () => {
+      if (openTimer.current) clearTimeout(openTimer.current);
+    },
+    [],
+  );
+
+  const steer = (delta: number) => {
+    interaction.current.lastTouch = performance.now();
+    camera.current.target = clampTarget(camera.current.target + delta);
+  };
+
+  const onPointerDown = (e: React.PointerEvent) => {
+    interaction.current.dragging = true;
+    interaction.current.dragged = false;
+    interaction.current.startX = e.clientX;
+    interaction.current.startCam = camera.current.target;
+    interaction.current.lastTouch = performance.now();
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!interaction.current.dragging) return;
+    const dx = e.clientX - interaction.current.startX;
+    if (Math.abs(dx) > 8) interaction.current.dragged = true;
+    interaction.current.lastTouch = performance.now();
+    camera.current.target = clampTarget(interaction.current.startCam - dx);
+  };
+  const endDrag = () => {
+    interaction.current.dragging = false;
+    interaction.current.lastTouch = performance.now();
+  };
+
+  const openBook = (note: Note) => {
+    if (interaction.current.dragged) return; // that was a walk, not a choice
+    if (openingId) return;
+    if (prefersReducedMotion()) {
+      onOpen(note);
+      return;
+    }
+    setOpeningId(note.id);
+    openTimer.current = setTimeout(() => {
+      setOpeningId(null);
+      onOpen(note);
+    }, OPEN_ANIMATION_MS);
+  };
+
+  return (
+    <section className="glb-scene" aria-labelledby="grand-room-title">
+      <div className="glb-glow glb-glow-left" aria-hidden="true" />
+      <div className="glb-glow glb-glow-right" aria-hidden="true" />
+
+      <header className="grand-room-heading glb-heading">
+        <p>THE PAPER VAULT</p>
+        <h1 id="grand-room-title">The Grand Library</h1>
+        <span>Every letter stands here as a book. Choose one and open it.</span>
+      </header>
+
+      <div className="glb-controls">
+        <div className="glb-sections" role="group" aria-label="Filter the desk by shelf">
+          {SHELF_SECTIONS.map((section) => (
+            <button
+              key={section.id}
+              type="button"
+              aria-pressed={sectionId === section.id}
+              className={`glb-chip ${sectionId === section.id ? "is-active" : ""}`}
+              onClick={() => setSectionId(section.id)}
+            >
+              {section.label}
+            </button>
+          ))}
+        </div>
+        <div className="glb-actions">
+          <button type="button" className="glb-random" onClick={onRandom} disabled={randomDisabled}>
+            read in random order
+          </button>
+          <button type="button" className="glb-browse" onClick={() => onChoose(sectionId)}>
+            browse as shelves ↗
+          </button>
+        </div>
+      </div>
+
+      {loading ? (
+        <div role="status" className="glb-empty">
+          <Feather className="w-6 h-6 text-gold/60 mx-auto mb-3 animate-pulse" />
+          <p>Unshelving the letters...</p>
+        </div>
+      ) : books.length === 0 ? (
+        <div role="status" className="glb-empty">
+          <Feather className="w-7 h-7 text-gold/50 mx-auto mb-3" />
+          <p>This part of the desk is waiting for its first letter.</p>
+        </div>
+      ) : (
+        <div
+          ref={stageRef}
+          className="glb-stage"
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={endDrag}
+          onPointerLeave={endDrag}
+          onWheel={(e) => steer(e.deltaY + e.deltaX)}
+          role="region"
+          aria-label="Letters standing as books on the library desk. Drag sideways to walk along the desk."
+        >
+          <div
+            ref={trackRef}
+            className="glb-track"
+            style={{ width: trackWidth, paddingLeft: STAGE_SIDE_PAD, paddingRight: STAGE_SIDE_PAD }}
+          >
+            {books.map((note, index) => {
+              const h = hash(note.id || String(index));
+              const binding = BINDINGS[h % BINDINGS.length];
+              const height = 208 + (h % 5) * 14;
+              const tilt = -18 - (h % 4) * 5;
+              const title = note.title || "Untitled Letter";
+              const penName = note.profiles?.pen_name || "Anonymous";
+              const opening = openingId === note.id;
+              return (
+                <div
+                  key={note.id}
+                  className={`glb-book ${opening ? "is-opening" : ""}`}
+                  style={{ height, ["--tilt" as string]: `${tilt}deg` }}
+                >
+                  <button
+                    type="button"
+                    className="glb-cover"
+                    style={{ background: binding.bg, borderColor: binding.border }}
+                    onClick={() => openBook(note)}
+                    aria-label={`Open letter: ${title}`}
+                  >
+                    <span className="glb-frame" aria-hidden="true">
+                      <span className="glb-ornament">✦</span>
+                      <span className="glb-title">{title}</span>
+                      <span className="glb-pen">{penName}</span>
+                      {note.is_locked && <Lock className="w-3 h-3" aria-label="Passcode protected" />}
+                    </span>
+                    <span
+                      className="glb-ribbon"
+                      style={{ background: binding.ribbon }}
+                      aria-hidden="true"
+                    />
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+          <div className="glb-desk" aria-hidden="true" />
+          <button
+            type="button"
+            className="glb-arrow glb-arrow-left"
+            aria-label="Walk toward the start of the desk"
+            onClick={() => steer(-(stageRef.current?.clientWidth ?? 400) * 0.7)}
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            className="glb-arrow glb-arrow-right"
+            aria-label="Walk toward the end of the desk"
+            onClick={() => steer((stageRef.current?.clientWidth ?? 400) * 0.7)}
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
+      )}
+
+      <p className="glb-count" role="note">
+        {books.length > 0 &&
+          `${books.length} ${books.length === 1 ? "letter stands" : "letters stand"} on the desk${overflowCount > 0 ? `, and ${overflowCount} more rest deeper in the archive` : ""}.`}
+      </p>
+    </section>
+  );
+};

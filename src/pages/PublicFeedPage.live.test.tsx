@@ -4,9 +4,9 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { PublicFeedPage } from "./PublicFeedPage";
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
 
-vi.mock("../components/library/GrandLibraryRoom", async (importOriginal) => {
-  const actual=await importOriginal<typeof import("../components/library/GrandLibraryRoom")>();
-  return {GrandLibraryRoom:(props:React.ComponentProps<typeof actual.GrandLibraryRoom>)=><><actual.GrandLibraryRoom {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
+vi.mock("../components/library/GrandLibraryBooks", async (importOriginal) => {
+  const actual=await importOriginal<typeof import("../components/library/GrandLibraryBooks")>();
+  return {GrandLibraryBooks:(props:React.ComponentProps<typeof actual.GrandLibraryBooks>)=><><actual.GrandLibraryBooks {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
 });
 
 const { from, range } = vi.hoisted(() => ({ from: vi.fn(), range: vi.fn() }));
@@ -55,7 +55,8 @@ describe("configured public feed sample fallback", () => {
     render(<PublicFeedPage/>);
     const random=screen.getByRole("button",{name:"read in random order"});
     await waitFor(()=>expect(random).not.toBeDisabled());
-    expect(screen.queryByRole("button",{name:"All Shelves"})).not.toBeInTheDocument();
+    // The desk leads with the whole collection; shelf chips narrow it.
+    expect(screen.getByRole("button",{name:"All Shelves"})).toBeInTheDocument();
     fireEvent.click(random);
     expect(await screen.findByText("Volume retrieved from the shelf")).toBeInTheDocument();
     expect(document.querySelector("article.reader-open-volume")?.textContent).toContain("Eligible public letter");

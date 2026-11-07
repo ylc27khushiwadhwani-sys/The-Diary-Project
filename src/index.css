@@ -2989,3 +2989,106 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
    The hall moth is position:fixed z-2 and otherwise drifts over card text;
    the entry-sequence veil (z 200) is below the overlay (z 300). */
 .guidelines-overlay .hall-moth { display: none; }
+
+/* ==== Grand Library: letters standing as books on the desk ==== */
+.glb-scene{position:relative;min-height:calc(100vh - 64px);overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#1d1712 0%,#12100f 45%,#0a0d1f 100%);color:rgb(var(--cream));padding:26px 0 46px;}
+.glb-glow{position:absolute;top:8%;width:340px;height:340px;border-radius:50%;pointer-events:none;filter:blur(10px);}
+.glb-glow-left{left:-90px;background:radial-gradient(circle,#d4a37322,transparent 65%);}
+.glb-glow-right{right:-90px;background:radial-gradient(circle,#d4a3731c,transparent 65%);}
+.glb-heading{position:relative;left:auto;right:auto;top:auto;margin:0 auto 14px;max-width:560px;}
+.glb-controls{position:relative;z-index:3;max-width:1060px;margin:0 auto 6px;padding:0 18px;}
+.glb-sections{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:10px;}
+.glb-chip{padding:5px 13px;border-radius:999px;border:1px solid rgb(var(--hairline));background:rgb(var(--card) / .55);color:#e8cf9f;font-family:Lora,Georgia,serif;font-size:11.5px;cursor:pointer;transition:all .18s;}
+.glb-chip:hover{border-color:#d4a37366;color:#f3e2c2;}
+.glb-chip.is-active{border-color:rgb(var(--gold));background:rgb(var(--gold) / .15);color:rgb(var(--gold-light));box-shadow:0 0 14px #d4a37333;}
+.glb-actions{display:flex;justify-content:center;align-items:center;gap:20px;font-family:Lora,Georgia,serif;font-size:12px;}
+.glb-random{padding:7px 20px;border-radius:999px;border:1px solid rgb(var(--gold) / .45);background:#2a1c10;color:rgb(var(--gold-light));cursor:pointer;transition:all .18s;}
+.glb-random:hover:not(:disabled){background:#38260f;box-shadow:0 0 16px #d4a3732e;}
+.glb-random:disabled{opacity:.45;cursor:default;}
+.glb-browse{color:rgb(var(--muted));border-bottom:1px solid #b78b4d44;padding-bottom:2px;cursor:pointer;background:none;transition:color .18s;}
+.glb-browse:hover{color:rgb(var(--gold-light));}
+.glb-empty{position:relative;z-index:2;text-align:center;padding:80px 20px;font-family:Lora,Georgia,serif;font-size:14px;color:rgb(var(--muted));font-style:italic;}
+
+/* The desk shot: perspective stage, one long row of standing books. */
+.glb-stage{position:relative;z-index:2;height:520px;margin-top:4px;perspective:1150px;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;}
+.glb-stage:active{cursor:grabbing;}
+.glb-track{position:absolute;left:0;bottom:146px;display:flex;gap:18px;align-items:flex-end;transform-style:preserve-3d;will-change:transform;}
+.glb-desk{position:absolute;left:0;right:0;bottom:0;height:150px;background:
+  linear-gradient(180deg,#8a6136 0%,#6b4826 3%,#553520 12%,#3c2513 55%,#2b1909 100%);
+  box-shadow:0 -14px 40px #0009 inset,0 -2px 0 #a97c4b66;
+  pointer-events:none;}
+.glb-book{position:relative;width:132px;flex:none;transform-style:preserve-3d;}
+.glb-book::after{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:12px;background:radial-gradient(50% 100% at 50% 0%,#000c,transparent 75%);filter:blur(3px);z-index:-1;}
+.glb-cover{position:relative;display:block;width:100%;height:100%;border:1px solid;border-radius:3px 7px 7px 3px;cursor:pointer;padding:0;text-align:center;
+  transform:rotateY(var(--tilt,-24deg));transform-style:preserve-3d;
+  box-shadow:0 16px 30px #000b,inset 0 0 0 1px #0006;
+  transition:transform .55s cubic-bezier(.22,.9,.24,1),box-shadow .35s;}
+.glb-cover::before{content:"";position:absolute;top:0;bottom:0;left:0;width:12px;border-radius:3px 0 0 3px;
+  background:linear-gradient(90deg,#000a,#ffffff14 55%,#0008);}
+.glb-cover::after{content:"";position:absolute;top:0;bottom:0;right:3px;width:3px;background:repeating-linear-gradient(180deg,#e8dcc288 0 1px,transparent 1px 3px);opacity:.5;}
+.glb-cover:hover,.glb-cover:focus-visible{transform:rotateY(-6deg) translateZ(52px) translateY(-8px);box-shadow:0 26px 44px #000d,0 0 26px #d4a37330;outline:none;z-index:5;}
+.glb-book.is-opening .glb-cover{transform:rotateY(0deg) translateZ(170px) translateY(-16px) scale(1.12);box-shadow:0 40px 70px #000e,0 0 44px #d4a37345;z-index:8;}
+.glb-frame{position:absolute;inset:9px;border:1px solid #d4a37355;border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;}
+.glb-frame::before{content:"";position:absolute;inset:3px;border:1px solid #d4a37333;border-radius:2px;pointer-events:none;}
+.glb-ornament{color:rgb(var(--gold));font-size:13px;text-shadow:0 1px 3px #000;}
+.glb-title{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:17px;line-height:1.22;color:#f3e6cd;text-shadow:0 1px 4px #000;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;}
+.glb-pen{font-family:Lora,Georgia,serif;font-style:italic;font-size:9.5px;color:#d8bd93;opacity:.85;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
+.glb-frame svg{color:#e8cf9f;}
+.glb-ribbon{position:absolute;left:50%;bottom:-9px;width:9px;height:16px;transform:translateX(-50%);border-radius:0 0 3px 3px;box-shadow:0 3px 6px #0008;}
+.glb-arrow{position:absolute;top:42%;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid rgb(var(--gold) / .4);background:#1a130cd9;color:rgb(var(--gold-light));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
+.glb-arrow:hover{background:#2a1c10;box-shadow:0 0 18px #d4a37333;}
+.glb-arrow-left{left:14px;}
+.glb-arrow-right{right:14px;}
+.glb-count{position:relative;z-index:2;text-align:center;font-family:Lora,Georgia,serif;font-style:italic;font-size:12px;color:rgb(var(--muted));margin-top:14px;padding:0 20px;}
+
+@media (max-width:640px){
+  .glb-scene{padding-top:18px;}
+  .glb-sections{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:2px 2px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+  .glb-sections::-webkit-scrollbar{display:none;}
+  .glb-chip{flex:none;}
+  .glb-stage{height:440px;}
+  .glb-track{bottom:116px;}
+  .glb-book{width:104px;}
+  .glb-book .glb-cover{--tilt:-18deg;}
+  .glb-title{font-size:14.5px;}
+  .glb-desk{height:120px;}
+  .glb-arrow{width:34px;height:34px;}
+  .glb-heading h1{font-size:34px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .glb-cover,.glb-book.is-opening .glb-cover{transition:none;}
+}
+
+/* ==== Received flower gift: the ceremony ==== */
+.flower-recipient{position:relative;overflow:hidden;min-height:100vh;background:
+  radial-gradient(90% 60% at 50% 108%,#3a2a16 0%,transparent 55%),
+  radial-gradient(120% 90% at 50% -10%,#141b3d 0%,#0a0e24 45%,#070f29 100%);}
+.flower-recipient .flower-recipient-shell{position:relative;z-index:2;}
+.fg-glow{position:absolute;left:50%;top:30%;width:560px;height:560px;transform:translate(-50%,-50%);border-radius:50%;pointer-events:none;z-index:1;
+  background:radial-gradient(circle,#d4a37326 0%,#d4a37310 35%,transparent 68%);}
+.fg-status{font-style:italic;color:rgb(var(--muted));margin-top:60px;}
+.fg-title{font-size:clamp(34px,6vw,48px);margin:30px 0 6px;text-shadow:0 2px 18px #000;}
+.fg-sub{font-family:Lora,Georgia,serif;font-style:italic;font-size:14px;color:rgb(var(--muted));margin-bottom:8px;}
+.fg-card{margin-top:34px;background:rgb(var(--card) / .55);border:1px solid rgb(var(--hairline));border-radius:18px;padding:30px 24px;backdrop-filter:blur(4px);}
+.fg-stage{position:relative;margin-top:10px;}
+.fg-parcel{position:relative;padding:26px 0 8px;}
+.flower-opening img{transition:transform 1.7s cubic-bezier(.2,.7,.2,1);filter:drop-shadow(0 22px 30px #000a);}
+.flower-opening.is-open img{transform:rotate(-4deg) scale(1.09) translateY(-14px);animation:fgFloat 5.5s ease-in-out 1.8s infinite;}
+@keyframes fgFloat{0%,100%{transform:rotate(-4deg) scale(1.09) translateY(-14px);}50%{transform:rotate(-3deg) scale(1.1) translateY(-24px);}}
+.fg-seal{position:absolute;left:50%;top:16px;transform:translateX(-50%);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 35% 30%,#c9503f,#8e2f24 60%,#6d1f18);box-shadow:0 4px 12px #0009,inset 0 2px 4px #ffffff2e;}
+.fg-seal-mark{color:#f3d9b0;font-size:17px;text-shadow:0 1px 2px #0007;}
+.fg-open-hint{display:inline-block;border-bottom:1px solid #a98a5566;font-size:12.5px;padding:8px 0;margin-top:16px;color:#d8bd93;font-family:Lora,Georgia,serif;letter-spacing:.02em;}
+.fg-petals{position:absolute;left:50%;top:38%;pointer-events:none;}
+.fg-petals i{position:absolute;border-radius:60% 40% 55% 45%;background:radial-gradient(circle at 35% 30%,#f2c9c0,#d98a80);opacity:0;animation:fgPetal 1.9s cubic-bezier(.2,.6,.3,1) var(--del) forwards;}
+@keyframes fgPetal{0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.4);}18%{opacity:.95;}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(1);}}
+.fg-letter{position:relative;border:1px solid #b78b4d66;box-shadow:0 18px 46px #0006,0 0 0 5px #fffaf01c;margin-top:14px;}
+.fg-letter-seal{position:absolute;top:-14px;left:50%;transform:translateX(-50%);width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;color:#f3d9b0;background:radial-gradient(circle at 35% 30%,#c9503f,#7a241b);box-shadow:0 3px 8px #0008;}
+.flower-recipient .flower-reveal{animation:flowerReveal 1.25s cubic-bezier(.22,.8,.26,1) .25s both;}
+@media(max-width:760px){}
+@media(prefers-reduced-motion:reduce){
+  .flower-opening img{transition:none;}
+  .flower-opening.is-open img{animation:none;}
+  .fg-petals{display:none;}
+  .flower-recipient .flower-reveal{animation:none;}
+}
