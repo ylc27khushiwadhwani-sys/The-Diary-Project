@@ -99,6 +99,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 until you ask to read them. */}
             {todaysShelf.length > 0 && (
               <section className="mb-12 reading-firefly-scene">
+                <h1 className="reading-invitation">Wander through the words we couldn't send.</h1>
                 <div className="book-fireflies" aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i} style={{left:`${[2,96,18,80,8,93,38,66][i]}%`,top:`${[15,12,1,3,86,80,96,93][i]}%`,animationDelay:`${-i*1.3}s`,animationDuration:`${7+i%3*2}s`}} />)}</div>
                 {readingOpen ? (
                   /* every letter out of its envelope, four across the view
