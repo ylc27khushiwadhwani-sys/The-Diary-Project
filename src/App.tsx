@@ -52,8 +52,9 @@ export const App: React.FC = () => {
   const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
 
   // After entering, the two doors come first; the rooms wait behind them.
-  // The brand leads back to the landing page, even once inside.
-  const [showLanding, setShowLanding] = useState(false);
+  // The landing is the first page on every visit, signed in or not; the
+  // brand leads back to it. "Step inside" enters the rooms.
+  const [showLanding, setShowLanding] = useState(true);
   const [postboxUnseen, setPostboxUnseen] = useState(0);
 
   useEffect(() => {
