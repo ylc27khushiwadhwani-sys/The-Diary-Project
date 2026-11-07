@@ -84,6 +84,7 @@ export default {
         cormorant: ['"Cormorant Garamond"', 'serif'],
         script: ['"Alex Brush"', 'cursive'],
         hand: ['"Great Vibes"', 'cursive'],
+        garden: ['"Gloria Hallelujah"', 'cursive'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
       boxShadow: {

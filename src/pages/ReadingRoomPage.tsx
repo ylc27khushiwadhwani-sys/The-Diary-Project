@@ -44,6 +44,8 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [respondingNote, setRespondingNote] = useState<Note | null>(null);
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  // The shelf greets closed; "Read the letters" opens the books.
+  const [readingOpen, setReadingOpen] = useState(false);
 
   // Letters you can actually open today (date-sealed ones are still waiting)
   const readable = useMemo(
@@ -83,25 +85,44 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
           </div>
         ) : (
           <>
-            {/* A small shelf to wander - not the whole library */}
+            {/* The shelf is the first thing you see; the books stay closed
+                until you ask to read them. */}
             {todaysShelf.length > 0 && (
               <section className="mb-12">
-                <p className="text-center font-body text-xs text-muted italic mb-4">
-                  A few spines resting on the shelf. Touch a book to unroll its
-                  letter.
-                </p>
-                <div className="relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
+                <div
+                  className={`shelf-stage relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto ${
+                    readingOpen ? "books-open" : "books-closed"
+                  }`}
+                >
                   <div className="relative flex items-end justify-center gap-[3px] min-h-[136px] pb-1">
                     {todaysShelf.map((note, idx) => (
                       <BookItem
                         key={note.id}
                         note={note}
                         index={idx}
-                        onOpen={(opened) => setSelectedNote(opened)}
+                        onOpen={(opened) =>
+                          readingOpen && setSelectedNote(opened)
+                        }
                       />
                     ))}
                   </div>
                   <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
+                </div>
+                <div className="text-center mt-6">
+                  {readingOpen ? (
+                    <p className="font-body text-xs text-muted italic">
+                      The books are open. Touch one to read its letter.
+                    </p>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setReadingOpen(true)}
+                      className="inline-flex items-center gap-2 rounded-full bg-wax-crimson hover:bg-wax-crimsonBright px-8 py-3.5 font-serif text-base text-amber-50 font-semibold shadow-candle border border-red-500/30 transition hover:-translate-y-0.5 cursor-pointer"
+                    >
+                      <BookOpen className="w-4 h-4" />
+                      <span>Read the letters</span>
+                    </button>
+                  )}
                 </div>
               </section>
             )}

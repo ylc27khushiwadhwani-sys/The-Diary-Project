@@ -49,8 +49,8 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
               <span className="door-name">The Reading Room</span>
             </span>
             <span className="door-desc">
-              Sit with words someone else couldn't send. The Librarian left one
-              out for you, still sealed.
+              Sit with words someone else couldn't send. The shelf is yours to
+              wander.
             </span>
           </motion.button>
 

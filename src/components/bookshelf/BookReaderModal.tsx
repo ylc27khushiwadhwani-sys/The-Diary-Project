@@ -138,10 +138,11 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
 
         {/* Modal container with perspective for flip */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 25 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 25 }}
-          transition={{ type: "spring", damping: 26, stiffness: 280 }}
+          initial={{ opacity: 0, rotateY: -72, y: 18 }}
+          animate={{ opacity: 1, rotateY: 0, y: 0 }}
+          exit={{ opacity: 0, rotateY: -72, y: 18 }}
+          transition={{ type: "spring", damping: 24, stiffness: 220 }}
+          style={{ transformOrigin: "left center" }}
           className="relative z-10 w-full min-w-0 max-w-2xl my-auto text-left perspective-1000"
           onClick={(e) => e.stopPropagation()}
         >
@@ -291,7 +292,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                         className={`text-wood-950 whitespace-pre-wrap break-words select-text mb-6 ${
                           handwritingFont
                             ? "font-serif text-[1.05rem] sm:text-xl font-normal leading-[1.85] text-[#2a2118]"
-                            : "font-hand text-2xl sm:text-[1.85rem] font-normal leading-[1.85]"
+                            : "font-garden text-xl sm:text-2xl font-normal leading-[1.9]"
                         }`}
                       >
                         {pages[pageIndex]}

@@ -2303,3 +2303,41 @@ html.light .coffee-note {
 }
 html.light .memory-line { color: #655026; }
 html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
+
+/* --- Reading Room shelf: closed until invited, then the books open ------- */
+/* Closed: spines wait quietly, slightly dimmed, not touchable. */
+.shelf-stage.books-closed .group {
+  pointer-events: none;
+  filter: saturate(0.82) brightness(0.9);
+}
+/* Opening: each book swings a little, like a cover cracked open, staggered
+   along the shelf. The inline 3D-tilt transform resumes afterwards. */
+@keyframes bookOpen {
+  0% { transform: rotateY(0deg) translateY(0); }
+  35% { transform: rotateY(-26deg) translateY(-5px); }
+  70% { transform: rotateY(7deg) translateY(-1px); }
+  100% { transform: rotateY(0deg) translateY(0); }
+}
+.shelf-stage.books-open .group > div[role="button"] {
+  transform-origin: left center;
+  animation: bookOpen 0.8s cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.shelf-stage.books-open .group:nth-child(2) > div[role="button"] { animation-delay: 0.08s; }
+.shelf-stage.books-open .group:nth-child(3) > div[role="button"] { animation-delay: 0.16s; }
+.shelf-stage.books-open .group:nth-child(4) > div[role="button"] { animation-delay: 0.24s; }
+.shelf-stage.books-open .group:nth-child(5) > div[role="button"] { animation-delay: 0.32s; }
+.shelf-stage.books-open .group:nth-child(6) > div[role="button"] { animation-delay: 0.4s; }
+.shelf-stage.books-open .group:nth-child(7) > div[role="button"] { animation-delay: 0.48s; }
+@media (prefers-reduced-motion: reduce) {
+  .shelf-stage.books-open .group > div[role="button"] { animation: none; }
+}
+
+/* Stronger garden air in daylight mode */
+html.light body {
+  background-image:
+    linear-gradient(to right, rgba(122, 96, 56, 0.07) 0%, transparent 9%, transparent 91%, rgba(122, 96, 56, 0.07) 100%),
+    radial-gradient(ellipse at 50% 8%, rgba(255, 241, 196, 0.75) 0%, transparent 60%),
+    radial-gradient(ellipse at 8% 40%, rgba(140, 175, 108, 0.42) 0%, transparent 55%),
+    radial-gradient(ellipse at 92% 64%, rgba(140, 175, 108, 0.38) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 108%, rgba(190, 150, 96, 0.22) 0%, transparent 60%);
+}
