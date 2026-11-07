@@ -2738,3 +2738,8 @@ body[data-view=rooms]::after { top:144px; }
 @media(max-width:640px) {
   body[data-view=landing]::after { top:98px; right:3%; width:34px; height:34px; }
 }
+.botanical-flower { display:block; position:relative; flex-shrink:0; }
+.botanical-flower img { display:block; width:100%; height:100%; object-fit:contain; pointer-events:none; }
+.botanical-flower .botanical-day { display:none; }
+html.light .botanical-flower .botanical-day { display:block; }
+html.light .botanical-flower .botanical-night { display:none; }
