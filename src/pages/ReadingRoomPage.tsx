@@ -12,7 +12,6 @@ import { completionLine } from "../lib/librarian";
 import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 
-import { BookItem } from "../components/bookshelf/BookItem";
 import { OpenBookCard } from "../components/bookshelf/OpenBookCard";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
@@ -47,7 +46,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   // The shelf greets closed; "Read the letters" opens the envelopes.
-  const [readingOpen, setReadingOpen] = useState(true);
+  const [readingOpen, setReadingOpen] = useState(false);
 
   // Letters you can actually open today (date-sealed ones are still waiting)
   const readable = useMemo(
@@ -99,12 +98,13 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
             {/* The shelf is the first thing you see; the books stay closed
                 until you ask to read them. */}
             {todaysShelf.length > 0 && (
-              <section className="mb-12">
+              <section className="mb-12 reading-firefly-scene">
+                <div className="book-fireflies" aria-hidden="true">{Array.from({length:8},(_,i)=><i key={i} style={{left:`${[2,96,18,80,8,93,38,66][i]}%`,top:`${[15,12,1,3,86,80,96,93][i]}%`,animationDelay:`${-i*1.3}s`,animationDuration:`${7+i%3*2}s`}} />)}</div>
                 {readingOpen ? (
                   /* every letter out of its envelope, four across the view
                      (two by two on phones) - her gardenletters reference */
                   <div className="reading-books-stage">
-                    <div className="reading-books-row">
+                    <div className="reading-books-row reading-books-unfold">
                       {todaysShelf.map((note) => (
                         <OpenBookCard
                           key={note.id}
@@ -124,15 +124,10 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                   </div>
                 ) : (
                   <>
-                    <div className="shelf-stage books-closed relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
+                    <div className="reading-closed-shelf shelf-stage books-closed relative rounded-xl wood-panel border border-hairline px-4 pt-8 pb-0 shadow-[0_14px_34px_rgba(0,0,0,0.85)] max-w-2xl mx-auto">
                       <div className="relative flex flex-wrap items-end justify-center gap-[3px] min-h-[136px] pb-1">
                         {todaysShelf.map((note, idx) => (
-                          <BookItem
-                            key={note.id}
-                            note={note}
-                            index={idx}
-                            onOpen={() => {}}
-                          />
+                          <button type="button" className={`reading-closed-book binding-${idx}`} key={note.id} onClick={()=>setReadingOpen(true)} aria-label={`Open shelf: ${note.title||'Unsent letter'}`}><span className="closed-book-ornament">✧</span><span>{note.title||'An unsent letter'}</span><small>{note.profiles?.pen_name||'Anonymous'}</small><span className="closed-book-ornament">❧</span></button>
                         ))}
                       </div>
                       <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
@@ -144,7 +139,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                         className="inline-flex items-center gap-2 rounded-full bg-wax-crimson hover:bg-wax-crimsonBright px-8 py-3.5 font-serif text-base text-amber-50 font-semibold shadow-candle border border-red-500/30 transition hover:-translate-y-0.5 cursor-pointer"
                       >
                         <BookOpen className="w-4 h-4" />
-                        <span>Read the letters</span>
+                        <span>Read letters</span>
                       </button>
                     </div>
                   </>

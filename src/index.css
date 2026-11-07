@@ -2895,3 +2895,20 @@ html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#e
  .lp-coffee .coffee-btn b { font-size:1.5rem; }
 }
 @media(prefers-reduced-motion:reduce) { .landing-garden-stem,.landing-butterfly,.butterfly-left,.butterfly-right { animation:none !important; } }
+
+.reading-firefly-scene { position:relative; padding:12px 0; }
+.book-fireflies { position:absolute; inset:-12px; pointer-events:none; z-index:4; }
+.book-fireflies i { position:absolute; width:5px; height:5px; border-radius:50%; background:#ffe8a0; box-shadow:0 0 5px 2px #e7bf6680,0 0 13px 4px #f4cf402e; animation:book-firefly-flight 9s ease-in-out infinite; }
+@keyframes book-firefly-flight { 0%,100% {transform:translate(0,0);opacity:.35} 25% {transform:translate(12px,-14px);opacity:1} 55% {transform:translate(-9px,-32px);opacity:.6} 80% {transform:translate(-15px,-8px);opacity:1} }
+.reading-closed-shelf { max-width:720px; padding-top:40px; }
+.reading-closed-shelf>div:first-child { gap:16px; padding-bottom:0; }
+.reading-closed-book { position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:13px; width:29%; min-height:240px; padding:22px 20px; color:#e9cea0; background:linear-gradient(100deg,#35151a 0 7%,#6b2931 8%,#4b1922 13%,#42131c 94%,#1c1114 97%); border:1px solid #9e7253; border-radius:4px 10px 10px 3px; box-shadow:inset 0 0 0 7px #3b151b,inset 0 0 0 8px #b1834b70,4px 0 0 #ddc8a2,7px 0 0 #382719,0 7px 12px #0006; font:1.3rem/1.25 'Cormorant Garamond',serif; text-align:center; transition:transform .3s; }
+.reading-closed-book:hover {transform:translateY(-7px) rotate(-1deg)}
+.reading-closed-book.binding-1 { background:linear-gradient(100deg,#17291e 0 7%,#416146 8%,#244332 13%,#1c3228 94%,#101c16 97%); box-shadow:inset 0 0 0 7px #223e2e,inset 0 0 0 8px #b1834b70,4px 0 0 #ddc8a2,7px 0 0 #382719,0 7px 12px #0006; min-height:260px; }
+.reading-closed-book.binding-2 {background:linear-gradient(100deg,#132239 0 7%,#324c6a 8%,#223551 13%,#172940 94%,#0c1729 97%);box-shadow:inset 0 0 0 7px #223551,inset 0 0 0 8px #b1834b70,4px 0 0 #ddc8a2,7px 0 0 #382719,0 7px 12px #0006; }
+.reading-closed-book small {font-size:.8rem;font-style:italic;opacity:.8}
+.closed-book-ornament {font-size:1.6rem;color:#d6ad6b}
+.reading-books-unfold {animation:reading-unfold .8s ease both; transform-origin:center bottom;}
+@keyframes reading-unfold {from {opacity:0;transform:perspective(1000px) rotateX(12deg) scale(.96)} to {opacity:1;transform:none}}
+@media(max-width:640px) {.reading-closed-shelf {padding:24px 10px 0}.reading-closed-shelf>div:first-child {gap:10px}.reading-closed-book {width:29%;min-height:190px;padding:16px 10px;font-size:1rem;gap:8px}.reading-closed-book.binding-1 {min-height:210px}.reading-closed-book small {font-size:.65rem}.book-fireflies {inset:-4px}.book-fireflies i {width:4px;height:4px}}
+@media(prefers-reduced-motion:reduce) {.book-fireflies i,.reading-books-unfold {animation:none !important}.book-fireflies i {opacity:.7}}
