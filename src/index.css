@@ -2715,3 +2715,7 @@ html.light .gc-fonts button[aria-pressed=true],html.light .gc-flowers button[ari
   body[data-view=rooms]::after { top:150px; right:8px; width:38px; height:38px; }
   .gc-flowers button { width:calc(33.333% - 8px); }
 }
+@media(max-width:640px) {
+  .env-excerpt { -webkit-line-clamp:3; }
+  .env-sign { margin-top:4px; font-size:9px; }
+}
