@@ -2728,3 +2728,10 @@ body[data-view=rooms]::after { top:144px; }
   .env-excerpt { -webkit-line-clamp:3; }
   body[data-view=rooms]::after { top:150px; }
 }
+.gc-full-preview { width:100%; padding:28px; border-radius:4px; background:#faf6eb; color:#423a30; box-shadow:0 8px 28px #0002; font-size:21px; line-height:1.9; overflow-wrap:anywhere; }
+.gc-full-preview h2 { font:inherit; margin-bottom:22px; }
+.gc-full-preview p { white-space:pre-wrap; }
+.gc-full-preview footer { text-align:right; margin-top:24px; }
+.gc-preview .env-excerpt { font-size:16px; -webkit-line-clamp:4; }
+.gc-preview .env-sign { font-size:12px; }
+@media(max-width:640px) { .gc-full-preview { padding:22px; font-size:21px; } }

@@ -206,7 +206,13 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         <fieldset><legend>Handwriting</legend><p>The handwriting on your letter.</p>
           <div className="gc-fonts">{LETTER_FONTS.map((font, index) => <button type="button" key={font.name} aria-label={font.name} aria-pressed={letterStyle.font === index} onClick={() => setLetterStyle({...letterStyle, font: index})} style={{fontFamily: font.family}}>A little of what my heart carries...</button>)}</div>
         </fieldset>
-      </div> : <div className="gc-preview"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Your full letter is kept intact.</p></div>}
+      </div> : <div className="gc-preview"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Your full letter is kept intact.</p>
+        <article className="gc-full-preview" aria-label="Full letter preview" style={{fontFamily: LETTER_FONTS[letterStyle.font].family}}>
+          <h2>To: {title || "whoever needs this"}</h2>
+          <p>{content || "Your words will appear here..."}</p>
+          <footer>- {letterStyle.from || "anonymous"}</footer>
+        </article>
+      </div>}
       <details className="gc-options"><summary>Shelf, privacy and sharing options</summary>
       {/* Desk Action Topbar */}
       <div className="bg-wood-900/90 border border-amber-900/40 rounded-t-2xl p-4 flex flex-wrap items-center justify-between gap-3 backdrop-blur-md shadow-2xl">
