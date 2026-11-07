@@ -56,6 +56,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
       {/* one promise, one door */}
       <main className="lp-center">
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          className="lp-pill"
+        >
+          An anonymous library of unsent letters
+        </motion.span>
+
         <motion.h1
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -63,34 +72,54 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           className="lp-headline"
         >
           <InkText
-            text="Everyone has one letter"
+            text="Paper keeps what"
             startDelay={0.4}
             perLetter={0.04}
           />
           <br />
           <InkText
-            text="they "
-            startDelay={1.5}
+            text="the heart "
+            startDelay={1.3}
             perLetter={0.04}
           />
           <span className="lp-highlight">
-            <InkText text="never sent." startDelay={1.8} perLetter={0.045} />
+            <InkText text="can't" startDelay={1.7} perLetter={0.05} />
           </span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 2.3, duration: 0.9 }}
+          transition={{ delay: 2.1, duration: 0.9 }}
           className="lp-quiet"
         >
-          This is where they live.
+          Say what you couldn't say. Write the letter you'll never send, keep
+          it safe under a pen name, or leave it on the shelf for someone who
+          needs it - and read the words others couldn't send either.
         </motion.p>
+
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 2.5, duration: 0.7 }}
+          className="lp-cta"
+        >
+          <button type="button" onClick={onGuest} className="lp-cta-primary">
+            Step inside
+          </button>
+          <button
+            type="button"
+            onClick={() => onAuth("signin")}
+            className="lp-cta-ghost"
+          >
+            I have a library card
+          </button>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 2.8, duration: 0.8 }}
+          transition={{ delay: 3.0, duration: 0.8 }}
           className="lp-letter-stage"
         >
           <SelfWritingLetter />
@@ -105,10 +134,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 3.5, duration: 0.8 }}
+          transition={{ delay: 3.4, duration: 0.8 }}
           className="lp-honest"
         >
-          <p>An anonymous library of unsent letters. No names. No feeds. Free to read, free to write.</p>
+          <p>No names. No feeds. Free to read, free to write.</p>
           <RoomMemory />
         </motion.div>
       </main>

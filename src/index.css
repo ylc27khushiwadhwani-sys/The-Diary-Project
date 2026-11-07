@@ -36,7 +36,13 @@
     background-attachment: fixed;
   }
 
-  /* Stars, twinkling, behind the content and never receiving taps. */
+  /* The reader as an open book: two leaves with a shadowed centre spine. */
+@media (min-width: 640px) {
+  .book-leaf-left { box-shadow: inset -28px 0 32px -28px rgba(56, 36, 16, 0.55); }
+  .book-leaf-right { box-shadow: inset 28px 0 32px -28px rgba(56, 36, 16, 0.55); }
+}
+
+/* Stars, twinkling, behind the content and never receiving taps. */
   body::before {
     content: "";
     position: fixed;
@@ -59,8 +65,8 @@
   body::after {
     content: "";
     position: fixed;
-    top: 112px;
-    right: 8%;
+    top: 128px;
+    right: 19%;
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -1525,13 +1531,73 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 
 /* ===== Landing: the confessional + the self-writing letter ===== */
 .lp-quiet {
-  margin: 14px 0 0;
+  margin: 16px auto 0;
+  max-width: 54ch;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-style: italic;
-  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  line-height: 1.55;
   color: #cbbfa8;
   letter-spacing: 0.01em;
 }
+/* the small pill above the headline (godownthisrabbithole.me reference) */
+.lp-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 16px;
+  margin: 0 auto 6px;
+  border: 1px solid rgba(212, 163, 115, 0.4);
+  border-radius: 999px;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d4a373;
+}
+html.light .lp-pill {
+  border-color: rgba(133, 100, 58, 0.45);
+  color: #8c5929;
+}
+/* the centre call-to-action pair under the subline */
+.lp-cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 26px;
+}
+.lp-cta-primary {
+  padding: 13px 30px;
+  border-radius: 999px;
+  border: 1px solid rgba(226, 177, 122, 0.6);
+  background: linear-gradient(180deg, #e2b17a, #c99a5f);
+  color: #241608;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s, box-shadow 0.2s;
+}
+.lp-cta-primary:hover { transform: translateY(-1px); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.5); }
+.lp-cta-ghost {
+  padding: 13px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(212, 163, 115, 0.45);
+  background: transparent;
+  color: #e8dcc4;
+  font-family: "Manrope", system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lp-cta-ghost:hover { border-color: rgba(226, 177, 122, 0.8); color: #f3ece0; }
+html.light .lp-cta-ghost { border-color: rgba(133, 100, 58, 0.45); color: #6f5a33; }
+html.light .lp-cta-ghost:hover { border-color: rgba(133, 100, 58, 0.75); color: #3d2f1e; }
 
 .swl-card {
   position: relative;

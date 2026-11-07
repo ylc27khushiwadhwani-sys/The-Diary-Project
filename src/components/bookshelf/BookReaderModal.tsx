@@ -143,7 +143,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
           exit={{ opacity: 0, rotateY: -72, y: 18 }}
           transition={{ type: "spring", damping: 24, stiffness: 220 }}
           style={{ transformOrigin: "left center" }}
-          className="relative z-10 w-full min-w-0 max-w-2xl my-auto text-left perspective-1000"
+          className="relative z-10 w-full min-w-0 max-w-2xl sm:max-w-4xl my-auto text-left perspective-1000"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header */}
@@ -214,31 +214,72 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
               </button>
             </div>
           ) : (
-            // Paginated parchment letter, turned page by page
+            // An open book: title page on the left leaf, letter pages on
+            // the right, turned page by page. On phones only the reading
+            // leaf shows, with a compact header.
             <article
               key={note.id}
-              className="letter-frame parchment-sheet letter-deckle letter-unfold reader-ivory text-wood-950 relative flex flex-col max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
+              className="letter-frame parchment-sheet letter-deckle letter-unfold reader-ivory text-wood-950 relative flex flex-col sm:flex-row max-h-[calc(100vh-5rem)] max-h-[calc(100dvh-5rem)] overflow-hidden"
             >
               <div
                 className="letter-liner"
                 key={`liner-${note.id}`}
                 aria-hidden="true"
               />
-              <div
-                ref={scrollRef}
-                className="reader-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain overflow-x-hidden px-7 sm:px-16 pt-10 sm:pt-14 pb-6"
-              >
-                {/* Header bar */}
-                <div className="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-amber-900/20">
-                  <div className="flex items-center gap-3">
-                    <div>
-                      <span className="label-caps block text-[10px] text-wood-700">
-                        The Paper Vault
-                      </span>
-                      <span className="font-serif text-2xl font-normal text-wood-950 italic leading-none">
-                        {authorPenName}
-                      </span>
-                    </div>
+              {/* Left leaf: the title page */}
+              <div className="book-leaf-left relative z-10 hidden sm:flex sm:w-[42%] flex-none flex-col px-9 lg:px-12 pt-12 pb-8 border-r border-amber-900/15">
+                <span className="label-caps block text-[10px] text-wood-700 mb-3">
+                  The Paper Vault
+                </span>
+                {note.title && (
+                  <h2 className="font-serif text-3xl font-bold text-wood-950 mb-3 tracking-tight leading-snug">
+                    {note.title}
+                  </h2>
+                )}
+                <span className="font-serif text-xl italic text-wood-900 leading-snug">
+                  {authorPenName}
+                </span>
+                <span className="text-xs font-serif text-wood-700 mt-1.5">
+                  {formattedDate}
+                </span>
+                {prompt && (
+                  <div className="mt-5">
+                    <span className="inline-flex items-center gap-1.5 text-xs font-serif italic text-amber-950 bg-amber-800/10 border border-amber-800/20 px-3 py-1 rounded-full">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-800" />
+                      <span>From the shelf: "{prompt.title}"</span>
+                    </span>
+                  </div>
+                )}
+                <div className="mt-auto pt-8 flex items-end justify-between">
+                  <svg width="84" height="34" viewBox="0 0 84 34" aria-hidden="true" className="text-amber-800/50">
+                    <path d="M2 17 C 16 3, 30 3, 42 17 C 54 31, 68 31, 82 17" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                    <circle cx="42" cy="17" r="3" fill="currentColor" opacity="0.5" />
+                  </svg>
+                  <button
+                    type="button"
+                    onClick={() => setHandwritingFont(!handwritingFont)}
+                    className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
+                    title={
+                      handwritingFont
+                        ? "Switch to Quill Handwriting"
+                        : "Switch to Classic Book Print"
+                    }
+                  >
+                    <Type className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              {/* Right leaf: the reading page */}
+              <div className="book-leaf-right relative z-10 flex-1 min-w-0 min-h-0 flex flex-col">
+                {/* compact header on phones, where the title page is hidden */}
+                <div className="sm:hidden flex items-center justify-between gap-2 px-6 pt-6 pb-3 border-b border-amber-900/20">
+                  <div>
+                    <span className="label-caps block text-[10px] text-wood-700">
+                      The Paper Vault
+                    </span>
+                    <span className="font-serif text-lg italic text-wood-950 leading-none">
+                      {authorPenName}
+                    </span>
                   </div>
                   <div className="flex items-center gap-3">
                     <span className="text-xs font-serif text-wood-700">
@@ -258,8 +299,14 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                     </button>
                   </div>
                 </div>
+              <div
+                ref={scrollRef}
+                className="reader-scroll flex-1 min-h-0 overflow-y-auto overscroll-contain overflow-x-hidden px-7 sm:px-12 pt-8 sm:pt-12 pb-6"
+              >
 
-                {/* Prompt badge */}
+                {/* On phones the title page leaf is hidden, so the badge
+                    and title repeat here */}
+                <div className="sm:hidden">
                 {prompt && (
                   <div className="mb-4">
                     <span className="inline-flex items-center gap-1.5 text-xs font-serif italic text-amber-950 bg-amber-800/10 border border-amber-800/20 px-3 py-1 rounded-full">
@@ -269,12 +316,12 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                   </div>
                 )}
 
-                {/* Title */}
                 {note.title && (
-                  <h2 className="font-serif text-2xl sm:text-3xl font-bold text-wood-950 mb-4 tracking-tight leading-snug">
+                  <h2 className="font-serif text-2xl font-bold text-wood-950 mb-4 tracking-tight leading-snug">
                     {note.title}
                   </h2>
                 )}
+                </div>
 
                 {/* Page content with flip animation */}
                 <div className="flex-1 flex flex-col relative min-h-[200px]">
@@ -428,6 +475,7 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                     Next →
                   </button>
                 )}
+              </div>
               </div>
             </article>
           )}
