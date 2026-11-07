@@ -2965,3 +2965,8 @@ html.light .landing-garden-stem img {filter:none;}
 .reading-invitation{text-align:center;font:italic clamp(25px,3vw,40px)/1.25 "Cormorant Garamond",Georgia,serif;color:rgb(var(--cream));margin:0 auto 32px;max-width:750px;}
 .lp-coffee{width:min(1050px,calc(100% - 48px));max-width:none;margin:30px auto 16px;}.lp-coffee .coffee-wrap{width:100%;}.lp-coffee .coffee-btn{width:100%;min-height:96px;padding:12px 30px;justify-content:center;gap:24px;border-radius:12px;}.lp-coffee .coffee-btn .coffee-saucer{width:68px;height:68px;}.lp-coffee .coffee-btn span{flex-direction:row;align-items:baseline;gap:14px;}.lp-coffee .coffee-note{margin:12px auto;text-align:center;}
 @media(max-width:640px){.lp-coffee{width:calc(100% - 32px);}.lp-coffee .coffee-btn{min-height:88px;padding:10px 15px;gap:14px;}.lp-coffee .coffee-btn span{flex-direction:column;gap:3px;}.lp-coffee .coffee-btn .coffee-saucer{width:58px;height:58px;}.lp-coffee .coffee-btn b{font-size:1.45rem;}.reading-invitation{font-size:27px;max-width:330px;margin-bottom:25px;}}
+
+/* Latest requested balance: taller flowers and about forty percent more. */
+.landing-flower-border{height:190px;}
+.landing-garden-stem{flex-basis:5%;margin:0 -.5%;}
+@media(max-width:640px){.landing-flower-border{height:136px;}.landing-garden-stem{flex-basis:9%;margin:0;max-height:136px;}.landing-garden-stem:nth-child(n+7){display:block;}.landing-garden-stem:nth-child(n+9){display:none;}}
