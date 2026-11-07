@@ -2476,16 +2476,16 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
    blooms stand clear of the sheet, tall enough to show above the flap */
 .env-flowers {
   position: absolute;
-  bottom: 36%;
+  bottom: 40%;
   left: 50%;
-  width: 118%;
+  width: 104%;
   transform: translateX(-50%);
   transform-origin: bottom center;
   z-index: 0;
   filter: saturate(1.05);
 }
-.env-flowers .flower-spray { transform: scale(1.5); transform-origin: bottom center; }
-.env-flowers .gf-cluster { justify-content: center; gap: 10px; }
+.env-flowers .flower-spray { transform: scale(2.05); transform-origin: bottom center; }
+.env-flowers .gf-cluster { justify-content: space-between; gap: 10px; }
 .env-envelope {
   position: absolute;
   inset: 0;
@@ -2590,7 +2590,7 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
     gap: 6px 14px;
     padding: 0 18px;
   }
-  .env-flowers .flower-spray { transform: scale(0.78); }
+  .env-flowers .flower-spray { transform: scale(1.1); }
   .env-excerpt { font-size: 11px; -webkit-line-clamp: 6; }
   .env-sign { font-size: 10px; }
   .env-to { font-size: 12px; }
