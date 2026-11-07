@@ -200,7 +200,8 @@ describe("LibraryPage tag entry persistence in demo mode (R6)", () => {
     const stored = JSON.parse(
       localStorage.getItem(NOTES_KEY) ?? "[]",
     ) as Note[];
-    expect(stored[0].tags).toEqual(["hope"]);
+    expect(stored[0].tags).toEqual(expect.arrayContaining(["hope"]));
+    expect(stored[0].tags?.some(t => t.startsWith("letterstyle:"))).toBe(true);
 
     // "Reload": a fresh mount must read the tag back from localStorage.
     first.unmount();

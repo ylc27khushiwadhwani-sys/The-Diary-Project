@@ -40,4 +40,4 @@ export const withUnsealTag = (tags: string[], isoDate: string | null): string[] 
 };
 
 export const visibleTags = (tags?: string[] | null): string[] =>
-  (tags ?? []).filter((t) => !t.toLowerCase().startsWith(UNSEAL_PREFIX));
+  (tags ?? []).filter((t) => !t.toLowerCase().startsWith(UNSEAL_PREFIX) && !t.startsWith('letterstyle:'));

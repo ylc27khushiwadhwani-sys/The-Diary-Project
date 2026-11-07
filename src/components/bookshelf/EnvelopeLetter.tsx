@@ -1,5 +1,6 @@
 import React from "react";
 import { Note } from "../../types/database";
+import { getLetterStyle, LETTER_FONTS } from "../../utils/letterStyle";
 import { FlowerSpray } from "../common/GardenFlowers";
 
 /**
@@ -41,7 +42,9 @@ export const EnvelopeLetter: React.FC<EnvelopeLetterProps> = ({
   index,
   onOpen,
 }) => {
-  const penName = note.profiles?.pen_name?.trim() || "anonymous";
+  const style = getLetterStyle(note.tags);
+  const styled = note.tags?.some(t => t.startsWith("letterstyle:"));
+  const penName = styled ? style.from || "anonymous" : note.profiles?.pen_name?.trim() || "anonymous";
   const title = note.title?.trim();
   return (
     <button
@@ -52,7 +55,7 @@ export const EnvelopeLetter: React.FC<EnvelopeLetterProps> = ({
       aria-label={`Read "${title || "Untitled letter"}" by ${penName}`}
     >
       <span className="env-flowers" aria-hidden="true">
-        <FlowerSpray seed={index} />
+        {(!styled || style.flowers !== -1) && <FlowerSpray seed={styled ? style.flowers : index} />}
       </span>
       <span className="env-envelope">
         {/* the opened flap, folded back behind the sheet */}
@@ -60,7 +63,7 @@ export const EnvelopeLetter: React.FC<EnvelopeLetterProps> = ({
         {/* the risen sheet, its foot tucked to a point inside the envelope */}
         <span
           className="env-paper"
-          style={{ fontFamily: HAND_FONTS[index % HAND_FONTS.length] }}
+          style={{ fontFamily: styled ? LETTER_FONTS[style.font].family : HAND_FONTS[index % HAND_FONTS.length] }}
         >
           <span className="env-excerpt">{excerptOf(note.content)}</span>
           <span className="env-sign">- {penName}</span>

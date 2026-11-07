@@ -4,17 +4,16 @@ import {
   Save,
   Globe,
   EyeOff,
-  Sparkles,
   Folder,
-  Type,
-  Feather,
 } from "lucide-react";
 import { Note, Shelf } from "../../types/database";
 import { LockNoteToggle } from "./LockNoteToggle";
 import { ShareModal } from "../library/ShareModal";
 import { screenNoteContent } from "../../services/moderation";
 import { HelplineModal } from "../safety/HelplineModal";
-import { WaxSeal } from "../library/WaxSeal";
+import { EnvelopeLetter } from "../bookshelf/EnvelopeLetter";
+import { FlowerSpray } from "../common/GardenFlowers";
+import { getLetterStyle, withLetterStyle, LETTER_FONTS } from "../../utils/letterStyle";
 import {
   getUnsealDate,
   visibleTags,
@@ -50,7 +49,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
   const [allowResponses, setAllowResponses] = useState(
     note?.allow_responses ?? true,
   );
-  const [handwritingFont, setHandwritingFont] = useState(false);
+  const [letterStyle, setLetterStyle] = useState(() => getLetterStyle(note?.tags));
+  const [composeTab, setComposeTab] = useState<"write" | "preview">("write");
   const [tags, setTags] = useState<string[]>(
     visibleTags(note?.tags).map((tag) => tag.toLowerCase()),
   );
@@ -110,7 +110,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     // Anything that would be public is screened first - Save is not a way
     // around the release check.
     if (isPublic && !futureSelf) {
-      const verdict = await screenNoteContent(content, title);
+      const verdict = await screenNoteContent(content, `${title} ${letterStyle.from}`);
       if (!verdict.allowed) {
         setSaving(false);
         setIsPublic(false);
@@ -131,7 +131,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         return;
       }
     }
-    const sealedTags = withUnsealTag(tags, unsealOn || null);
+    const sealedTags = withUnsealTag(withLetterStyle(tags, letterStyle), unsealOn || null);
     await onSave({
       id: note?.id,
       title: title.trim() || null,
@@ -162,7 +162,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       is_public: true,
       allow_responses: allowResponsesVal,
       prompt_id: note?.prompt_id || null,
-      tags: withUnsealTag(tags, unsealOn || null),
+      tags: withUnsealTag(withLetterStyle(tags, letterStyle), unsealOn || null),
       published_at: new Date().toISOString(),
     });
   };
@@ -178,12 +178,36 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
       passcode_hash: passcodeHash,
       is_public: false,
       allow_responses: allowResponses,
-      tags: withUnsealTag(tags, unsealOn || null),
+      tags: withUnsealTag(withLetterStyle(tags, letterStyle), unsealOn || null),
     });
   };
 
   return (
-    <div className="max-w-4xl mx-auto py-4 px-2 sm:px-4 animate-fade-in">
+    <div className="garden-composer animate-fade-in">
+      <button type="button" onClick={onClose} className="gc-back">← Back to your Study</button>
+      <div className="gc-tabs" role="tablist" aria-label="Letter view">
+        <button type="button" role="tab" aria-selected={composeTab === "write"} onClick={() => setComposeTab("write")}>✎ Write</button>
+        <button type="button" role="tab" aria-selected={composeTab === "preview"} onClick={() => setComposeTab("preview")}>◉ Preview</button>
+      </div>
+      {composeTab === "write" ? <div className="gc-fields">
+        <label htmlFor="letter-to">To</label>
+        <p>Who is this letter for?</p>
+        <input id="letter-to" value={title} onChange={e => setTitle(e.target.value)} placeholder={futureSelf ? "To the me who opens this..." : "A title for what remained unspoken..."} />
+        <label htmlFor="letter-from">From</label>
+        <p>Leave blank to sign anonymously. A pen name is welcome.</p>
+        <input id="letter-from" value={letterStyle.from} onChange={e => setLetterStyle({...letterStyle, from: e.target.value})} maxLength={80} placeholder="Your pen name (optional)" />
+        <label htmlFor="letter-message">Your message</label>
+        <p>What do you want to say?</p>
+        <textarea id="letter-message" value={content} onChange={e => setContent(e.target.value)} placeholder="Write what you have carried in silence. No judgment reaches this shelf..." style={{fontFamily: LETTER_FONTS[letterStyle.font].family}} />
+        <div className="gc-count">{content.length} characters</div>
+        <fieldset><legend>Flowers</legend><p>Choose the flowers that grow behind your envelope.</p>
+          <div className="gc-flowers">{[-1, 0, 1, 2, 3].map(seed => <button type="button" key={seed} aria-label={seed < 0 ? "No flowers" : `Flower bouquet ${seed + 1}`} aria-pressed={letterStyle.flowers === seed} onClick={() => setLetterStyle({...letterStyle, flowers: seed})}>{seed < 0 ? "None" : <FlowerSpray seed={seed} />}</button>)}</div>
+        </fieldset>
+        <fieldset><legend>Handwriting</legend><p>The handwriting on your letter.</p>
+          <div className="gc-fonts">{LETTER_FONTS.map((font, index) => <button type="button" key={font.name} aria-label={font.name} aria-pressed={letterStyle.font === index} onClick={() => setLetterStyle({...letterStyle, font: index})} style={{fontFamily: font.family}}>A little of what my heart carries...</button>)}</div>
+        </fieldset>
+      </div> : <div className="gc-preview"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Your full letter is kept intact.</p></div>}
+      <details className="gc-options"><summary>Shelf, privacy and sharing options</summary>
       {/* Desk Action Topbar */}
       <div className="bg-wood-900/90 border border-amber-900/40 rounded-t-2xl p-4 flex flex-wrap items-center justify-between gap-3 backdrop-blur-md shadow-2xl">
         <button
@@ -294,20 +318,6 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
             </button>
           )}
 
-          {/* Font Toggle */}
-          <button
-            type="button"
-            onClick={() => setHandwritingFont(!handwritingFont)}
-            className="p-1.5 bg-wood-950/80 border border-amber-800/40 text-amber-300 hover:text-amber-100 rounded-lg text-xs transition cursor-pointer"
-            title={
-              handwritingFont
-                ? "Switch to Quill Cursive"
-                : "Switch to Book Print"
-            }
-          >
-            <Type className="w-4 h-4" />
-          </button>
-
           {/* Save & Seal Button */}
           <button
             onClick={handleManualSave}
@@ -326,130 +336,20 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         </div>
       </div>
 
-      {/* The Scroll Parchment Writing Canvas */}
-      <div className="letter-frame parchment-sheet letter-deckle p-6 sm:p-10 md:p-12 pl-9 sm:pl-12 relative min-h-[580px] flex flex-col justify-between">
-        <div className="letter-ribbon" />
-        <div className="letter-stamps">
-          <span className="letter-stamp" />
-          <span className="letter-stamp stamp-green" />
-        </div>
-        <div className="letter-botanical" />
-
-        <div className="flex-1 flex flex-col">
-          {/* Letterhead Header with Wax Seal */}
-          <div className="flex items-center justify-between pb-4 mb-6 border-b border-amber-900/25">
-            <div className="flex items-center gap-3">
-              <WaxSeal
-                color={isLocked ? "crimson" : isPublic ? "gold" : "crimson"}
-                size="md"
-                icon={isLocked ? "lock" : "quill"}
-              />
-              <div>
-                <span className="font-serif text-[11px] tracking-widest uppercase text-wood-700 block font-bold">
-                  The Paper Vault
-                </span>
-                <span className="font-body text-xs italic text-wood-900">
-                  {futureSelf
-                    ? "A letter to your future self - sealed until the day you choose"
-                    : isLocked
-                      ? "Eyes-Only Confidential Letter"
-                      : isPublic
-                        ? "Archived for the Sanctuary"
-                        : "Private Library Parchment"}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-wood-700 text-xs font-serif">
-              <Feather className="w-4 h-4 text-amber-900" />
-              <span>Quill in Hand</span>
-            </div>
-          </div>
-
-          {note?.prompt_id && (
-            <div className="flex items-center gap-1.5 mb-5 px-3 py-1 bg-amber-900/10 text-wood-900 font-serif text-xs rounded-full border border-amber-900/20 self-start">
-              <Sparkles className="w-3.5 h-3.5 text-amber-800" />
-              <span>Prompt: {note.prompt_id}</span>
-            </div>
-          )}
-
-          {/* Title Input */}
-          <input
-            type="text"
-            placeholder={
-              futureSelf
-                ? "To the me who opens this..."
-                : "A title for what remained unspoken..."
-            }
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full font-serif text-2xl md:text-3xl font-bold text-wood-950 placeholder:text-wood-600/50 focus:outline-none mb-6 bg-transparent border-b border-amber-900/20 pb-2"
-          />
-
-          {/* Tag Chips */}
-          <div className="flex flex-wrap items-center gap-2 mb-6">
-            {tags.map((tag) => (
-              <span
-                key={tag}
-                className="flex items-center gap-1 px-2.5 py-1 bg-amber-900/15 border border-amber-800/30 rounded-full text-[11px] font-serif text-wood-800"
-              >
-                {tag}
-                <button
-                  type="button"
-                  aria-label={`Remove tag ${tag}`}
-                  onClick={() =>
-                    setTags((prev) => prev.filter((t) => t !== tag))
-                  }
-                  className="text-wood-600 hover:text-wax-crimson cursor-pointer"
-                >
-                  ×
-                </button>
-              </span>
-            ))}
-            <input
-              type="text"
-              placeholder="Add tags, comma or Enter to seal..."
-              value={tagDraft}
-              onChange={(e) => handleTagInput(e.target.value)}
-              onKeyDown={handleTagKeyDown}
-              aria-label="Add tags"
-              className="flex-1 min-w-[10rem] bg-transparent text-xs font-serif text-wood-950 placeholder:text-wood-600/60 focus:outline-none"
-            />
-          </div>
-
-          {/* Content TextArea */}
-          <textarea
-            placeholder="Write what you have carried in silence. No judgment reaches this shelf..."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className={`flex-1 w-full text-wood-950 placeholder:text-wood-600/50 focus:outline-none resize-none bg-transparent ${
-              handwritingFont
-                ? "font-body text-xl md:text-2xl leading-relaxed font-medium"
-                : "font-hand text-2xl md:text-3xl leading-[1.8] font-normal"
-            }`}
-          />
-        </div>
-
-        {screenNotice && (
-          <p
-            role="alert"
-            className="mt-3 rounded-lg border border-red-800/30 bg-red-900/10 px-3 py-2 text-center font-body text-xs text-red-900"
-          >
-            {screenNotice}
-          </p>
-        )}
-        <p className="mt-3 text-center font-body text-[11px] italic text-wood-600">
-          Letters released to the Grand Library are checked by automated rules
-          (not human review) before they appear in public.
-        </p>
-
-        {/* Bottom Scroll Roll */}
+      </details>
+      <div className="gc-tags">
+        {tags.map(tag => <button key={tag} type="button" aria-label={`Remove tag ${tag}`} onClick={() => setTags(prev => prev.filter(t => t !== tag))}><span>{tag}</span> ×</button>)}
+        <input aria-label="Add tags" placeholder="Add tags, comma or Enter to seal..." value={tagDraft} onChange={e => handleTagInput(e.target.value)} onKeyDown={handleTagKeyDown} />
       </div>
+      {screenNotice && <p role="alert" className="gc-notice">{screenNotice}</p>}
+      <p className="gc-disclosure">Public letters are checked by automated rules, not human review. Private letters stay private unless you choose to share them.</p>
+      <div className="gc-save"><button type="button" disabled={saving || !content.trim() || (futureSelf && !unsealOn)} onClick={handleManualSave}>{saving ? "Saving..." : futureSelf ? "Seal for the Future" : isPublic ? "Save changes" : "Save letter privately"}</button>
+      {!futureSelf && !isPublic && <button type="button" disabled={!content.trim() || isLocked} onClick={() => setIsShareModalOpen(true)}>Share to the Grand Library</button>}</div>
 
       {/* Sharing and Safety Modals */}
       <ShareModal
         isOpen={isShareModalOpen}
-        noteTitle={title}
+        noteTitle={`${title} ${letterStyle.from}`}
         noteContent={content}
         onSuccess={handleShareConfirmed}
         onSelfHarmFlagged={() => setIsHelplineOpen(true)}

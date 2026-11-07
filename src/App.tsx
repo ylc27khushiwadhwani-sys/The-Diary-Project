@@ -106,8 +106,8 @@ export const App: React.FC = () => {
         ) : (
           <main className="flex-1 relative z-10">
             <LandingPage
-              onAuth={user ? () => setShowLanding(false) : openAuth}
-              onGuest={user ? () => setShowLanding(false) : loginAsGuestDemo}
+              onAuth={user && !user.is_anonymous && user.email !== "writer@unsent.local" && user.email !== "anonymous@unsentlibrary.local" ? () => setShowLanding(false) : openAuth}
+              onGuest={async () => { if (!user) await loginAsGuestDemo(); setShowLanding(false); }}
             />
           </main>
         )}
