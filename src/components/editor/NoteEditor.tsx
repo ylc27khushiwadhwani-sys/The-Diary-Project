@@ -182,6 +182,14 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     });
   };
 
+  const letterPreview = (<aside className="gc-preview" aria-label="Live letter preview" aria-live="off"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Updates as you write. Your full letter is kept intact.</p>
+        <article className="gc-full-preview" aria-label="Full letter preview" style={{fontFamily: LETTER_FONTS[letterStyle.font].family}}>
+          <h2>To: {title || "whoever needs this"}</h2>
+          <p>{content || "Your words will appear here..."}</p>
+          <footer>- {letterStyle.from || "anonymous"}</footer>
+        </article>
+      </aside>);
+
   return (
     <div className="garden-composer animate-fade-in">
       <button type="button" onClick={onClose} className="gc-back">← Back to your Study</button>
@@ -189,6 +197,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         <button type="button" role="tab" aria-selected={composeTab === "write"} onClick={() => setComposeTab("write")}>✎ Write</button>
         <button type="button" role="tab" aria-selected={composeTab === "preview"} onClick={() => setComposeTab("preview")}>◉ Preview</button>
       </div>
+      <div className={`gc-compose-layout ${composeTab === "write" ? "is-writing" : "is-previewing"}`}>
+        {letterPreview}
       {composeTab === "write" ? <div className="gc-fields">
         <label htmlFor="letter-to">To</label>
         <p>Who is this letter for?</p>
@@ -206,13 +216,8 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
         <fieldset><legend>Handwriting</legend><p>The handwriting on your letter.</p>
           <div className="gc-fonts">{LETTER_FONTS.map((font, index) => <button type="button" key={font.name} aria-label={font.name} aria-pressed={letterStyle.font === index} onClick={() => setLetterStyle({...letterStyle, font: index})} style={{fontFamily: font.family}}>A little of what my heart carries...</button>)}</div>
         </fieldset>
-      </div> : <div className="gc-preview"><EnvelopeLetter note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} index={0} onOpen={() => {}} /><p>Preview of your envelope. Your full letter is kept intact.</p>
-        <article className="gc-full-preview" aria-label="Full letter preview" style={{fontFamily: LETTER_FONTS[letterStyle.font].family}}>
-          <h2>To: {title || "whoever needs this"}</h2>
-          <p>{content || "Your words will appear here..."}</p>
-          <footer>- {letterStyle.from || "anonymous"}</footer>
-        </article>
-      </div>}
+      </div> : null}
+      </div>
       <details className="gc-options"><summary>Shelf, privacy and sharing options</summary>
       {/* Desk Action Topbar */}
       <div className="bg-wood-900/90 border border-amber-900/40 rounded-t-2xl p-4 flex flex-wrap items-center justify-between gap-3 backdrop-blur-md shadow-2xl">
