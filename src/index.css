@@ -2743,3 +2743,11 @@ body[data-view=rooms]::after { top:144px; }
 .botanical-flower .botanical-day { display:none; }
 html.light .botanical-flower .botanical-day { display:block; }
 html.light .botanical-flower .botanical-night { display:none; }
+/* On phones keep the garden below the reading surface, never over copy. */
+@media(max-width:640px) {
+  body[data-view=landing] .garden-flowers { position:absolute; bottom:0; transform:scale(.65); }
+  .lp-scene { padding-bottom:100px; }
+  .lp-honest { position:relative; z-index:2; padding:12px 16px; border-radius:12px; background:#081029e8; }
+  html.light .lp-honest { background:#f4ecdbe8; }
+  .lp-coffee { position:relative; inset:auto; margin:22px auto 0; z-index:20; }
+}
