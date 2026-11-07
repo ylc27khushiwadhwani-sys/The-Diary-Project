@@ -128,3 +128,19 @@ describe("configured public feed sample fallback", () => {
     expect(from.mock.calls).toEqual([["notes"]]);
   });
 });
+
+describe("grand library passcode gate", () => {
+  it("a locked public book opens into the wax-seal passcode gate, never the letter", async () => {
+    const base=INITIAL_PUBLIC_NOTES[0];
+    range.mockResolvedValue({data:[
+      {...base,id:"open-letter",title:"Open public letter"},
+      {...base,id:"locked",is_locked:true,passcode_hash:"salt$hash",title:"Locked sentinel"},
+    ],error:null});
+    render(<PublicFeedPage/>);
+    const lockedBook=await screen.findByRole("button",{name:"Open letter: Locked sentinel"});
+    fireEvent.click(lockedBook);
+    expect(await screen.findByText(/sealed with a secret passcode/i,undefined,{timeout:4000})).toBeInTheDocument();
+    expect(screen.getByRole("button",{name:/Break Wax Seal with Passcode/i})).toBeInTheDocument();
+    expect(screen.queryByText(base.content||"__no_letter_body__")).not.toBeInTheDocument();
+  });
+});

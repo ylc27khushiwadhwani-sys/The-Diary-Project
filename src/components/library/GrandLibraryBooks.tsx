@@ -55,7 +55,7 @@ const STAGE_SIDE_PAD = 60;
 // Past this many letters the desk ends with a note pointing at the archive.
 const MAX_BOOKS = 400;
 const DRIFT_RESUME_MS = 6000;
-const OPEN_ANIMATION_MS = 620;
+const OPEN_ANIMATION_MS = 1500;
 
 export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   notes,
@@ -251,21 +251,25 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
                     onClick={() => openBook(note)}
                     aria-label={`Open letter: ${title}`}
                   >
-                    <span
-                      className="glb-face glb-front"
-                      style={{ background: binding.bg, borderColor: binding.border }}
-                    >
-                      <span className="glb-frame" aria-hidden="true">
-                        <span className="glb-ornament">✦</span>
-                        <span className="glb-title">{title}</span>
-                        <span className="glb-pen">{penName}</span>
-                        {note.is_locked && <Lock className="w-3 h-3" aria-label="Passcode protected" />}
-                      </span>
+                    <span className="glb-firstpage" aria-hidden="true" />
+                    <span className="glb-cover">
                       <span
-                        className="glb-ribbon"
-                        style={{ background: binding.ribbon }}
-                        aria-hidden="true"
-                      />
+                        className="glb-face glb-front"
+                        style={{ background: binding.bg, borderColor: binding.border }}
+                      >
+                        <span className="glb-frame" aria-hidden="true">
+                          <span className="glb-ornament">✦</span>
+                          <span className="glb-title">{title}</span>
+                          <span className="glb-pen">{penName}</span>
+                          {note.is_locked && <Lock className="w-3 h-3" aria-label="Passcode protected" />}
+                        </span>
+                        <span
+                          className="glb-ribbon"
+                          style={{ background: binding.ribbon }}
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="glb-face glb-cover-inside" aria-hidden="true" />
                     </span>
                     <span
                       className="glb-face glb-spine"

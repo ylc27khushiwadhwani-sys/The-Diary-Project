@@ -3041,9 +3041,16 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
   transform:rotateY(var(--tilt,-24deg));transform-style:preserve-3d;
   transition:transform .55s cubic-bezier(.22,.9,.24,1);}
 .glb-face{position:absolute;backface-visibility:hidden;}
-.glb-front{inset:0;transform:translateZ(14px);border:1px solid;border-radius:3px 7px 7px 3px;
+.glb-cover{position:absolute;inset:0;transform:translateZ(14px);transform-origin:left center;transform-style:preserve-3d;}
+.glb-front{inset:0;border:1px solid;border-radius:3px 7px 7px 3px;
   box-shadow:inset 0 0 0 1px #0006,inset 0 2px 3px #ffffff14;
   display:flex;align-items:center;justify-content:center;}
+.glb-cover-inside{inset:0;transform:rotateY(180deg);border-radius:7px 3px 3px 7px;border:1px solid #b78b4d55;
+  background:linear-gradient(105deg,#efe3c8 0%,#e6d7b6 55%,#d9c8a2 100%);
+  box-shadow:inset 0 0 0 1px #0004,inset 0 0 24px #7a5c2e33;}
+.glb-firstpage{position:absolute;inset:0;transform:translateZ(13px);border-radius:3px 7px 7px 3px;border:1px solid #b78b4d44;
+  background:repeating-linear-gradient(180deg,#f2e8d0 0 7px,#e4d6b4 7px 8px),linear-gradient(100deg,#f5ecd6 0%,#ecdfc0 60%,#e0d0aa 100%);
+  background-blend-mode:multiply;box-shadow:inset 0 0 18px #6d4f241f;}
 .glb-spine{top:0;bottom:0;left:-14px;width:28px;transform:rotateY(-90deg);border:1px solid;border-radius:6px 0 0 6px;
   box-shadow:inset 0 0 8px #0009;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 .glb-spine::before{content:"";position:absolute;inset:8px 4px;border-top:1px solid #d4a37344;border-bottom:1px solid #d4a37344;}
@@ -3064,6 +3071,7 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .glb-book3d:hover,.glb-book3d:focus-visible{transform:rotateY(-5deg) translateZ(58px) translateY(-8px);outline:none;}
 .glb-book3d:hover .glb-front,.glb-book3d:focus-visible .glb-front{box-shadow:inset 0 0 0 1px #0006,0 0 30px #d4a37338;}
 .glb-book.is-opening .glb-book3d{transform:rotateY(0deg) translateZ(190px) translateY(-16px) scale(1.12);}
+.glb-book.is-opening .glb-cover{transform:translateZ(14px) rotateY(-163deg);transition:transform .9s cubic-bezier(.55,.06,.25,1) .45s;}
 .glb-book.is-opening .glb-front{box-shadow:inset 0 0 0 1px #0006,0 0 48px #d4a3734d;}
 .glb-arrow{position:absolute;top:42%;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid rgb(var(--gold) / .4);background:#1a130cd9;color:rgb(var(--gold-light));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
 .glb-arrow:hover{background:#2a1c10;box-shadow:0 0 18px #d4a37333;}
@@ -3085,7 +3093,7 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
   .glb-title{font-size:15px;}
 }
 @media (prefers-reduced-motion: reduce){
-  .glb-book3d,.glb-book.is-opening .glb-book3d{transition:none;}
+  .glb-book3d,.glb-book.is-opening .glb-book3d,.glb-book.is-opening .glb-cover{transition:none;}
 }
 /* ==== Received flower gift: the ceremony ==== */
 .flower-recipient{position:relative;overflow:hidden;min-height:100vh;background:
