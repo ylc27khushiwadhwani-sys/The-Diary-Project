@@ -6,7 +6,7 @@ import { ThemeToggle } from "../components/common/ThemeToggle";
 import { InkText } from "../components/cinematic/InkText";
 import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { SelfWritingLetter } from "../components/landing/SelfWritingLetter";
-import { GardenFlowers } from "../components/common/GardenFlowers";
+import { LandingFlowerBorder } from "../components/common/GardenFlowers";
 
 interface LandingPageProps {
   onAuth: (mode: "signin" | "signup") => void;
@@ -25,7 +25,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   return (
     <div className="lp-scene" data-testid="landing-scene">
       {/* the garden: theme sky overhead, drifting dust, flowers below */}
-      <GardenFlowers />
+      <LandingFlowerBorder />
       <div className="lp-motes" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
           <span key={i} className={`lp-mote lp-mote-${(i % 7) + 1}`} />

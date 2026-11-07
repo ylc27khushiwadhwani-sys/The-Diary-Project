@@ -2772,3 +2772,17 @@ html.light .is-writing .gc-preview { background:#f0e8d8f5; }
   .is-writing .gc-full-preview h2 { margin-bottom:10px; }
   .is-writing .gc-full-preview footer { margin-top:12px; }
 }
+
+/* A dedicated flowerbed fills the whole landing edge, below all controls. */
+.lp-scene { padding-bottom:170px; }
+.lp-coffee { position:relative; inset:auto; margin:24px auto 0; z-index:20; }
+.landing-flower-border { position:absolute; inset:auto 0 0; height:150px; display:flex; align-items:flex-end; justify-content:space-around; overflow:hidden; pointer-events:none; z-index:1; }
+.landing-flower-border .botanical-flower { flex:0 0 3.2%; width:3.2% !important; margin:0 -.35%; }
+@media(max-width:640px) {
+  .lp-scene { padding-bottom:140px; }
+  .landing-flower-border { height:120px; }
+  .landing-flower-border .botanical-flower { flex-basis:8%; width:8% !important; margin:0 -1%; height:100px !important; }
+  .landing-flower-border .botanical-flower:nth-child(n+17) { display:none; }
+  .landing-flower-border .botanical-flower:nth-child(3n) { height:116px !important; }
+  .landing-flower-border .botanical-flower:nth-child(3n+1) { height:88px !important; }
+}

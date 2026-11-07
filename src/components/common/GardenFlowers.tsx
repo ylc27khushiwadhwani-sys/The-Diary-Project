@@ -112,3 +112,10 @@ export const GardenFlowers: React.FC<{ className?: string }> = ({
     />
   </div>
 );
+
+/** Continuous landing border, separate from the room's spaced bouquets. */
+export const LandingFlowerBorder: React.FC = () => (
+  <div className="landing-flower-border" aria-hidden="true">
+    {Array.from({length:40}, (_, i) => <Flower key={i} type="iris" variant={`gf-v${i % 4 + 1}`} height={[128, 102, 142, 116, 134, 108][i % 6]} delay={-(i % 7) * .7} duration={4.8 + (i % 4) * .4} />)}
+  </div>
+);
