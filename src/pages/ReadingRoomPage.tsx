@@ -39,6 +39,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const { user } = useAuth();
   const { notes, loading, refetch, hasMore, loadingMore, loadMore } = usePublicNotes();
   const [bookPage,setBookPage] = useState(0);
+  const [awaitingNext,setAwaitingNext] = useState(false);
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [finishedNote, setFinishedNote] = useState<Note | null>(null);
@@ -59,10 +60,16 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   useEffect(() => {
     if (hasMore && !loadingMore && readable.length < (bookPage+2)*3) loadMore();
   }, [readable.length,bookPage,hasMore,loadingMore]);
+  useEffect(() => {
+    if (awaitingNext && (bookPage+1)*3 < readable.length) {
+      setBookPage(p=>p+1);
+      setAwaitingNext(false);
+    } else if (awaitingNext && !hasMore && !loadingMore) setAwaitingNext(false);
+  }, [awaitingNext,bookPage,readable.length,hasMore,loadingMore]);
   const todaysShelf = readable.slice(bookPage*3,bookPage*3+3);
   const nextBooks = () => {
     if ((bookPage+1)*3 < readable.length) setBookPage(bookPage+1);
-    else if (hasMore) loadMore();
+    else if (hasMore) { setAwaitingNext(true); loadMore(); }
   };
 
   const handleStartResponse = (note: Note) => {

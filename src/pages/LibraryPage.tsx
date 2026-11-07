@@ -26,13 +26,6 @@ import { fetchQuota, isLimitError, FREE_LETTER_LIMIT } from "../lib/payments";
 import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
 import { PasscodeModal } from "../components/library/PasscodeModal";
 import { WaxSeal } from "../components/library/WaxSeal";
-import {
-  getSealChoice,
-  setSealChoice,
-  SealChoice,
-  SealColor,
-  SealIcon,
-} from "../lib/sealPreference";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 import { useCancellableLoad } from "../hooks/useCancellableLoad";
 import { Librarian } from "../components/library/Librarian";
@@ -139,13 +132,7 @@ export const LibraryPage: React.FC = () => {
 
   const whisper = useMemo(() => pickDaily(promptsData as Prompt[]), []);
   const thread = useMemo(() => writingThread(notes), [notes]);
-  const [seal, setSeal] = useState<SealChoice>(() => getSealChoice());
   const [giftOpen, setGiftOpen] = useState(false);
-  const chooseSeal = (next: Partial<SealChoice>) => {
-    const choice = { ...seal, ...next };
-    setSeal(choice);
-    setSealChoice(choice);
-  };
 
   // Letters from your past self: the Librarian resurfaces the oldest letter
   // you wrote more than a month ago and never dated for unsealing.
@@ -576,50 +563,6 @@ export const LibraryPage: React.FC = () => {
             </p>
           </button>
         )}
-
-        {/* Your seal: the wax strangers learn to recognise */}
-        <div className="bg-card/60 border border-hairline rounded-2xl p-5 backdrop-blur-sm">
-          <span className="label-caps block mb-2">Your seal</span>
-          <div className="flex flex-wrap items-center gap-4">
-            <WaxSeal color={seal.color} size="lg" icon={seal.icon} />
-            <div>
-              <div className="flex items-center gap-2 mb-2" role="group" aria-label="Wax colour">
-                {(["crimson", "gold", "emerald", "midnight"] as SealColor[]).map(
-                  (c) => (
-                    <button
-                      key={c}
-                      type="button"
-                      onClick={() => chooseSeal({ color: c })}
-                      aria-pressed={seal.color === c}
-                      aria-label={`${c} wax`}
-                      className={`seal-dot seal-dot-${c} ${seal.color === c ? "seal-dot-on" : ""}`}
-                    />
-                  ),
-                )}
-              </div>
-              <div className="flex items-center gap-2" role="group" aria-label="Seal stamp">
-                {(["quill", "lock", "flame", "crest"] as SealIcon[]).map(
-                  (ic) => (
-                    <button
-                      key={ic}
-                      type="button"
-                      onClick={() => chooseSeal({ icon: ic })}
-                      aria-pressed={seal.icon === ic}
-                      aria-label={`${ic} stamp`}
-                      className={`seal-iconpick ${seal.icon === ic ? "seal-iconpick-on" : ""}`}
-                    >
-                      {ic}
-                    </button>
-                  ),
-                )}
-              </div>
-            </div>
-            <p className="font-body text-xs italic text-muted ml-auto max-w-[200px]">
-              The wax on everything you seal - strangers will learn it by
-              sight.
-            </p>
-          </div>
-        </div>
 
         <FutureSelfDesk
           notes={notes}
