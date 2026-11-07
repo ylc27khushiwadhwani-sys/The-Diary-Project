@@ -1,198 +1,64 @@
 import React, { useState } from 'react';
-import { Mail, CheckCircle2, X, KeyRound } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import { WaxSeal } from '../library/WaxSeal';
 
 interface SignInModalProps {
   isOpen: boolean;
   onClose: () => void;
   onAuthenticated?: () => void;
-  initialMode?: 'signin' | 'signup';
+  initialMode?: 'signin' | 'signup' | 'password';
 }
 
-// App remounts this modal with `key={authMode}` whenever the chosen mode
-// changes, so initialMode always applies on open.
-export const SignInModal: React.FC<SignInModalProps> = ({ isOpen, onClose, initialMode = 'signin', onAuthenticated }) => {
-  const { signInWithMagicLink, loginAsGuestDemo } = useAuth();
-  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [sent, setSent] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
-    const nameOptions = [
-    "The Boy Who Cried Wolf",
-    "The One Who Lived",
-    "Silent Quill",
-    "Midnight Wanderer",
-    "Velvet Sparrow",
-    "Luminous Dreamer",
-    "Mysterious Stranger",
-    "Hidden Ink",
-    "Wandering Bard",
-    "Shadow Scribe",
-  ];
-  const [chosenName, setChosenName] = useState('');
-  const handleNameSelect = (name: string) => {
-    setChosenName(name);
-  };
-
+export const SignInModal: React.FC<SignInModalProps> = ({isOpen,onClose,onAuthenticated,initialMode='signin'}) => {
+  const {signInWithMagicLink,signInWithPassword,signUpWithPassword,completeGuestPassword,loginAsGuestDemo} = useAuth();
+  const [mode,setMode] = useState(initialMode);
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [name,setName] = useState('');
+  const [loading,setLoading] = useState(false);
+  const [notice,setNotice] = useState('');
+  const [error,setError] = useState('');
   if (!isOpen) return null;
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email) return;
-    setLoading(true);
-    setErrorMessage('');
-
-    try {
-      const { error } = await signInWithMagicLink(email.trim());
-      if (error) setErrorMessage(error.message);
-      else setSent(true);
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Could not send your sign-in link. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  const finish = () => {onAuthenticated?.();onClose();};
+  const run = async (action:()=>Promise<void>) => {
+    setLoading(true);setError('');setNotice('');
+    try {await action();} catch(err) {setError(err instanceof Error ? err.message : 'Could not connect. Please try again.');} finally {setLoading(false);}
   };
-
-  const handleGuestEntry = async () => {
-    setLoading(true);
-    setErrorMessage('');
-    try {
-      await loginAsGuestDemo(chosenName || undefined);
-      onAuthenticated?.();
-      onClose();
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Could not enter as a guest. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+  const submit = (event:React.FormEvent) => {
+    event.preventDefault();
+    void run(async()=>{
+      if (mode==='password') {
+        const result=await completeGuestPassword(password); if(result.error) throw result.error; finish();
+      } else if (mode==='signup') {
+        const result=await signUpWithPassword(email.trim(),password,name.trim());
+        if(result.error) throw result.error;
+        if(result.needsConfirmation) {setNotice('Check your inbox to verify your email. Open the confirmation link to activate your library card. If you started as a guest, you will set your password after verification so your letters stay with you.');setPassword('');}
+        else finish();
+      } else {
+        const result=await signInWithPassword(email.trim(),password);
+        if(result.error) throw result.error;
+        finish();
+      }
+    });
   };
-
-  return (
-    <div role="dialog" aria-modal="true" aria-label={mode === 'signup' ? 'Create a library card' : 'Sign in to your library'} className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto bg-black/80 backdrop-blur-md animate-fade-in">
-      <div className="relative w-full max-w-md max-h-[calc(100dvh-32px)] overflow-y-auto parchment-sheet border border-amber-900/40 rounded-2xl p-7 shadow-2xl text-left text-wood-950">
-        <div className="scroll-roll-top -mx-4 -mt-5 mb-4" />
-
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 text-wood-600 hover:text-wood-950 transition-colors p-1"
-          aria-label="Close"
-        >
-          <X className="w-5 h-5" />
-        </button>
-
-        <div className="flex items-center gap-3 mb-4 pb-3 border-b border-amber-900/20">
-          <WaxSeal color="crimson" size="md" icon="crest" />
-          <div>
-            <h3 className="font-serif text-xl font-bold text-wood-950">
-              {mode === 'signup' ? 'Join the Sanctuary' : 'Enter the Sanctuary'}
-            </h3>
-            <p className="font-body text-xs text-wood-800 italic">Your anonymous, locked library chamber</p>
-          </div>
-        </div>
-
-        {sent ? (
-          <div className="text-center py-6 space-y-3">
-            <CheckCircle2 className="w-12 h-12 text-emerald-700 mx-auto" />
-            <h4 className="font-serif text-lg text-wood-950 font-bold">Courier Dispatched</h4>
-            <p className="font-body text-sm text-wood-900 leading-relaxed italic">
-              We dispatched a passwordless sign-in key to <span className="font-serif font-bold text-wood-950 not-italic">{email}</span>. Click it to unlock your private shelves.
-            </p>
-            <button
-              onClick={onClose}
-              className="mt-4 px-5 py-2 text-xs font-serif font-bold bg-wood-900 text-amber-100 rounded-full hover:bg-wood-800 transition-colors cursor-pointer"
-            >
-              Return to Hall
-            </button>
-          </div>
-        ) : (
-          <div className="space-y-4">
-            <p className="font-body text-sm text-wood-900 leading-relaxed italic">
-              {mode === 'signup'
-                ? 'Create your sanctuary with an email sign-up link. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.'
-                : 'Sign in with an email to preserve your sanctuary across devices. Nobody ever sees your real address—you are identified only by a generated anonymous pen name.'}
-            </p>
-
-            {errorMessage && (
-              <div className="p-3 text-xs bg-red-900/10 text-red-900 border border-red-800/20 rounded-lg font-serif">
-                {errorMessage}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="auth-email" className="block text-xs font-serif font-bold text-wood-800 mb-1">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Mail className="w-4 h-4 text-amber-800 absolute left-3 top-3" />
-                  <input
-                    id="auth-email"
-                    type="email"
-                    autoComplete="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="reader@example.com"
-                    className="w-full pl-9 pr-4 py-2.5 bg-amber-50/80 border border-amber-900/30 rounded-xl text-sm font-serif text-wood-950 focus:outline-none focus:ring-1 focus:ring-amber-600 transition"
-                  />
-                </div>
-                {/* Name selection for guest */}
-                <div className="flex flex-wrap gap-2 justify-center mb-2">
-                  {nameOptions.map((name) => (
-                    <button
-                      key={name}
-                      type="button"
-                      onClick={() => handleNameSelect(name)}
-                      className={`px-3 py-1 rounded ${chosenName === name ? 'bg-amber-600 text-white' : 'bg-wood-800 text-amber-200'} text-xs font-serif`}
-                    >
-                      {name}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-2.5 bg-wax-crimson hover:bg-wax-crimsonBright text-white rounded-xl text-xs font-serif font-bold transition shadow-candle border border-red-500/30 disabled:opacity-50 cursor-pointer"
-              >
-                {loading ? 'Dispatching Key...' : mode === 'signup' ? 'Email Me a Sign-Up Link' : 'Send Magic Link via Email'}
-              </button>
-            </form>
-
-            <p className="text-center text-xs font-serif text-wood-700">
-              {mode === 'signup' ? (
-                <>Already have a sanctuary?{' '}
-                  <button type="button" onClick={() => setMode('signin')} className="underline text-amber-800 hover:text-amber-900 cursor-pointer">Sign in</button>
-                </>
-              ) : (
-                <>New here?{' '}
-                  <button type="button" onClick={() => setMode('signup')} className="underline text-amber-800 hover:text-amber-900 cursor-pointer">Create an account</button>
-                </>
-              )}
-            </p>
-
-            <div className="relative flex py-2 items-center">
-              <div className="flex-grow border-t border-amber-900/20" />
-              <span className="flex-shrink mx-3 text-xs font-serif text-wood-600">or explore freely</span>
-              <div className="flex-grow border-t border-amber-900/20" />
-            </div>
-
-            <button
-              onClick={handleGuestEntry}
-              disabled={loading}
-              className="w-full py-2.5 bg-wood-900 hover:bg-wood-850 text-amber-200 border border-amber-700/50 rounded-xl text-xs font-serif font-semibold transition cursor-pointer flex items-center justify-center gap-2"
-            >
-              <KeyRound className="w-3.5 h-3.5 text-amber-400" />
-              <span>Continue as Anonymous Guest</span>
-            </button>
-          </div>
-        )}
-
-        <div className="scroll-roll-bottom -mx-4 -mb-5 mt-4" />
-      </div>
-    </div>
-  );
+  return <div role="dialog" aria-modal="true" aria-label={mode==='signup'?'Create a library card':'Log in to your library'} className="pv-auth-overlay">
+    <section className="pv-auth-card" data-clarity-mask="true">
+      <button type="button" onClick={onClose} className="pv-auth-close" aria-label="Close"><X size={20}/></button>
+      <p className="pv-auth-eyebrow">THE PAPER VAULT</p>
+      <h2>{mode==='password'?'Your email is verified.':mode==='signup'?'A library card of your own.':'Welcome back to your library.'}</h2>
+      <p className="pv-auth-intro">{mode==='password'?'Set a password to finish saving your guest library. Your letters stay on the same shelves.':mode==='signup'?'Keep a private place for the words you have carried. Your email stays private; readers see only your pen name.':'Log in to find your private shelves and the letters you left here.'}</p>
+      <form onSubmit={submit}>
+        {mode==='signup' && <label htmlFor="auth-name">What should we call you?<input id="auth-name" autoComplete="nickname" value={name} onChange={e=>setName(e.target.value)} placeholder="Your pen name" required maxLength={80}/></label>}
+        {mode!=='password' && <label htmlFor="auth-email">Email Address<input id="auth-email" type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label>}
+        <label htmlFor="auth-password">{mode==='signup'?'Password (8+ characters)':'Password'}<input id="auth-password" type="password" autoComplete={mode!=='signin'?'new-password':'current-password'} minLength={mode!=='signin'?8:undefined} value={password} onChange={e=>setPassword(e.target.value)} required/></label>
+        {mode==='signup' && <p className="pv-auth-help">Verify your email using the link we send before activating your new library card.</p>}
+        {error && <p role="alert" className="pv-auth-error">{error}</p>}
+        {notice && <p role="status" className="pv-auth-notice">{notice}</p>}
+        <button type="submit" className="pv-auth-submit" disabled={loading}>{loading?'Please wait...':mode==='password'?'Save password and enter':mode==='signup'?'Create my library card':'Log in'}</button>
+      </form>
+      {mode!=='password' && <p className="pv-auth-switch">{mode==='signup'?'Already have a library card?':'New to the library?'} <button type="button" onClick={()=>{setMode(mode==='signup'?'signin':'signup');setPassword('');setError('');setNotice('');}}>{mode==='signup'?'Log in':'Sign up'}</button></p>}
+      {mode==='signin' && <div className="pv-auth-email-link"><p>Used an email link before, or need help signing in?</p><button type="button" disabled={loading || !email.trim()} onClick={()=>void run(async()=>{const result=await signInWithMagicLink(email.trim());if(result.error) throw result.error;setNotice('Check your inbox for a secure sign-in link. Existing library cards and letters are kept.');})}>Email me a sign-in link</button></div>}
+      {mode!=='password' && <button type="button" className="pv-auth-guest" disabled={loading} onClick={()=>void run(async()=>{await loginAsGuestDemo();finish();})}>Continue as Anonymous Guest</button>}
+    </section>
+  </div>;
 };

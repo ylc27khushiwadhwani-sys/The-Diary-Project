@@ -11,6 +11,9 @@ interface AuthContextType {
   loading: boolean;
   isConfigured: boolean;
   signInWithMagicLink: (email: string) => Promise<{ error: Error | null }>;
+  signInWithPassword: (email: string, password: string) => Promise<{error: Error | null}>;
+  signUpWithPassword: (email: string, password: string, penName: string) => Promise<{error: Error | null; needsConfirmation: boolean}>;
+  completeGuestPassword: (password: string) => Promise<{error: Error | null}>;
   signOut: () => Promise<void>;
   updatePenName: (name: string) => Promise<{ error: Error | null }>;
   loginAsGuestDemo: (penName?: string) => Promise<void>;
@@ -153,6 +156,32 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return { error };
   };
 
+  const signInWithPassword = async (email: string, password: string) => {
+    if (!isSupabaseConfigured) return {error: new Error('Email accounts are unavailable in this preview.')};
+    const {error} = await supabase.auth.signInWithPassword({email, password});
+    return {error};
+  };
+
+  const signUpWithPassword = async (email: string, password: string, penName: string) => {
+    if (!isSupabaseConfigured) return {error: new Error('Email accounts are unavailable in this preview.'), needsConfirmation:false};
+    // Converting an anonymous session keeps its UUID, shelves and letters.
+    if (user?.is_anonymous) {
+      const {data, error} = await supabase.auth.updateUser({email, data:{pen_name:penName, needs_password:true}}, {emailRedirectTo:`${window.location.origin}/?auth=complete`});
+      if (!error && penName.trim()) await updatePenName(penName.trim());
+      return {error, needsConfirmation: !data.user?.email_confirmed_at};
+    }
+    const {data, error} = await supabase.auth.signUp({email, password, options:{emailRedirectTo:`${window.location.origin}/?auth=complete`, data:{pen_name:penName}}});
+    if (!error && data.session && penName.trim()) {
+      await supabase.from('profiles').update({pen_name:penName.trim()}).eq('id',data.user!.id);
+    }
+    return {error, needsConfirmation:!data.session};
+  };
+
+  const completeGuestPassword = async (password: string) => {
+    const {error} = await supabase.auth.updateUser({password, data:{needs_password:false}});
+    return {error};
+  };
+
   const signOut = async () => {
     if (!isSupabaseConfigured) {
       localStorage.removeItem(DEMO_STORAGE_KEY);
@@ -250,6 +279,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         loading,
         isConfigured: isSupabaseConfigured,
         signInWithMagicLink,
+        signInWithPassword,
+        completeGuestPassword,
+        signUpWithPassword,
         signOut,
         updatePenName,
         loginAsGuestDemo,

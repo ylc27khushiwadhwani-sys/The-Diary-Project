@@ -128,7 +128,7 @@ export const App: React.FC = () => {
           isOpen={isSignInModalOpen}
           onClose={() => setIsSignInModalOpen(false)}
           initialMode={authMode}
-          onAuthenticated={() => setShowLanding(false)}
+          onAuthenticated={() => { setActiveTabState("reading"); setShowLanding(false); }}
         />
         <HelplineModal
           isOpen={isHelplineOpen}
@@ -147,6 +147,7 @@ export const App: React.FC = () => {
       {/* Drifting dust that glows in the light shafts, plus ember bursts */}
       <DustCanvas />
 
+      <SignInModal key="finish-guest-password" isOpen={!!user?.email_confirmed_at && !!user?.user_metadata?.needs_password} initialMode="password" onClose={() => {}} onAuthenticated={() => setActiveTabState("reading")} />
       {/* Top Header */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-background/85 backdrop-blur-md">
         <VisitBadge />
