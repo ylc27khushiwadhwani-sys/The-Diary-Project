@@ -21,7 +21,7 @@ import {
   getSeenResponseIds,
 } from "../components/library/AuthorInbox";
 import { PaywallModal } from "../components/payments/PaywallModal";
-import { GiftComposer } from "../components/study/GiftComposer";
+import { ConnectedFlowerStudio } from "../components/gifts/ConnectedFlowerStudio";
 import { fetchQuota, isLimitError, FREE_LETTER_LIMIT } from "../lib/payments";
 import { KeepsakeBox } from "../components/bookshelf/KeepsakeBox";
 import { PasscodeModal } from "../components/library/PasscodeModal";
@@ -498,7 +498,7 @@ export const LibraryPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2.5 rounded-full border border-gold/50 bg-card/60 hover:bg-card text-gold-light font-serif text-sm transition cursor-pointer"
           >
             <Gift className="w-4 h-4 text-gold" />
-            <span>For one person</span>
+            <span>Flowers & letters</span>
           </button>
 
           <button
@@ -746,11 +746,7 @@ export const LibraryPage: React.FC = () => {
       />
 
       <AuthorInbox isOpen={isInboxOpen} onClose={() => setIsInboxOpen(false)} />
-      <GiftComposer
-        isOpen={giftOpen}
-        notes={notes}
-        onClose={() => setGiftOpen(false)}
-      />
+      {giftOpen && <ConnectedFlowerStudio onClose={() => setGiftOpen(false)} />}
 
       {/* Read a future-self letter (sealed ones show their countdown) */}
       <BookReaderModal

@@ -1,3 +1,5 @@
+import {FlowerGiftPage} from "./components/gifts/FlowerGiftPage";
+import {flowerTokenFromLocation,openFlowerGift} from "./lib/flowerGifts";
 import { isAuthReturn } from "./utils/authReturn";
 import React, { useEffect, useState } from "react";
 import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
@@ -29,8 +31,9 @@ export const App: React.FC = () => {
   const [gift, setGift] = useState<GiftPayload | null>(() =>
     giftFromLocation(),
   );
+  const [flowerToken,setFlowerToken]=useState<string|null>(()=>flowerTokenFromLocation());
   useEffect(() => {
-    const onHash = () => setGift(giftFromLocation());
+    const onHash = () => {setGift(giftFromLocation());setFlowerToken(flowerTokenFromLocation());};
     window.addEventListener("hashchange", onHash);
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
@@ -91,6 +94,8 @@ export const App: React.FC = () => {
     const id = window.setInterval(apply, 10 * 60 * 1000);
     return () => window.clearInterval(id);
   }, []);
+
+  if (flowerToken) return <FlowerGiftPage token={flowerToken} read={openFlowerGift} onExit={()=>{window.history.replaceState(null,"",window.location.pathname);setFlowerToken(null);setShowLanding(true)}}/>;
 
   // A dedicated letter opens for whoever holds the link, signed in or not.
   if (gift) {

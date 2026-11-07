@@ -2912,3 +2912,5 @@ html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#e
 @keyframes reading-unfold {from {opacity:0;transform:perspective(1000px) rotateX(12deg) scale(.96)} to {opacity:1;transform:none}}
 @media(max-width:640px) {.reading-closed-shelf {padding:24px 10px 0}.reading-closed-shelf>div:first-child {gap:10px}.reading-closed-book {width:29%;min-height:190px;padding:16px 10px;font-size:1rem;gap:8px}.reading-closed-book.binding-1 {min-height:210px}.reading-closed-book small {font-size:.65rem}.book-fireflies {inset:-4px}.book-fireflies i {width:4px;height:4px}}
 @media(prefers-reduced-motion:reduce) {.book-fireflies i,.reading-books-unfold {animation:none !important}.book-fireflies i {opacity:.7}}
+.landing-garden-stem { flex-basis:6%; margin:0 -1.4%; }
+@media(max-width:640px) { .landing-garden-stem {flex-basis:16%;margin:0 -4%;} }
