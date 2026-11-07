@@ -103,15 +103,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           transition={{ delay: 2.5, duration: 0.7 }}
           className="lp-cta"
         >
-          <button type="button" onClick={onGuest} className="lp-cta-primary">
-            Step inside
+          <button
+            type="button"
+            onClick={() => onAuth("signup")}
+            className="lp-cta-primary"
+          >
+            Sign up to get a library card
           </button>
           <button
             type="button"
             onClick={() => onAuth("signin")}
             className="lp-cta-ghost"
           >
-            I have a library card
+            I already have a library card
+          </button>
+          <button type="button" onClick={onGuest} className="lp-guest-link">
+            or wander in as a guest
           </button>
         </motion.div>
 
