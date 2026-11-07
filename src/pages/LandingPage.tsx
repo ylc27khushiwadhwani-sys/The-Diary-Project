@@ -1,15 +1,18 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { CoffeeButton } from "../components/payments/CoffeeButton";
-import { CandleLanternIcon } from "../components/common/CandleLanternIcon";
 import { InkText } from "../components/cinematic/InkText";
 import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { SelfWritingLetter } from "../components/landing/SelfWritingLetter";
+import { LandingStars } from "../components/landing/LandingStars";
 import { LandingFlowerBorder } from "../components/common/GardenFlowers";
 
 interface LandingPageProps {
   onAuth: (mode: "signin" | "signup") => void;
   onGuest: () => void;
+  /** A verified card-holder is visiting: the doors become one way in. */
+  isSignedIn?: boolean;
+  onEnter?: () => void;
 }
 
 /**
@@ -20,25 +23,19 @@ interface LandingPageProps {
 export const LandingPage: React.FC<LandingPageProps> = ({
   onAuth,
   onGuest,
+  isSignedIn = false,
+  onEnter,
 }) => {
   return (
     <div className="lp-scene" data-testid="landing-scene">
       {/* the garden: theme sky overhead, drifting dust, flowers below */}
+      <LandingStars />
       <LandingFlowerBorder />
       <div className="lp-motes" aria-hidden="true">
         {Array.from({ length: 14 }).map((_, i) => (
           <span key={i} className={`lp-mote lp-mote-${(i % 7) + 1}`} />
         ))}
       </div>
-
-      {/* floating pill header */}
-      <header className="lp-header">
-        <span className="lp-brand">
-          <CandleLanternIcon className="h-6 w-4 text-gold" />
-          <span className="font-serif italic">The Paper Vault</span>
-        </span>
-
-      </header>
 
       {/* one promise, one door */}
       <main className="lp-center">
@@ -90,23 +87,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           transition={{ delay: 2.5, duration: 0.7 }}
           className="lp-cta"
         >
-          <button
-            type="button"
-            onClick={() => onAuth("signup")}
-            className="lp-cta-primary"
-          >
-            Sign up to get a library card
-          </button>
-          <button
-            type="button"
-            onClick={() => onAuth("signin")}
-            className="lp-cta-ghost"
-          >
-            I already have a library card
-          </button>
-          <button type="button" onClick={onGuest} className="lp-guest-link">
-            or wander in as a guest
-          </button>
+          {isSignedIn ? (
+            <button type="button" onClick={onEnter} className="lp-cta-primary">
+              Step inside your library
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => onAuth("signup")}
+                className="lp-cta-primary"
+              >
+                Sign up to get a library card
+              </button>
+              <button
+                type="button"
+                onClick={() => onAuth("signin")}
+                className="lp-cta-ghost"
+              >
+                I already have a library card
+              </button>
+              <button type="button" onClick={onGuest} className="lp-guest-link">
+                or wander in as a guest
+              </button>
+            </>
+          )}
         </motion.div>
 
         <motion.div

@@ -118,7 +118,7 @@ export const GardenFlowers: React.FC<{ className?: string }> = ({
 const GARDEN_TYPES = ['rose','daisy','iris','tulip','cosmos','delphinium','poppy','peony'];
 export const LandingFlowerBorder: React.FC = () => createPortal(
   <div className="landing-flower-border" aria-hidden="true">
-    <div className="landing-garden-stems">{Array.from({length:17}, (_,i)=><span key={i} className="landing-garden-stem" style={{height:[164,142,184,156,150,176,158,172][i%8],animationDelay:`${-i*.65}s`,animationDuration:`${5+i%4}s`}}><img src={`/art/garden-${GARDEN_TYPES[i%8]}.webp`} alt="" draggable={false}/></span>)}</div>
+    <div className="landing-garden-stems">{Array.from({length:17}, (_,i)=><span key={i} className="landing-garden-stem" style={{height:[139,121,156,133,128,150,134,146][i%8],animationDelay:`${-i*.65}s`,animationDuration:`${5+i%4}s`}}><img src={`/art/garden-${GARDEN_TYPES[i%8]}.webp`} alt="" draggable={false}/></span>)}</div>
     {[0,1,2].map(i=><span key={i} className={`landing-butterfly landing-butterfly-${i}`}><svg viewBox="0 0 40 32"><path className="butterfly-left" d="M20 16C7-4-3 2 4 16c-7 10 7 18 16 3Z"/><path className="butterfly-right" d="M20 16C33-4 43 2 36 16c7 10-7 18-16 3Z"/><path d="M20 11v14m0-13-4-6m4 6 4-6" fill="none" stroke="currentColor" strokeWidth="1.4"/></svg></span>)}
   </div>, document.body
 );

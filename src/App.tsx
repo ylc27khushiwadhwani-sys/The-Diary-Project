@@ -2,7 +2,7 @@ import {FlowerGiftPage} from "./components/gifts/FlowerGiftPage";
 import {flowerTokenFromLocation,openFlowerGift} from "./lib/flowerGifts";
 import { isAuthReturn } from "./utils/authReturn";
 import React, { useEffect, useState } from "react";
-import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
+import { BookOpen, Feather, Flower2, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 import { PenNameBadge } from "./components/auth/PenNameBadge";
 import { SignInModal } from "./components/auth/SignInModal";
@@ -15,6 +15,7 @@ import { GiftOpeningPage } from "./pages/GiftOpeningPage";
 import { GuidelinesPage } from "./pages/GuidelinesPage";
 import { giftFromLocation, GiftPayload } from "./lib/giftLink";
 import { PostboxPage, countUnseen } from "./pages/PostboxPage";
+import { ConnectedFlowerStudio } from "./components/gifts/ConnectedFlowerStudio";
 import { loadAuthorResponses } from "./components/library/AuthorInbox";
 import { DustCanvas } from "./components/cinematic/DustCanvas";
 import { EntrySequence } from "./components/cinematic/EntrySequence";
@@ -23,7 +24,7 @@ import { VisitBadge } from "./components/cinematic/VisitBadge";
 import { burstEmbers } from "./lib/motion";
 import { currentHallHour } from "./lib/timeOfDay";
 
-type Tab = "reading" | "library" | "postbox" | "study";
+type Tab = "reading" | "library" | "postbox" | "study" | "flowers";
 
 export const App: React.FC = () => {
   const { user, profile, loading, signOut, loginAsGuestDemo } = useAuth();
@@ -51,6 +52,14 @@ export const App: React.FC = () => {
     setAuthMode(mode);
     setIsSignInModalOpen(true);
   };
+  // A visitor holding a verified library card never needs the signup or
+  // signin popups from the landing; they get one clear way back inside.
+  const isCardHolder = !!(
+    user &&
+    !user.is_anonymous &&
+    user.email !== "writer@unsent.local" &&
+    user.email !== "anonymous@unsentlibrary.local"
+  );
   const [isHelplineOpen, setIsHelplineOpen] = useState(false);
   const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
 
@@ -119,8 +128,10 @@ export const App: React.FC = () => {
         ) : (
           <main className="flex-1 relative z-10">
             <LandingPage
-              onAuth={user && !user.is_anonymous && user.email !== "writer@unsent.local" && user.email !== "anonymous@unsentlibrary.local" ? () => setShowLanding(false) : openAuth}
+              onAuth={openAuth}
               onGuest={async () => { if (!user) await loginAsGuestDemo(); setShowLanding(false); }}
+              isSignedIn={isCardHolder}
+              onEnter={() => setShowLanding(false)}
             />
           </main>
         )}
@@ -245,6 +256,22 @@ export const App: React.FC = () => {
                 <span className="hidden sm:inline">Your Study</span>
               </span>
             </button>
+
+            <button
+              onClick={() => setActiveTab("flowers")}
+              aria-label="Gift a letter"
+              className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
+                activeTab === "flowers"
+                  ? "bg-card text-gold border border-gold/40 shadow-candle"
+                  : "text-muted hover:text-cream hover:bg-card/60"
+              }`}
+            >
+              <Flower2 className="hidden sm:block w-3.5 h-3.5 text-gold" />
+              <span>
+                <span className="sm:hidden">Gift</span>
+                <span className="hidden sm:inline">Gift a letter</span>
+              </span>
+            </button>
           </nav>
 
           {/* Daylight lamp + user profile */}
@@ -282,10 +309,20 @@ export const App: React.FC = () => {
           <PublicFeedPage />
         ) : activeTab === "postbox" ? (
           <PostboxPage onUnseenChange={setPostboxUnseen} />
+        ) : activeTab === "flowers" ? (
+          <ReadingRoomPage
+            onEnterLibrary={() => setActiveTab("library")}
+            onOpenStudy={() => setActiveTab("study")}
+          />
         ) : (
           <LibraryPage />
         )}
       </main>
+
+      {/* Flowers & letters gets its own room, opening over whatever is under it */}
+      {activeTab === "flowers" && (
+        <ConnectedFlowerStudio onClose={() => setActiveTab("study")} />
+      )}
 
       <LandingFooter
           onOpenHelplines={() => setIsHelplineOpen(true)}

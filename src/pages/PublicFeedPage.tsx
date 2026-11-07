@@ -6,7 +6,6 @@ import { useAuth } from "../contexts/AuthContext";
 import { PaywallModal } from "../components/payments/PaywallModal";
 import { fetchQuota, isLimitError } from "../lib/payments";
 import { InteractiveBookshelf, SHELF_SECTIONS, matchesSection } from "../components/bookshelf/InteractiveBookshelf";
-import { LibraryAisles } from "../components/library/LibraryAisles";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { GrandLibraryRoom } from "../components/library/GrandLibraryRoom";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
@@ -36,7 +35,6 @@ export const PublicFeedPage: React.FC = () => {
     usePublicNotes();
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
-  const [browseMode, setBrowseMode] = useState<"shelf" | "aisles">("shelf");
   const [roomSection, setRoomSection] = useState<string | null>(null);
   const [randomSeen,setRandomSeen]=useState<string[]>([]);
   const [aisleNote, setAisleNote] = useState<Note | null>(null);
@@ -202,33 +200,6 @@ export const PublicFeedPage: React.FC = () => {
             </p>
           )}
 
-          {/* Browse mode: the single shelf or the full aisles */}
-          <div
-            className="mt-4 inline-flex items-center gap-1 rounded-full border border-hairline bg-card/60 p-1"
-            role="group"
-            aria-label="How to walk the library"
-          >
-            {(
-              [
-                { id: "shelf", label: "The Big Shelf" },
-                { id: "aisles", label: "Walk the Aisles" },
-              ] as const
-            ).map((mode) => (
-              <button
-                key={mode.id}
-                type="button"
-                onClick={() => setBrowseMode(mode.id)}
-                aria-pressed={browseMode === mode.id}
-                className={`px-4 py-1.5 rounded-full text-xs font-serif tracking-wide cursor-pointer transition-all duration-200 ${
-                  browseMode === mode.id
-                    ? "bg-gold text-wood-950 shadow-candle"
-                    : "text-amber-200 hover:text-gold-light"
-                }`}
-              >
-                {mode.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* The Librarian's collections */}
@@ -338,14 +309,8 @@ export const PublicFeedPage: React.FC = () => {
               Try a different phrase, or search by pen name.
             </p>
           </div>
-        ) : browseMode === "aisles" ? (
-          <div className="mx-auto max-w-5xl px-4">
-            <LibraryAisles
-              notes={visibleNotes.filter(note=>matchesSection(note,roomSection))}
-              onOpen={(n) => setAisleNote(n)}
-            />
-          </div>
         ) : (
+          // Browse: the single shelf, one section at a time
           <InteractiveBookshelf
             key={roomSection}
             controlledSectionId={roomSection}

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
+import { Coffee } from "lucide-react";
 import { COFFEE_LINK } from "../../lib/payments";
-
-const CupIcon: React.FC = () => <img className="coffee-saucer" src="/art/coffee-saucer.webp" alt="" aria-hidden="true" />;
 
 /** Top-left of the Reading Room hero. Goes to the owner's payment link once one is set. */
 export const CoffeeButton: React.FC = () => {
@@ -9,9 +8,9 @@ export const CoffeeButton: React.FC = () => {
   const classes = "coffee-btn";
   const body = (
     <>
-      <CupIcon />
+      <Coffee className="coffee-cup" aria-hidden="true" />
       <span>
-        like this idea? <b>buy me a coffee</b>
+        if a letter here kept you warm, <b>buy me a coffee</b>
       </span>
     </>
   );

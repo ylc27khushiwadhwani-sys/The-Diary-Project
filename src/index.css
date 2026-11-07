@@ -1309,28 +1309,6 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 .lp-mote-7 { left: 91%; animation-delay: 3.1s; animation-duration: 10.5s; }
 
 /* floating pill header, like a label tacked to the hall wall */
-.lp-header {
-  position: relative;
-  z-index: 30;
-  margin: 18px auto 0;
-  width: min(680px, calc(100% - 32px));
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px 10px 18px;
-  border-radius: 9999px;
-  border: 1px solid rgba(212, 163, 115, 0.28);
-  background: rgba(20, 12, 7, 0.72);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-}
-.lp-brand {
-  display: inline-flex;
-  align-items: center;
-  gap: 9px;
-  font-size: 1.05rem;
-  color: #f3ece0;
-}
 .lp-signin {
   border-radius: 9999px;
   border: 1px solid rgba(212, 163, 115, 0.55);
@@ -2302,12 +2280,6 @@ html.light .lp-mote {
   background: rgba(190, 150, 80, 0.5);
   box-shadow: 0 0 8px rgba(220, 185, 110, 0.55);
 }
-html.light .lp-header {
-  border-color: rgba(133, 100, 58, 0.35);
-  background: rgba(251, 247, 236, 0.78);
-  box-shadow: 0 10px 30px rgba(110, 82, 40, 0.18);
-}
-html.light .lp-brand { color: #3d2f1e; }
 html.light .lp-eyebrow {
   border-color: rgba(133, 100, 58, 0.4);
   background: rgba(251, 247, 236, 0.7);
@@ -2860,7 +2832,7 @@ html.light .flower-studio-overlay {background:#f4ecd9;color:#42372b;}html.light 
 
 /* Viewport garden stays anchored while landing content scrolls. No canvas,
    filters or per-frame JavaScript. Decorations never intercept a tap. */
-.landing-flower-border { position:fixed; inset:auto 0 0; height:156px; z-index:30; display:block; overflow:visible; pointer-events:none; }
+.landing-flower-border { position:fixed; inset:auto 0 0; height:133px; z-index:30; display:block; overflow:visible; pointer-events:none; }
 .landing-garden-stems { height:100%; display:flex; align-items:flex-end; justify-content:space-around; overflow:hidden; }
 .landing-garden-stem { flex:0 0 4.5%; margin:0 -.7%; transform-origin:50% 100%; animation:landing-stem-sway 6s ease-in-out infinite alternate; }
 .landing-garden-stem img { height:100%; width:100%; object-fit:contain; object-position:center bottom; display:block; }
@@ -2876,11 +2848,11 @@ html.light .flower-studio-overlay {background:#f4ecd9;color:#42372b;}html.light 
 @keyframes butterfly-wing { to {transform:scaleX(.3)} }
 @keyframes landing-butterfly-float { 0% {transform:translate(-16px,0) rotate(-12deg)} 50% {transform:translate(30px,-28px) rotate(8deg)} 100% {transform:translate(70px,8px) rotate(-5deg)} }
 .lp-scene { padding-bottom:180px; }
-.lp-coffee { width:fit-content; max-width:calc(100% - 32px); margin:30px auto 16px; }
-.lp-coffee .coffee-btn { gap:16px; padding:18px 30px; border-radius:18px; border-color:#b88b53; background:linear-gradient(135deg,#2e2419,#17120e); font-size:1.25rem; box-shadow:0 9px 28px #0003, inset 0 1px #f2d5a62e; backdrop-filter:none; }
-.lp-coffee .coffee-btn svg { width:38px; height:38px; flex-shrink:0; }
-.lp-coffee .coffee-btn span { display:flex; flex-direction:column; align-items:flex-start; gap:3px; font-style:normal; font-size:1rem; line-height:1.2; }
-.lp-coffee .coffee-btn b { font-size:1.65rem; font-style:italic; }
+.lp-coffee { width:fit-content; max-width:calc(100% - 32px); margin:26px auto 14px; }
+.lp-coffee .coffee-btn { gap:10px; padding:7px 20px; border-radius:9999px; border-color:#b88b53; background:linear-gradient(135deg,#2e2419,#17120e); font-size:.95rem; box-shadow:0 6px 18px #0003, inset 0 1px #f2d5a62e; backdrop-filter:none; }
+.lp-coffee .coffee-btn .coffee-cup { width:20px; height:20px; flex-shrink:0; }
+.lp-coffee .coffee-btn span { display:flex; align-items:baseline; gap:8px; font-style:italic; line-height:1.25; }
+.lp-coffee .coffee-btn b { font-size:1.05rem; }
 html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#efdfc4); border-color:#bd9560; color:#795f3d; }
 .lp-coffee .coffee-note { max-width:320px; font-size:1rem; }
 @media(max-width:640px) {
@@ -2891,8 +2863,8 @@ html.light .lp-coffee .coffee-btn { background:linear-gradient(135deg,#fff9eb,#e
  .landing-butterfly-1 { bottom:112px; width:18px; }
  .landing-butterfly-2 { bottom:66px; }
  .lp-scene { padding-bottom:135px; }
- .lp-coffee .coffee-btn { padding:16px 24px; gap:13px; }
- .lp-coffee .coffee-btn b { font-size:1.5rem; }
+ .lp-coffee .coffee-btn { padding:6px 16px; gap:9px; }
+ .lp-coffee .coffee-btn b { font-size:1rem; }
 }
 @media(prefers-reduced-motion:reduce) { .landing-garden-stem,.landing-butterfly,.butterfly-left,.butterfly-right { animation:none !important; } }
 
@@ -2935,9 +2907,9 @@ html.light .landing-garden-stem img {filter:none;}
 .grand-library-room{position:relative;min-height:720px;height:calc(100svh - 100px);max-height:1050px;isolation:isolate;overflow:hidden;background:#23150e;color:#fff2d4;}
 .grand-room-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;}
 .grand-library-room:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(#100b0780,transparent 30%,transparent 75%,#100b07cc);pointer-events:none;}
-.grand-room-heading{position:absolute;top:22px;left:25%;right:25%;text-align:center;text-shadow:0 2px 12px #000;}
+.grand-room-heading{position:absolute;top:22px;left:25%;right:25%;text-align:center;text-shadow:0 2px 12px #000;background:rgba(16,10,6,.45);backdrop-filter:blur(3px);border-radius:14px;padding:10px 18px 14px;}
 .grand-room-heading p{font-size:9px;letter-spacing:.3em;color:#e7c591;}
-.grand-room-heading h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(32px,3.5vw,56px);line-height:1.1;margin:4px 0 8px;}
+.grand-room-heading h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:700;font-size:clamp(32px,3.5vw,56px);line-height:1.1;margin:4px 0 8px;}
 .grand-room-heading>span{font-family:Lora,Georgia,serif;font-size:12px;display:block;max-width:310px;margin:auto;}
 .grand-room-plaque{position:absolute;width:27%;padding:8px 12px;background:linear-gradient(125deg,#362215f5,#1d130df5,#42291af5);border:1px solid #bd9257;border-radius:7px;box-shadow:0 6px 15px #0009,inset 0 0 0 3px #1a110a,inset 0 0 0 4px #a3793b66;}
 .grand-room-plaque:nth-child(-n+3){left:4%;transform:perspective(900px) rotateY(9deg);}
@@ -2960,16 +2932,16 @@ html.light .landing-garden-stem img {filter:none;}
  .grand-room-note{left:8%;right:8%;font-size:11px;bottom:20px;line-height:1.6;}
 }
 
-.coffee-btn .coffee-saucer{width:66px;height:66px;object-fit:cover;border-radius:50%;flex-shrink:0;box-shadow:0 2px 8px #0005;}
+.coffee-btn .coffee-cup{width:20px;height:20px;flex-shrink:0;}
 
 .reading-invitation{text-align:center;font:italic clamp(25px,3vw,40px)/1.25 "Cormorant Garamond",Georgia,serif;color:rgb(var(--cream));margin:0 auto 32px;max-width:750px;}
-.lp-coffee{width:min(1050px,calc(100% - 48px));max-width:none;margin:30px auto 16px;}.lp-coffee .coffee-wrap{width:100%;}.lp-coffee .coffee-btn{width:100%;min-height:96px;padding:12px 30px;justify-content:center;gap:24px;border-radius:12px;}.lp-coffee .coffee-btn .coffee-saucer{width:68px;height:68px;}.lp-coffee .coffee-btn span{flex-direction:row;align-items:baseline;gap:14px;}.lp-coffee .coffee-note{margin:12px auto;text-align:center;}
-@media(max-width:640px){.lp-coffee{width:calc(100% - 32px);}.lp-coffee .coffee-btn{min-height:88px;padding:10px 15px;gap:14px;}.lp-coffee .coffee-btn span{flex-direction:column;gap:3px;}.lp-coffee .coffee-btn .coffee-saucer{width:58px;height:58px;}.lp-coffee .coffee-btn b{font-size:1.45rem;}.reading-invitation{font-size:27px;max-width:330px;margin-bottom:25px;}}
+.lp-coffee{width:min(1050px,calc(100% - 48px));}
+@media(max-width:640px){.lp-coffee{width:calc(100% - 32px);}.lp-coffee .coffee-btn{padding:6px 16px;}.reading-invitation{font-size:27px;max-width:330px;margin-bottom:25px;}}
 
 /* Latest requested balance: taller flowers and about forty percent more. */
 .landing-flower-border{height:190px;}
 .landing-garden-stem{flex-basis:5%;margin:0 -.5%;}
-@media(max-width:640px){.landing-flower-border{height:136px;}.landing-garden-stem{flex-basis:9%;margin:0;max-height:136px;}.landing-garden-stem:nth-child(n+7){display:block;}.landing-garden-stem:nth-child(n+9){display:none;}}
+@media(max-width:640px){.landing-flower-border{height:116px;}.landing-garden-stem{flex-basis:9%;margin:0;max-height:116px;}.landing-garden-stem:nth-child(n+7){display:block;}.landing-garden-stem:nth-child(n+9){display:none;}}
 
 /* The indoor library uses candlelight rather than the outdoor sky layers. */
 body:has(.grand-library-room)::before,body:has(.grand-library-room)::after{display:none;}
@@ -2989,3 +2961,26 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 
 .grand-room-random{position:absolute;bottom:62px;left:0;right:0;text-align:center;}.grand-room-random button{padding:11px 29px;border:1px solid #c39a60;border-radius:30px;color:#f3d9af;background:linear-gradient(135deg,#382617,#1c140e);font:italic 17px Lora,Georgia,serif;box-shadow:0 5px 20px #0007;cursor:pointer;}.grand-room-random button:hover{background:#4b3220;}.grand-room-random button:focus-visible{outline:2px solid #f3d9af;outline-offset:4px;}.grand-room-random button:disabled{opacity:.4;cursor:default;}.grand-room-plaque-2,.grand-room-plaque-5{top:63%;}
 @media(max-width:640px){.grand-room-plaque-2,.grand-room-plaque-5{top:65%;}.grand-room-random{bottom:80px;}.grand-room-random button{font-size:15px;padding:10px 25px;}}
+
+/* --- Landing night sky: stars, constellations, rare shooting stars ------ */
+.lp-stars { position:absolute; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.lp-star { position:absolute; border-radius:9999px; opacity:.25; box-shadow:0 0 5px rgba(247,236,217,.6); animation:lp-twinkle 4s ease-in-out infinite alternate; }
+@keyframes lp-twinkle { from {opacity:.14; transform:scale(.8);} to {opacity:.9; transform:scale(1.15);} }
+.lp-constellation { position:absolute; opacity:.5; animation:lp-twinkle 9s ease-in-out infinite alternate; }
+.lp-constellation-a { left:8%; top:6%; }
+.lp-constellation-b { right:9%; top:15%; animation-delay:-4s; }
+.lp-shoot { position:absolute; width:130px; height:2px; border-radius:2px; background:linear-gradient(90deg,#fdf3d8,rgba(253,243,216,0)); opacity:0; transform:rotate(-32deg); }
+.lp-shoot-1 { left:80%; top:9%; animation:lp-shoot 13s linear infinite; animation-delay:2s; }
+.lp-shoot-2 { left:62%; top:4%; animation:lp-shoot 21s linear infinite; animation-delay:9s; }
+.lp-shoot-3 { left:90%; top:24%; animation:lp-shoot 29s linear infinite; animation-delay:17s; }
+@keyframes lp-shoot {
+  0% { opacity:0; transform:rotate(-32deg) translateX(0); }
+  2% { opacity:.95; }
+  8% { opacity:0; transform:rotate(-32deg) translateX(-46vw); }
+  100% { opacity:0; transform:rotate(-32deg) translateX(-46vw); }
+}
+@media (max-width:640px) { .lp-constellation-a{left:4%;top:4%;} .lp-constellation-b{right:4%;} }
+@media (prefers-reduced-motion: reduce) {
+  .lp-star, .lp-constellation { animation:none; }
+  .lp-shoot { display:none; }
+}
