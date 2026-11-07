@@ -8,11 +8,7 @@ import { usePublicNotes } from "../hooks/usePublicNotes";
 import { registerVisit } from "../lib/visits";
 import { currentHallHour, HALL_LABELS } from "../lib/timeOfDay";
 import { isCandleLit, lightCandle } from "../lib/candles";
-import {
-  readingGreeting,
-  completionLine,
-  nextLetterLine,
-} from "../lib/librarian";
+import { readingGreeting, completionLine } from "../lib/librarian";
 import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 import { Librarian } from "../components/library/Librarian";
@@ -59,12 +55,6 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   // singled out or pushed.
   const todaysShelf = useMemo(() => readable.slice(0, 7), [readable]);
 
-  // The next shelf over: whatever followed the finished letter
-  const nextAfter = (note: Note): Note | null => {
-    const idx = readable.findIndex((n) => n.id === note.id);
-    return idx >= 0 ? (readable[(idx + 1) % readable.length] ?? null) : null;
-  };
-
   const handleStartResponse = (note: Note) => {
     if (isSupabaseConfigured && isSampleNote(note.id)) return;
     if (!user) {
@@ -73,8 +63,6 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
     }
     setRespondingNote(note);
   };
-
-  const ceremonyNext = finishedNote ? nextAfter(finishedNote) : null;
 
   return (
     <div className="relative min-h-screen text-amber-100">
@@ -204,20 +192,6 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                   >
                     <Flame className="w-4 h-4" />
                     <span>Light a candle for it</span>
-                  </button>
-                )}
-                {ceremonyNext && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const next = ceremonyNext;
-                      setFinishedNote(null);
-                      setSelectedNote(next);
-                    }}
-                    className="inline-flex items-center gap-2 rounded-full border border-gold/50 bg-card/70 hover:bg-card px-6 py-2.5 font-serif text-sm text-gold-light transition cursor-pointer"
-                  >
-                    <span>{nextLetterLine}</span>
-                    <ArrowRight className="w-4 h-4" />
                   </button>
                 )}
                 <button
