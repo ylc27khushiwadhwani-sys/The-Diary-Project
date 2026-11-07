@@ -2838,3 +2838,6 @@ html.light .is-writing .gc-preview { background:#f0e8d8f5; }
 .gc-preview > .reading-open-book { width:100%; max-width:420px; flex-shrink:0; cursor:default; }
 .is-writing .gc-preview > .reading-open-book { width:100%; }
 @media(max-width:760px) { .is-writing .gc-preview > .reading-open-book {width:100px;aspect-ratio:1.05;} .is-writing .gc-preview .rob-left,.is-writing .gc-preview .rob-right {padding:7px 4px;} .is-writing .gc-preview .rob-dedication {font-size:9px;} .is-writing .gc-preview .rob-author {font-size:6px;margin-top:5px;} .is-writing .gc-preview .rob-excerpt {font-size:7px;-webkit-line-clamp:6;} .is-writing .gc-preview .rob-read {display:none;} }
+body[data-room="library"]::before,body[data-room="study"]::before { animation:none; }
+.grand-hall-backdrop .candle-glow-halo { animation:none; }
+.grand-hall-windows { filter:none; }

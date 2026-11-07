@@ -68,7 +68,8 @@ export const App: React.FC = () => {
   // visit badge, while the landing keeps it high.
   useEffect(() => {
     document.body.dataset.view = showLanding || !user ? "landing" : "rooms";
-  }, [showLanding, user]);
+    document.body.dataset.room = activeTab;
+  }, [showLanding, user, activeTab]);
   const [postboxUnseen, setPostboxUnseen] = useState(0);
 
   useEffect(() => {
@@ -145,7 +146,7 @@ export const App: React.FC = () => {
     <div className="min-h-screen flex flex-col text-cream selection:bg-wax-crimson selection:text-white relative bg-background">
       <EntrySequence />
       {/* Drifting dust that glows in the light shafts, plus ember bursts */}
-      <DustCanvas />
+      {activeTab !== "library" && activeTab !== "study" && <DustCanvas />}
 
       <SignInModal key="finish-guest-password" isOpen={!!user?.email_confirmed_at && !!user?.user_metadata?.needs_password} initialMode="password" onClose={() => {}} onAuthenticated={() => setActiveTabState("reading")} />
       {/* Top Header */}

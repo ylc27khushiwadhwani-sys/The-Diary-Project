@@ -263,8 +263,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                     className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
                     title={
                       handwritingFont
-                        ? "Switch to Quill Handwriting"
-                        : "Switch to Classic Book Print"
+                        ? "Switch to Classic Book Print"
+                        : "Switch to Letter Handwriting"
                     }
                   >
                     <Type className="w-4 h-4" />
@@ -293,8 +293,8 @@ const BookReaderModalInner: React.FC<BookReaderModalProps> = ({
                       className="p-1.5 text-wood-700 hover:text-wood-950 bg-amber-900/10 rounded-lg transition cursor-pointer"
                       title={
                         handwritingFont
-                          ? "Switch to Quill Handwriting"
-                          : "Switch to Classic Book Print"
+                          ? "Switch to Classic Book Print"
+                          : "Switch to Letter Handwriting"
                       }
                     >
                       <Type className="w-4 h-4" />
