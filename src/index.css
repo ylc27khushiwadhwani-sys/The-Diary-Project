@@ -2922,3 +2922,11 @@ body[data-view="landing"] .vault-site-footer { padding-bottom:180px; }
 .flower-studio-intro h2,.flower-studio-header h1,.flower-recipient h1 {font-family:"Cormorant Garamond",Georgia,serif;}
 
 .flower-delete-confirm {position:fixed;inset:0;z-index:120;display:grid;place-items:center;padding:22px;background:#0008;}.flower-delete-confirm>div {max-width:420px;padding:28px;border:1px solid rgb(var(--hairline));border-radius:18px;background:rgb(var(--card));}.flower-delete-confirm h2 {font-size:24px;margin-bottom:14px;}.flower-delete-confirm p {font-size:14px;line-height:1.7;margin-bottom:24px;}.flower-delete-confirm button {padding:12px;margin-right:12px;border:1px solid rgb(var(--hairline));border-radius:10px;margin-top:8px;}
+
+/* A sparse, translucent border leaves the page readable. */
+.landing-garden-stem {flex-basis:5%;margin:0;opacity:.32;}
+.landing-garden-stem img {filter:grayscale(1) sepia(1) saturate(2.2) hue-rotate(352deg) brightness(1.12);}
+html.light .landing-garden-stem {opacity:.4;}
+html.light .landing-garden-stem img {filter:none;}
+.landing-butterfly {opacity:.6;}
+@media(max-width:640px){.landing-garden-stem{flex-basis:10%;margin:0;}.landing-garden-stem:nth-child(n+7){display:none;}}
