@@ -21,8 +21,8 @@ interface FlowerSpec {
 const Flower: React.FC<FlowerSpec> = ({ variant, height, delay, duration }) => {
   const variantIndex = Math.max(0, Number(variant.replace("gf-v", "")) - 1) % 4;
   return <span className={`gf-flower botanical-flower ${variant}`} style={{ height, width: height * 0.32, animationDelay: `${delay}s`, animationDuration: `${duration}s` }} aria-hidden="true">
-    <img className="botanical-day" src={`/art/iris-${variantIndex}.webp`} alt="" draggable={false} />
-    <img className="botanical-night" src={`/art/iris-${variantIndex}-gold.webp`} alt="" draggable={false} />
+    <img className="botanical-day" src={`/art/botanical-iris-v2-${variantIndex}.webp`} alt="" draggable={false} />
+    <img className="botanical-night" src={`/art/botanical-iris-v2-${variantIndex}-gold.webp`} alt="" draggable={false} />
   </span>;
 };
 
