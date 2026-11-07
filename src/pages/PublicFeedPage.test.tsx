@@ -1,8 +1,14 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import type React from "react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { AuthProvider } from "../contexts/AuthContext";
 import { PublicFeedPage } from "./PublicFeedPage";
 import type { Note } from "../types/database";
+
+vi.mock("../components/library/GrandLibraryRoom", async (importOriginal) => {
+  const actual=await importOriginal<typeof import("../components/library/GrandLibraryRoom")>();
+  return {GrandLibraryRoom:(props:React.ComponentProps<typeof actual.GrandLibraryRoom>)=><><actual.GrandLibraryRoom {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
+});
 
 const PROFILE_KEY = "unsent_library_demo_profile";
 const FEED_NOTES_KEY = "unsent_library_demo_notes_v2";
@@ -99,7 +105,7 @@ const renderFeed = () => {
       <PublicFeedPage />
     </AuthProvider>,
   );
-  fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+  fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
   return result;
 };
 

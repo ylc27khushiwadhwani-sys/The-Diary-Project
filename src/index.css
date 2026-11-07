@@ -2986,3 +2986,6 @@ body:has(.grand-library-room)::before,body:has(.grand-library-room)::after{displ
 
 body:has(.grand-library-room){background:#170e09;background-image:none;}
 body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
+
+.grand-room-random{position:absolute;bottom:62px;left:0;right:0;text-align:center;}.grand-room-random button{padding:11px 29px;border:1px solid #c39a60;border-radius:30px;color:#f3d9af;background:linear-gradient(135deg,#382617,#1c140e);font:italic 17px Lora,Georgia,serif;box-shadow:0 5px 20px #0007;cursor:pointer;}.grand-room-random button:hover{background:#4b3220;}.grand-room-random button:focus-visible{outline:2px solid #f3d9af;outline-offset:4px;}.grand-room-random button:disabled{opacity:.4;cursor:default;}.grand-room-plaque-2,.grand-room-plaque-5{top:63%;}
+@media(max-width:640px){.grand-room-plaque-2,.grand-room-plaque-5{top:65%;}.grand-room-random{bottom:80px;}.grand-room-random button{font-size:15px;padding:10px 25px;}}

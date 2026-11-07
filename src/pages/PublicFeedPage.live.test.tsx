@@ -1,7 +1,13 @@
+import type React from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { PublicFeedPage } from "./PublicFeedPage";
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
+
+vi.mock("../components/library/GrandLibraryRoom", async (importOriginal) => {
+  const actual=await importOriginal<typeof import("../components/library/GrandLibraryRoom")>();
+  return {GrandLibraryRoom:(props:React.ComponentProps<typeof actual.GrandLibraryRoom>)=><><actual.GrandLibraryRoom {...props}/><button onClick={()=>props.onChoose("all")}>Open test archive</button></>};
+});
 
 const { from, range } = vi.hoisted(() => ({ from: vi.fn(), range: vi.fn() }));
 vi.mock("../lib/supabase", () => ({
@@ -26,7 +32,7 @@ beforeEach(() => {
 describe("configured public feed sample fallback", () => {
   it("shows all 28 samples for a successful empty query, without persisting them", async () => {
     render(<PublicFeedPage />);
-    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+    fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
     expect(
       await screen.findByText(/28 sample letters rest/),
     ).toBeInTheDocument();
@@ -35,6 +41,24 @@ describe("configured public feed sample fallback", () => {
     ).toBeInTheDocument();
     expect(localStorage.getItem(PUBLIC_FEED_DEMO_KEY)).toBeNull();
     expect(from.mock.calls).toEqual([["notes"]]);
+  });
+
+  it("random reading from the room excludes private, sealed, locked and unclean letters", async () => {
+    const base=INITIAL_PUBLIC_NOTES[0];
+    range.mockResolvedValue({data:[
+      {...base,id:"eligible",title:"Eligible public letter"},
+      {...base,id:"private",is_public:false,title:"Private sentinel"},
+      {...base,id:"locked",is_locked:true,title:"Locked sentinel"},
+      {...base,id:"sealed",tags:["unseal:2999-01-01"],title:"Sealed sentinel"},
+      {...base,id:"unclean",moderation_status:"flagged",title:"Unclean sentinel"},
+    ],error:null});
+    render(<PublicFeedPage/>);
+    const random=screen.getByRole("button",{name:"read in random order"});
+    await waitFor(()=>expect(random).not.toBeDisabled());
+    expect(screen.queryByRole("button",{name:"All Shelves"})).not.toBeInTheDocument();
+    fireEvent.click(random);
+    expect(await screen.findByText("Volume retrieved from the shelf")).toBeInTheDocument();
+    expect(document.querySelector("article.reader-open-volume")?.textContent).toContain("Eligible public letter");
   });
 
   it("keeps real public letters without mixing in samples", async () => {
@@ -49,7 +73,7 @@ describe("configured public feed sample fallback", () => {
       error: null,
     });
     render(<PublicFeedPage />);
-    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+    fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
     expect(await screen.findByText("A real public letter")).toBeInTheDocument();
     expect(screen.queryByText(/sample letters rest/)).not.toBeInTheDocument();
     expect(
@@ -60,7 +84,7 @@ describe("configured public feed sample fallback", () => {
   it("does not disguise a database failure with sample content", async () => {
     range.mockResolvedValue({ data: null, error: { message: "Unavailable" } });
     render(<PublicFeedPage />);
-    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+    fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
     expect(
       await screen.findByText("This shelf is currently quiet."),
     ).toBeInTheDocument();
@@ -75,7 +99,7 @@ describe("configured public feed sample fallback", () => {
       ]),
     );
     render(<PublicFeedPage />);
-    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+    fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
     expect(
       await screen.findByText(/28 sample letters rest/),
     ).toBeInTheDocument();
@@ -86,7 +110,7 @@ describe("configured public feed sample fallback", () => {
 
   it("opens sample parchment read-only without requesting response rows for a fake ID", async () => {
     render(<PublicFeedPage />);
-    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+    fireEvent.click(screen.getByRole("button", {name:"Open test archive"}));
     fireEvent.click(await screen.findByText(INITIAL_PUBLIC_NOTES[0].title!));
     expect(
       await screen.findByText("Volume retrieved from the shelf"),

@@ -16,6 +16,7 @@ import { SignInModal } from "../components/auth/SignInModal";
 import { NoteEditor } from "../components/editor/NoteEditor";
 import { usePublicNotes } from "../hooks/usePublicNotes";
 import { PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
+import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 import {
   LIBRARIAN_COLLECTIONS,
@@ -37,6 +38,7 @@ export const PublicFeedPage: React.FC = () => {
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [browseMode, setBrowseMode] = useState<"shelf" | "aisles">("shelf");
   const [roomSection, setRoomSection] = useState<string | null>(null);
+  const [randomSeen,setRandomSeen]=useState<string[]>([]);
   const [aisleNote, setAisleNote] = useState<Note | null>(null);
 
   // Free writers hold a fixed number of letters; the ask only appears once it is reached.
@@ -87,6 +89,16 @@ export const PublicFeedPage: React.FC = () => {
   }, [notes, feedSearch, feedSort, activeCollection]);
 
   const sectionCount=visibleNotes.filter(note=>matchesSection(note,roomSection ?? "all")).length;
+
+  const randomEligible=notes.filter(note=>note.is_public&&note.moderation_status==="clean"&&!isDateSealed(note)&&!note.is_locked);
+  const readRandom=()=>{
+    const remaining=randomEligible.filter(note=>!randomSeen.includes(note.id));
+    const pool=remaining.length?remaining:randomEligible;
+    if(!pool.length)return;
+    const next=pool[Math.floor(Math.random()*pool.length)];
+    setRandomSeen(previous=>remaining.length?[...previous,next.id]:[next.id]);
+    setAisleNote(next);
+  };
 
   const handleStartResponse = (note: Note) => {
     if (isSupabaseConfigured && isSampleNote(note.id)) return;
@@ -165,12 +177,9 @@ export const PublicFeedPage: React.FC = () => {
     );
   }
 
-  if (roomSection === null) {
-    return <GrandLibraryRoom onChoose={(id) => {setRoomSection(id); setCollectionId(null); setFeedSearch("");}} />;
-  }
-
   return (
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
+      {roomSection === null ? <GrandLibraryRoom onChoose={(id) => {setRoomSection(id); setCollectionId(null); setFeedSearch("");}} onRandom={readRandom} randomDisabled={!randomEligible.length}/> : <>
       <GrandHallBackdrop />
       <div id="bookshelf" className="scroll-mt-16 py-10 relative z-10">
         <div className="text-center mb-6"><button type="button" className="library-return-room" onClick={() => setRoomSection(null)}>← Return to the library room</button></div>
@@ -365,6 +374,7 @@ export const PublicFeedPage: React.FC = () => {
         )}
       </div>
 
+      </>}
       {/* Aisle reader (the big shelf keeps its own internal reader) */}
       <BookReaderModal
         note={aisleNote}
