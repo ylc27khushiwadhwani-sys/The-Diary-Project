@@ -37,18 +37,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <CandleLanternIcon className="h-6 w-4 text-gold" />
           <span className="font-serif italic">The Paper Vault</span>
         </span>
-        <nav className="lp-nav" aria-label="Enter the vault">
-          <button
-            type="button"
-            onClick={() => onAuth("signin")}
-            className="lp-nav-ghost"
-          >
-            Sign in
-          </button>
-          <button type="button" onClick={onGuest} className="lp-signin">
-            Step inside
-          </button>
-        </nav>
+
       </header>
 
       {/* one promise, one door */}

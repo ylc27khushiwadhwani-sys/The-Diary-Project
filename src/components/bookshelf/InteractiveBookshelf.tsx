@@ -10,6 +10,8 @@ import promptsData from "../../data/prompts.json";
 interface InteractiveBookshelfProps {
   notes: Note[];
   initialSectionId?: string;
+  controlledSectionId?: string;
+  onSectionChange?: (sectionId:string)=>void;
   onWriteClick: () => void;
   onRespondLetter: (note: Note) => void;
   /** Public shelf: report a real letter for safety review. */
@@ -72,11 +74,15 @@ const BOOKS_PER_SHELF = 14;
 export const InteractiveBookshelf: React.FC<InteractiveBookshelfProps> = ({
   notes,
   initialSectionId = "all",
+  controlledSectionId,
+  onSectionChange,
   onWriteClick,
   onRespondLetter,
   onReportLetter,
 }) => {
-  const [activeSectionId, setActiveSectionId] = useState(initialSectionId);
+  const [localSectionId, setLocalSectionId] = useState(initialSectionId);
+  const activeSectionId=controlledSectionId ?? localSectionId;
+  const setActiveSectionId=(id:string)=>{setLocalSectionId(id);onSectionChange?.(id)};
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [view, setView] = useState<"shelves" | "box">("shelves");
 

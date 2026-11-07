@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback } from "react";
 import { Note } from "../types/database";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
@@ -72,7 +72,7 @@ export const usePublicNotes = (): PublicNotesState => {
     setNotes,
   );
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     if (!isSupabaseConfigured || loadingMore || !hasMore) return;
     setLoadingMore(true);
     fetchPage(offset.current).then((page) => {
@@ -81,11 +81,10 @@ export const usePublicNotes = (): PublicNotesState => {
       offset.current+=page.rawCount;
       setHasMore(page.rawCount === PAGE_SIZE);
       if (page.notes.length > 0) {
-        const seen = new Set(notes.map((n) => n.id));
-        setNotes([...notes, ...page.notes.filter((n) => !seen.has(n.id))]);
+        setNotes(current => {const seen = new Set(current.map((n) => n.id)); return [...current, ...page.notes.filter((n) => !seen.has(n.id))];});
       }
     });
-  };
+  }, [loadingMore, hasMore]);
 
   return { notes, loading, loadingMore, hasMore, refetch, loadMore, setNotes };
 };

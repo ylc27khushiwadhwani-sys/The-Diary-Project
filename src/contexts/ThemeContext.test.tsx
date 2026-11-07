@@ -1,0 +1,2 @@
+import{it,expect}from'vitest';import{render}from'@testing-library/react';import{ThemeProvider}from'./ThemeContext';
+it('clears the retired light theme for returning visitors',()=>{localStorage.setItem('tpv-theme','light');document.documentElement.classList.add('light');render(<ThemeProvider><p>Dark library</p></ThemeProvider>);expect(document.documentElement).not.toHaveClass('light');expect(localStorage.getItem('tpv-theme')).toBe('dark');expect(document.documentElement.style.colorScheme).toBe('dark');});

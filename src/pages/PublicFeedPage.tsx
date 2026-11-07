@@ -5,7 +5,7 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { PaywallModal } from "../components/payments/PaywallModal";
 import { fetchQuota, isLimitError } from "../lib/payments";
-import { InteractiveBookshelf, SHELF_SECTIONS } from "../components/bookshelf/InteractiveBookshelf";
+import { InteractiveBookshelf, SHELF_SECTIONS, matchesSection } from "../components/bookshelf/InteractiveBookshelf";
 import { LibraryAisles } from "../components/library/LibraryAisles";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { GrandLibraryRoom } from "../components/library/GrandLibraryRoom";
@@ -85,6 +85,8 @@ export const PublicFeedPage: React.FC = () => {
         : byDate(a).localeCompare(byDate(b)),
     );
   }, [notes, feedSearch, feedSort, activeCollection]);
+
+  const sectionCount=visibleNotes.filter(note=>matchesSection(note,roomSection ?? "all")).length;
 
   const handleStartResponse = (note: Note) => {
     if (isSupabaseConfigured && isSampleNote(note.id)) return;
@@ -186,8 +188,8 @@ export const PublicFeedPage: React.FC = () => {
               {isSupabaseConfigured &&
               notes.length > 0 &&
               notes.every((note) => isSampleNote(note.id))
-                ? `${visibleNotes.length} sample letters rest on these shelves. Explore them while the community begins writing.`
-                : `${visibleNotes.length} ${visibleNotes.length === 1 ? "letter rests" : "letters rest"} on these shelves, each left by an anonymous pen name.`}
+                ? `${sectionCount} sample letters rest on these shelves. Explore them while the community begins writing.`
+                : `${sectionCount} ${sectionCount === 1 ? "letter rests" : "letters rest"} on these shelves, each left by an anonymous pen name.`}
             </p>
           )}
 
@@ -330,14 +332,15 @@ export const PublicFeedPage: React.FC = () => {
         ) : browseMode === "aisles" ? (
           <div className="mx-auto max-w-5xl px-4">
             <LibraryAisles
-              notes={visibleNotes}
+              notes={visibleNotes.filter(note=>matchesSection(note,roomSection))}
               onOpen={(n) => setAisleNote(n)}
             />
           </div>
         ) : (
           <InteractiveBookshelf
             key={roomSection}
-            initialSectionId={roomSection}
+            controlledSectionId={roomSection}
+            onSectionChange={setRoomSection}
             notes={visibleNotes}
             onWriteClick={openWriter}
             onRespondLetter={handleStartResponse}

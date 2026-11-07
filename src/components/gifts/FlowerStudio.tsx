@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState,useEffect,useRef} from 'react';
 import {X,Copy,Trash2,Share2} from 'lucide-react';
 import {BOUQUETS,BouquetArt,BouquetId} from './BouquetArt';
 import {LETTER_FONTS} from '../../utils/letterStyle';
@@ -14,12 +14,26 @@ export const FlowerStudio:React.FC<FlowerStudioProps> = ({onClose,create,history
  const [passcode,setPasscode]=useState(''); const [peek,setPeek]=useState(false);
  const [created,setCreated]=useState<FlowerLink|null>(null); const [busy,setBusy]=useState(false);
  const [error,setError]=useState(''); const [copied,setCopied]=useState(false); const [deleteId,setDeleteId]=useState<string|null>(null);
+ const dialogRef=useRef<HTMLDivElement>(null);
+ const closeRef=useRef(onClose);useEffect(()=>{closeRef.current=onClose},[onClose]);
+ useEffect(()=>{
+  const previous=document.activeElement as HTMLElement|null;
+  const scope=dialogRef.current;
+  if(!scope)return;
+  const focusable=()=>Array.from((scope.querySelector('[role="alertdialog"]')||scope).querySelectorAll<HTMLElement>('button:not(:disabled),input:not(:disabled),textarea,select,a[href]')).filter(el=>el.offsetParent!==null);
+  const first=focusable()[0];first?.focus();
+  const keys=(event:KeyboardEvent)=>{
+   if(event.key==='Escape'){event.preventDefault();if(deleteId)setDeleteId(null);else closeRef.current();}
+   if(event.key==='Tab'){const items=focusable();const first=items[0],last=items[items.length-1];if(!items.length){event.preventDefault();return;}if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();}else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();}}
+  };
+  scope.addEventListener('keydown',keys);return()=>{scope.removeEventListener('keydown',keys);previous?.focus();};
+ },[deleteId]);
  const update=(patch:Partial<FlowerDraft>)=>{setDraft(d=>({...d,...patch}));setCreated(null)};
  const link=(token:string)=>`${window.location.origin}/#flower=${encodeURIComponent(token)}`;
  const copy=async(token:string)=>{try{await navigator.clipboard.writeText(link(token));setCopied(true)}catch{setError('Copy did not work. Select and copy the link below.')}};
  const make=async(e:React.FormEvent)=>{e.preventDefault();setBusy(true);setError('');try{setCreated(await create(draft,passcode));setCopied(false)}catch(e){setError(e instanceof Error?e.message:'Could not create your link. Your words are still here.')}finally{setBusy(false)}};
  const remove=async(id:string)=>{setBusy(true);setError('');try{await revoke(id);if(created?.id===id)setCreated(null)}catch{setError('Could not delete this gift. Please try again.')}finally{setBusy(false)}};
- return <div className="flower-studio-overlay" role="dialog" aria-modal="true" aria-label="Flowers and letters studio">
+ return <div ref={dialogRef} className="flower-studio-overlay" role="dialog" aria-modal="true" aria-label="Flowers and letters studio">
  <div className="flower-studio-shell"><header className="flower-studio-header"><div><span className="label-caps">THE PAPER VAULT</span><h1>Flowers & letters</h1></div><button type="button" onClick={onClose} aria-label="Close flower studio"><X size={22}/></button></header>
  <section className="flower-studio-intro"><span className="label-caps">A SMALL GESTURE, IN YOUR OWN WORDS</span><h2>Some things bloom on paper.</h2><p>Choose their flowers. Leave a little of yourself in the words.</p></section>
  <div className="flower-studio-grid"><form onSubmit={make} className="flower-studio-form">

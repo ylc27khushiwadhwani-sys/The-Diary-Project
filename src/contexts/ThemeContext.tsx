@@ -1,10 +1,6 @@
 import React, { createContext, useContext, useEffect } from "react";
 
-/**
- * The library has two lights: the original candlelit dark, and a sunlit
- * garden reading room (light). The choice persists on the device and is
- * applied as the `light` class on <html>, which index.css keys off.
- */
+/** Dark-only. Clears the retired light preference for returning readers. */
 
 type Theme = "dark" | "light";
 

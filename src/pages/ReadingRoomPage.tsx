@@ -37,8 +37,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
 }) => {
   const { user } = useAuth();
   const { notes, loading, refetch, hasMore, loadingMore, loadMore } = usePublicNotes();
-  const [bookPage,setBookPage] = useState(0);
-  const [awaitingNext,setAwaitingNext] = useState(false);
+  const [requestedPage,setRequestedPage] = useState(0);
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [finishedNote, setFinishedNote] = useState<Note | null>(null);
@@ -54,21 +53,15 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
     [notes],
   );
 
-  // A small shelf to wander - every reader picks their own, nothing is
-  // singled out or pushed.
+  // Keep a requested page separate from the available page. A late archive
+  // fetch can fulfill Next without synchronously updating state in an effect.
+  const bookPage = Math.min(requestedPage, Math.max(0, Math.ceil(readable.length / 3) - 1));
   useEffect(() => {
-    if (hasMore && !loadingMore && readable.length < (bookPage+2)*3) loadMore();
-  }, [readable.length,bookPage,hasMore,loadingMore]);
-  useEffect(() => {
-    if (awaitingNext && (bookPage+1)*3 < readable.length) {
-      setBookPage(p=>p+1);
-      setAwaitingNext(false);
-    } else if (awaitingNext && !hasMore && !loadingMore) setAwaitingNext(false);
-  }, [awaitingNext,bookPage,readable.length,hasMore,loadingMore]);
+    if (hasMore && !loadingMore && readable.length < (requestedPage+2)*3) loadMore();
+  }, [readable.length,requestedPage,hasMore,loadingMore,loadMore]);
   const todaysShelf = readable.slice(bookPage*3,bookPage*3+3);
   const nextBooks = () => {
-    if ((bookPage+1)*3 < readable.length) setBookPage(bookPage+1);
-    else if (hasMore) { setAwaitingNext(true); loadMore(); }
+    if ((bookPage+1)*3 < readable.length || hasMore) setRequestedPage(bookPage+1);
   };
 
   const handleStartResponse = (note: Note) => {
@@ -118,7 +111,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                       Open a book to read the full letter.
                     </p>
                     <div className="reading-book-pagination">
-                      <button type="button" disabled={bookPage===0} onClick={()=>setBookPage(bookPage-1)}>← Previous</button>
+                      <button type="button" disabled={bookPage===0} onClick={()=>setRequestedPage(bookPage-1)}>← Previous</button>
                       <span>Books {bookPage*3+1}-{bookPage*3+todaysShelf.length}</span>
                       <button type="button" disabled={loadingMore || (!hasMore && (bookPage+1)*3>=readable.length)} onClick={nextBooks}>{loadingMore?'Loading...':'Next →'}</button>
                     </div>

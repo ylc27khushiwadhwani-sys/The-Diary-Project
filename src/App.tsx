@@ -94,7 +94,7 @@ export const App: React.FC = () => {
     return () => window.clearInterval(id);
   }, []);
 
-  if (flowerToken) return <FlowerGiftPage token={flowerToken} read={openFlowerGift} onExit={()=>{window.history.replaceState(null,"",window.location.pathname);setFlowerToken(null);setShowLanding(true)}}/>;
+  if (flowerToken) return <FlowerGiftPage key={flowerToken} token={flowerToken} read={openFlowerGift} onExit={()=>{window.history.replaceState(null,"",window.location.pathname);setFlowerToken(null);setShowLanding(true)}}/>;
 
   // A dedicated letter opens for whoever holds the link, signed in or not.
   if (gift) {
@@ -333,7 +333,7 @@ const LandingFooter: React.FC<{
     <div className="mx-auto max-w-xl space-y-4">
       <div className="flex items-center justify-center gap-2 text-xs font-serif text-muted">
         <ShieldCheck className="w-4 h-4 text-gold/70" />
-        <span>Encrypted at rest & in transit • Pseudonymous by default</span>
+        <span>Write under a pen name • Choose private or public</span>
       </div>
 
       <p className="text-xs leading-relaxed">
@@ -356,13 +356,13 @@ const LandingFooter: React.FC<{
           Community Guidelines &amp; Safety
         </button>
         <span className="text-muted/60">
-          - how every letter is kept safe
+          - writing, sharing, and reporting
         </span>
       </div>
 
       <p className="text-xs text-muted/70">
-        We only use your email to preserve your private library across devices.
-        We never share it.
+        Use a verified email to sign in to your library across devices.
+        Your email is not shown on your public letters.
       </p>
 
       <p className="font-serif italic text-gold/80 text-base">

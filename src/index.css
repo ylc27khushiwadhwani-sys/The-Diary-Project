@@ -2970,3 +2970,19 @@ html.light .landing-garden-stem img {filter:none;}
 .landing-flower-border{height:190px;}
 .landing-garden-stem{flex-basis:5%;margin:0 -.5%;}
 @media(max-width:640px){.landing-flower-border{height:136px;}.landing-garden-stem{flex-basis:9%;margin:0;max-height:136px;}.landing-garden-stem:nth-child(n+7){display:block;}.landing-garden-stem:nth-child(n+9){display:none;}}
+
+/* The indoor library uses candlelight rather than the outdoor sky layers. */
+body:has(.grand-library-room)::before,body:has(.grand-library-room)::after{display:none;}
+.grand-library-room{z-index:1;}
+@media(max-width:640px){.grand-room-art{object-fit:cover;object-position:center;}.grand-library-room{background:#21150e;}.grand-room-heading{background:linear-gradient(#140c08aa,transparent);padding:8px 0 18px;}}
+/* Height controls the stems, rather than a narrow flex cell shrinking them. */
+.landing-garden-stem{display:flex;justify-content:center;}
+.landing-garden-stem img{width:auto;max-width:none;height:100%;}
+.lp-scene{padding-bottom:210px;}
+@media(max-width:640px){.lp-scene{padding-bottom:160px;}.landing-garden-stem{opacity:.28;}}
+
+/* Let the taller border breathe without laying dense petals over the copy. */
+.landing-garden-stem img{mask-image:linear-gradient(to top,#000 0%,#000 65%,#0008 100%);}
+
+body:has(.grand-library-room){background:#170e09;background-image:none;}
+body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
