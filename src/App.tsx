@@ -9,7 +9,6 @@ import { LandingPage } from "./pages/LandingPage";
 import { ReadingRoomPage } from "./pages/ReadingRoomPage";
 import { PublicFeedPage } from "./pages/PublicFeedPage";
 import { LibraryPage } from "./pages/LibraryPage";
-import { DoorsPage } from "./pages/DoorsPage";
 import { GiftOpeningPage } from "./pages/GiftOpeningPage";
 import { GuidelinesPage } from "./pages/GuidelinesPage";
 import { giftFromLocation, GiftPayload } from "./lib/giftLink";
@@ -41,7 +40,6 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTabState] = useState<Tab>("reading");
   const setActiveTab = (tab: Tab) => {
     if (tab !== activeTab) burstEmbers();
-    setDoorChosen(true);
     setActiveTabState(tab);
   };
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
@@ -54,7 +52,6 @@ export const App: React.FC = () => {
   const [isGuidelinesOpen, setIsGuidelinesOpen] = useState(false);
 
   // After entering, the two doors come first; the rooms wait behind them.
-  const [doorChosen, setDoorChosen] = useState(false);
   // The brand leads back to the landing page, even once inside.
   const [showLanding, setShowLanding] = useState(false);
   const [postboxUnseen, setPostboxUnseen] = useState(0);
@@ -253,17 +250,9 @@ export const App: React.FC = () => {
       </header>
 
       {/* Main Content Area */}
-      <main key={doorChosen ? activeTab : "doors"} className="flex-1 relative z-10 room-enter">
-        {!doorChosen && profile ? (
-          <DoorsPage
-            penName={profile.pen_name}
-            avatarColor={profile.avatar_color}
-            onOpen={(room) => {
-              setDoorChosen(true);
-              setActiveTab(room);
-            }}
-          />
-        ) : activeTab === "reading" ? (
+      {/* No door lobby: stepping inside lands straight in the rooms. */}
+      <main key={activeTab} className="flex-1 relative z-10 room-enter">
+        {activeTab === "reading" ? (
           <ReadingRoomPage
             onEnterLibrary={() => setActiveTab("library")}
             onOpenStudy={() => setActiveTab("study")}
