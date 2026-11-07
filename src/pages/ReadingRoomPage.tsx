@@ -13,6 +13,7 @@ import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
 import { Librarian } from "../components/library/Librarian";
 import { BookItem } from "../components/bookshelf/BookItem";
+import { OpenBookItem } from "../components/bookshelf/OpenBookItem";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
@@ -96,17 +97,24 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                     readingOpen ? "books-open" : "books-closed"
                   }`}
                 >
-                  <div className="relative flex items-end justify-center gap-[3px] min-h-[136px] pb-1">
-                    {todaysShelf.map((note, idx) => (
-                      <BookItem
-                        key={note.id}
-                        note={note}
-                        index={idx}
-                        onOpen={(opened) =>
-                          readingOpen && setSelectedNote(opened)
-                        }
-                      />
-                    ))}
+                  <div className="relative flex flex-wrap items-end justify-center gap-[3px] min-h-[136px] pb-1">
+                    {todaysShelf.map((note, idx) =>
+                      readingOpen ? (
+                        <OpenBookItem
+                          key={note.id}
+                          note={note}
+                          index={idx}
+                          onOpen={setSelectedNote}
+                        />
+                      ) : (
+                        <BookItem
+                          key={note.id}
+                          note={note}
+                          index={idx}
+                          onOpen={() => {}}
+                        />
+                      ),
+                    )}
                   </div>
                   <div className="wood-shelf-ledge h-4 rounded-b-md relative z-20" />
                 </div>
