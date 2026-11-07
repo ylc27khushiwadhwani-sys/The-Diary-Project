@@ -14,6 +14,7 @@ interface AuthContextType {
   signInWithPassword: (email: string, password: string) => Promise<{error: Error | null}>;
   signUpWithPassword: (email: string, password: string, penName: string) => Promise<{error: Error | null; needsConfirmation: boolean}>;
   completeGuestPassword: (password: string) => Promise<{error: Error | null}>;
+  signInWithGoogle: () => Promise<{error: Error | null}>;
   signOut: () => Promise<void>;
   updatePenName: (name: string) => Promise<{ error: Error | null }>;
   loginAsGuestDemo: (penName?: string) => Promise<void>;
@@ -182,6 +183,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return {error};
   };
 
+  const signInWithGoogle = async () => {
+    const options={redirectTo:`${window.location.origin}/?auth=complete`};
+    const result = user?.is_anonymous
+      ? await supabase.auth.linkIdentity({provider:'google',options})
+      : await supabase.auth.signInWithOAuth({provider:'google',options});
+    return {error:result.error};
+  };
+
   const signOut = async () => {
     if (!isSupabaseConfigured) {
       localStorage.removeItem(DEMO_STORAGE_KEY);
@@ -281,6 +290,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         signInWithMagicLink,
         signInWithPassword,
         completeGuestPassword,
+        signInWithGoogle,
         signUpWithPassword,
         signOut,
         updatePenName,

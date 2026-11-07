@@ -10,7 +10,7 @@ interface SignInModalProps {
 }
 
 export const SignInModal: React.FC<SignInModalProps> = ({isOpen,onClose,onAuthenticated,initialMode='signin'}) => {
-  const {signInWithMagicLink,signInWithPassword,signUpWithPassword,completeGuestPassword,loginAsGuestDemo} = useAuth();
+  const {signInWithMagicLink,signInWithPassword,signUpWithPassword,completeGuestPassword,signInWithGoogle,loginAsGuestDemo} = useAuth();
   const [mode,setMode] = useState(initialMode);
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
@@ -47,6 +47,7 @@ export const SignInModal: React.FC<SignInModalProps> = ({isOpen,onClose,onAuthen
       <p className="pv-auth-eyebrow">THE PAPER VAULT</p>
       <h2>{mode==='password'?'Your email is verified.':mode==='signup'?'A library card of your own.':'Welcome back to your library.'}</h2>
       <p className="pv-auth-intro">{mode==='password'?'Set a password to finish saving your guest library. Your letters stay on the same shelves.':mode==='signup'?'Keep a private place for the words you have carried. Your email stays private; readers see only your pen name.':'Log in to find your private shelves and the letters you left here.'}</p>
+      {mode!=='password' && <button type="button" className="pv-auth-google" disabled={loading} onClick={()=>void run(async()=>{const result=await signInWithGoogle();if(result.error) throw result.error;})}>Continue with Google</button>}
       <form onSubmit={submit}>
         {mode==='signup' && <label htmlFor="auth-name">What should we call you?<input id="auth-name" autoComplete="nickname" value={name} onChange={e=>setName(e.target.value)} placeholder="Your pen name" required maxLength={80}/></label>}
         {mode!=='password' && <label htmlFor="auth-email">Email Address<input id="auth-email" type="email" autoComplete="email" value={email} onChange={e=>setEmail(e.target.value)} required/></label>}

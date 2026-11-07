@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Note } from "../types/database";
 import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { INITIAL_PUBLIC_NOTES, PUBLIC_FEED_DEMO_KEY } from "../data/seedNotes";
@@ -22,17 +22,17 @@ const loadDemoNotes = (): Note[] => {
   );
 };
 
-const fetchPage = async (from: number): Promise<Note[] | null> => {
+const fetchPage = async (from: number): Promise<{notes:Note[]; rawCount:number} | null> => {
   const { data, error } = await supabase
     .from("notes")
     .select("*, profiles:user_id(id, pen_name, avatar_color)")
     .eq("is_public", true)
     .eq("moderation_status", "clean")
-    .order("published_at", { ascending: false })
+    .order("published_at", { ascending: false }).order("id", {ascending:false})
     .range(from, from + PAGE_SIZE - 1);
   if (error || !data) return null;
   // Whispers live on the Whisper Wall, never as books on the shelves
-  return (data as Note[]).filter((n) => !(n.tags ?? []).includes("whisper"));
+  return {notes:(data as Note[]).filter((n) => !(n.tags ?? []).includes("whisper")),rawCount:data.length};
 };
 
 export interface PublicNotesState {
@@ -51,6 +51,7 @@ export interface PublicNotesState {
  * Supabase it pages 120 letters at a time; `loadMore` unshelves the next page.
  */
 export const usePublicNotes = (): PublicNotesState => {
+  const offset = useRef(0);
   const [notes, setNotes] = useState<Note[]>([]);
   const [loadingMore, setLoadingMore] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -63,8 +64,9 @@ export const usePublicNotes = (): PublicNotesState => {
       }
       const first = await fetchPage(0);
       if (first === null) return null;
-      setHasMore(first.length === PAGE_SIZE);
-      return publicNotesOrSamples(first);
+      offset.current=first.rawCount;
+      setHasMore(first.rawCount === PAGE_SIZE);
+      return publicNotesOrSamples(first.notes);
     },
     [],
     setNotes,
@@ -73,13 +75,14 @@ export const usePublicNotes = (): PublicNotesState => {
   const loadMore = () => {
     if (!isSupabaseConfigured || loadingMore || !hasMore) return;
     setLoadingMore(true);
-    fetchPage(notes.length).then((page) => {
+    fetchPage(offset.current).then((page) => {
       setLoadingMore(false);
       if (!page) return;
-      setHasMore(page.length === PAGE_SIZE);
-      if (page.length > 0) {
+      offset.current+=page.rawCount;
+      setHasMore(page.rawCount === PAGE_SIZE);
+      if (page.notes.length > 0) {
         const seen = new Set(notes.map((n) => n.id));
-        setNotes([...notes, ...page.filter((n) => !seen.has(n.id))]);
+        setNotes([...notes, ...page.notes.filter((n) => !seen.has(n.id))]);
       }
     });
   };

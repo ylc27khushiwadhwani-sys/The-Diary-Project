@@ -1,7 +1,7 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SignInModal } from './SignInModal';
-const auth = vi.hoisted(() => ({signInWithMagicLink:vi.fn(), signInWithPassword:vi.fn(), signUpWithPassword:vi.fn(), loginAsGuestDemo:vi.fn()}));
+const auth = vi.hoisted(() => ({signInWithMagicLink:vi.fn(), signInWithGoogle:vi.fn(), signInWithPassword:vi.fn(), signUpWithPassword:vi.fn(), loginAsGuestDemo:vi.fn()}));
 vi.mock('../../contexts/AuthContext', () => ({useAuth:()=>auth}));
 beforeEach(()=>vi.resetAllMocks());
 describe('library sign in', () => {

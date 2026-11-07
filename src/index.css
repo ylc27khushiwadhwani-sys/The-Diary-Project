@@ -2806,3 +2806,20 @@ html.light .is-writing .gc-preview { background:#f0e8d8f5; }
 .pv-auth-error,.pv-auth-notice { padding:12px; border:1px solid #bc826c; background:#fff8; border-radius:10px; font-size:13px; line-height:1.6; margin-top:12px; }
 .pv-auth-error { color:#8d2820; }
 @media(max-width:640px) { .pv-auth-card { padding:28px 22px; border-radius:22px; } .pv-auth-card h2 { font-size:31px; } }
+
+.reading-books-stage { width:min(1380px,calc(100vw - 40px)); margin:38px 0 44px; position:relative; left:50%; transform:translateX(-50%); }
+.reading-books-row { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:32px; }
+.reading-open-book { display:flex; min-width:0; aspect-ratio:1.25; position:relative; color:#4b3b29; text-align:left; border-radius:6px 14px 14px 6px; background:#61452d; padding:6px 6px 12px; box-shadow:0 14px 28px #0005; transition:transform .2s; }
+.reading-open-book:hover { transform:translateY(-5px); }
+.rob-left,.rob-right { width:50%; min-width:0; display:flex; flex-direction:column; padding:24px 16px; background:#f4ebd6; border-radius:4px; }
+.rob-left { background:linear-gradient(90deg,#e7dac0,#fbf3e2 80%,#d5c7ac); box-shadow:inset -8px 0 12px -10px #49331c; justify-content:center; }
+.rob-right { background:linear-gradient(90deg,#d3c5a8,#fff9eb 12%,#f3e8d0); box-shadow:inset 6px 0 10px -8px #4e3824; }
+.rob-dedication { font:600 clamp(17px,1.7vw,25px)/1.25 'Cormorant Garamond',serif; overflow-wrap:anywhere; }
+.rob-author { font:italic 12px/1.5 Lora,serif; margin-top:18px; overflow-wrap:anywhere; }
+.rob-excerpt { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:7; overflow:hidden; font-size:clamp(14px,1.3vw,19px); line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; }
+.rob-read { font:italic 11px Lora,serif; margin-top:auto; padding-top:16px; }
+.reading-book-pagination { display:flex; align-items:center; justify-content:space-between; gap:16px; margin:26px 0 0; font-size:13px; }
+.reading-book-pagination button { border:1px solid #bd9b6570; border-radius:30px; padding:12px 22px; background:#ac8c4130; }
+.reading-book-pagination button:disabled { opacity:.35; }
+@media(max-width:760px) { .reading-books-stage { width:100%; margin-top:32px; } .reading-books-row { grid-template-columns:1fr; gap:28px; } .reading-open-book { aspect-ratio:1.35; } .rob-excerpt {font-size:17px;-webkit-line-clamp:6;} .rob-dedication {font-size:24px;} .reading-book-pagination {font-size:11px;gap:6px;} .reading-book-pagination button {padding:10px 14px;} }
+.pv-auth-google { display:block; width:100%; margin:10px 0 24px; border:1px solid #b6a184; background:#fffc; color:#332b22; padding:13px; border-radius:99px; font:500 14px Lora,serif; }

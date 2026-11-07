@@ -1,26 +1,26 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, BookOpen, Feather, Flame } from "lucide-react";
 import { Note } from "../types/database";
 import { isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { usePublicNotes } from "../hooks/usePublicNotes";
-import { registerVisit } from "../lib/visits";
-import { currentHallHour, HALL_LABELS } from "../lib/timeOfDay";
+
+
 import { isCandleLit, lightCandle } from "../lib/candles";
-import { readingGreeting, completionLine } from "../lib/librarian";
+import { completionLine } from "../lib/librarian";
 import { isDateSealed } from "../utils/unseal";
 import { isSampleNote } from "../services/publicFeed";
-import { Librarian } from "../components/library/Librarian";
+
 import { BookItem } from "../components/bookshelf/BookItem";
-import { EnvelopeLetter } from "../components/bookshelf/EnvelopeLetter";
+import { OpenBookCard } from "../components/bookshelf/OpenBookCard";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
 import { SignInModal } from "../components/auth/SignInModal";
 import { CandleFlame } from "../components/cinematic/CandleFlame";
 import { WhisperWall } from "../components/library/WhisperWall";
-import { GardenFlowers } from "../components/common/GardenFlowers";
+
 
 interface ReadingRoomPageProps {
   onEnterLibrary: () => void;
@@ -37,9 +37,8 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   onOpenStudy,
 }) => {
   const { user } = useAuth();
-  const { notes, loading, refetch } = usePublicNotes();
-  const [visits] = useState(() => registerVisit());
-  const [hourLabel] = useState(() => HALL_LABELS[currentHallHour()]);
+  const { notes, loading, refetch, hasMore, loadingMore, loadMore } = usePublicNotes();
+  const [bookPage,setBookPage] = useState(0);
 
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
   const [finishedNote, setFinishedNote] = useState<Note | null>(null);
@@ -47,7 +46,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   const [reportingNote, setReportingNote] = useState<Note | null>(null);
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
   // The shelf greets closed; "Read the letters" opens the envelopes.
-  const [readingOpen, setReadingOpen] = useState(false);
+  const [readingOpen, setReadingOpen] = useState(true);
 
   // Letters you can actually open today (date-sealed ones are still waiting)
   const readable = useMemo(
@@ -57,7 +56,14 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
 
   // A small shelf to wander - every reader picks their own, nothing is
   // singled out or pushed.
-  const todaysShelf = useMemo(() => readable.slice(0, 7), [readable]);
+  useEffect(() => {
+    if (hasMore && !loadingMore && readable.length < (bookPage+2)*3) loadMore();
+  }, [readable.length,bookPage,hasMore,loadingMore]);
+  const todaysShelf = readable.slice(bookPage*3,bookPage*3+3);
+  const nextBooks = () => {
+    if ((bookPage+1)*3 < readable.length) setBookPage(bookPage+1);
+    else if (hasMore) loadMore();
+  };
 
   const handleStartResponse = (note: Note) => {
     if (isSupabaseConfigured && isSampleNote(note.id)) return;
@@ -71,13 +77,8 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   return (
     <div className="relative min-h-screen text-amber-100">
       <div className="candle-glow absolute inset-0 pointer-events-none" />
-      <GardenFlowers />
+
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-10 sm:py-14">
-        {/* The Librarian greets by visit count and hour */}
-        <Librarian
-          line={readingGreeting(visits, hourLabel)}
-          className="justify-center mb-10"
-        />
 
         {loading ? (
           <div role="status" className="text-center py-20">
@@ -95,20 +96,24 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
                 {readingOpen ? (
                   /* every letter out of its envelope, four across the view
                      (two by two on phones) - her gardenletters reference */
-                  <div className="env-stage">
-                    <div className="env-row">
-                      {todaysShelf.slice(0, 4).map((note, idx) => (
-                        <EnvelopeLetter
+                  <div className="reading-books-stage">
+                    <div className="reading-books-row">
+                      {todaysShelf.map((note) => (
+                        <OpenBookCard
                           key={note.id}
                           note={note}
-                          index={idx}
                           onOpen={setSelectedNote}
                         />
                       ))}
                     </div>
                     <p className="env-hint font-body text-xs text-muted italic text-center">
-                      The letters are open. Touch one to read it in full.
+                      Open a book to read the full letter.
                     </p>
+                    <div className="reading-book-pagination">
+                      <button type="button" disabled={bookPage===0} onClick={()=>setBookPage(bookPage-1)}>← Previous</button>
+                      <span>Books {bookPage*3+1}-{bookPage*3+todaysShelf.length}</span>
+                      <button type="button" disabled={loadingMore || (!hasMore && (bookPage+1)*3>=readable.length)} onClick={nextBooks}>{loadingMore?'Loading...':'Next →'}</button>
+                    </div>
                   </div>
                 ) : (
                   <>
