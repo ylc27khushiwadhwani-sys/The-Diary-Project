@@ -55,8 +55,7 @@ describe("configured public feed sample fallback", () => {
     render(<PublicFeedPage/>);
     const random=screen.getByRole("button",{name:"read in random order"});
     await waitFor(()=>expect(random).not.toBeDisabled());
-    // The desk leads with the whole collection; shelf chips narrow it.
-    expect(screen.getByRole("button",{name:"All Shelves"})).toBeInTheDocument();
+    expect(screen.queryByRole("button",{name:"All Shelves"})).not.toBeInTheDocument();
     fireEvent.click(random);
     expect(await screen.findByText("Volume retrieved from the shelf")).toBeInTheDocument();
     expect(document.querySelector("article.reader-open-volume")?.textContent).toContain("Eligible public letter");

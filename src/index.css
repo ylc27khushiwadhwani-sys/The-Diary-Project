@@ -2991,11 +2991,24 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .guidelines-overlay .hall-moth { display: none; }
 
 /* ==== Grand Library: letters standing as books on the desk ==== */
-.glb-scene{position:relative;min-height:calc(100vh - 64px);overflow:hidden;background:radial-gradient(120% 90% at 50% 0%,#1d1712 0%,#12100f 45%,#0a0d1f 100%);color:rgb(var(--cream));padding:26px 0 46px;}
-.glb-glow{position:absolute;top:8%;width:340px;height:340px;border-radius:50%;pointer-events:none;filter:blur(10px);}
-.glb-glow-left{left:-90px;background:radial-gradient(circle,#d4a37322,transparent 65%);}
-.glb-glow-right{right:-90px;background:radial-gradient(circle,#d4a3731c,transparent 65%);}
-.glb-heading{position:relative;left:auto;right:auto;top:auto;margin:0 auto 14px;max-width:560px;}
+.glb-scene{position:relative;min-height:calc(100vh - 64px);overflow:hidden;background:
+  radial-gradient(130% 70% at 50% 118%,#40280f 0%,transparent 52%),
+  linear-gradient(180deg,#0c0a18 0%,#151009 55%,#0a0d1f 100%);
+  color:rgb(var(--cream));padding:26px 0 46px;
+  box-shadow:inset 0 0 190px #000d;}
+/* Out-of-focus shelves far behind the desk, painted in CSS so the room
+   reads as a warm library without a photographic wall. */
+.glb-back-shelves{position:absolute;left:-4%;right:-4%;top:0;height:56%;pointer-events:none;opacity:.5;filter:blur(7px);
+  background:
+   repeating-linear-gradient(90deg,#241708 0 16px,#120c05 16px 22px,#33220f 22px 34px,#0f0a04 34px 40px,#2b1c0c 40px 52px,#151009 52px 60px),
+   linear-gradient(180deg,#0000 0%,#0006 100%);
+  mask-image:linear-gradient(180deg,#000 55%,transparent 100%);
+  -webkit-mask-image:linear-gradient(180deg,#000 55%,transparent 100%);}
+.glb-back-shelves::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(180deg,transparent 0 150px,#00000088 150px 158px);}
+.glb-glow{position:absolute;top:16%;width:340px;height:340px;border-radius:50%;pointer-events:none;filter:blur(10px);z-index:1;}
+.glb-glow-left{left:-90px;background:radial-gradient(circle,#d4a37326,transparent 65%);}
+.glb-glow-right{right:-90px;background:radial-gradient(circle,#d4a37320,transparent 65%);}
+.glb-heading{position:relative;left:auto;right:auto;top:auto;margin:0 auto 14px;max-width:560px;z-index:3;}
 .glb-controls{position:relative;z-index:3;max-width:1060px;margin:0 auto 6px;padding:0 18px;}
 .glb-sections{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin-bottom:10px;}
 .glb-chip{padding:5px 13px;border-radius:999px;border:1px solid rgb(var(--hairline));background:rgb(var(--card) / .55);color:#e8cf9f;font-family:Lora,Georgia,serif;font-size:11.5px;cursor:pointer;transition:all .18s;}
@@ -3010,24 +3023,37 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .glb-empty{position:relative;z-index:2;text-align:center;padding:80px 20px;font-family:Lora,Georgia,serif;font-size:14px;color:rgb(var(--muted));font-style:italic;}
 
 /* The desk shot: perspective stage, one long row of standing books. */
-.glb-stage{position:relative;z-index:2;height:520px;margin-top:4px;perspective:1150px;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;}
+.glb-stage{position:relative;z-index:2;height:520px;margin-top:4px;perspective:1250px;overflow:hidden;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none;}
 .glb-stage:active{cursor:grabbing;}
-.glb-track{position:absolute;left:0;bottom:146px;display:flex;gap:18px;align-items:flex-end;transform-style:preserve-3d;will-change:transform;}
-.glb-desk{position:absolute;left:0;right:0;bottom:0;height:150px;background:
-  linear-gradient(180deg,#8a6136 0%,#6b4826 3%,#553520 12%,#3c2513 55%,#2b1909 100%);
-  box-shadow:0 -14px 40px #0009 inset,0 -2px 0 #a97c4b66;
-  pointer-events:none;}
+.glb-track{position:absolute;left:0;bottom:150px;display:flex;gap:22px;align-items:flex-end;transform-style:preserve-3d;will-change:transform;}
+/* Wooden table: grain, plank seams, a warm pool of lamplight on top. */
+.glb-desk{position:absolute;left:0;right:0;bottom:0;height:150px;pointer-events:none;
+  background:
+   radial-gradient(60% 90% at 50% 0%,#d4a37326 0%,transparent 60%),
+   repeating-linear-gradient(93deg,#00000014 0 3px,transparent 3px 9px),
+   repeating-linear-gradient(90deg,#0000 0 340px,#00000055 340px 343px),
+   linear-gradient(180deg,#9c6f3c 0%,#7a5228 4%,#5c3a1c 16%,#40271368 40%,#2b1909 100%);
+  box-shadow:0 -18px 44px #000a inset,0 -2px 0 #c79b664d;}
 .glb-book{position:relative;width:132px;flex:none;transform-style:preserve-3d;}
-.glb-book::after{content:"";position:absolute;left:8%;right:8%;bottom:-8px;height:12px;background:radial-gradient(50% 100% at 50% 0%,#000c,transparent 75%);filter:blur(3px);z-index:-1;}
-.glb-cover{position:relative;display:block;width:100%;height:100%;border:1px solid;border-radius:3px 7px 7px 3px;cursor:pointer;padding:0;text-align:center;
+.glb-book::after{content:"";position:absolute;left:4%;right:4%;bottom:-6px;height:16px;background:radial-gradient(50% 100% at 50% 0%,#000d,transparent 72%);filter:blur(4px);z-index:-1;}
+/* A real little hardback: front cover, spine, page block, top edge. */
+.glb-book3d{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:none;cursor:pointer;text-align:center;
   transform:rotateY(var(--tilt,-24deg));transform-style:preserve-3d;
-  box-shadow:0 16px 30px #000b,inset 0 0 0 1px #0006;
-  transition:transform .55s cubic-bezier(.22,.9,.24,1),box-shadow .35s;}
-.glb-cover::before{content:"";position:absolute;top:0;bottom:0;left:0;width:12px;border-radius:3px 0 0 3px;
-  background:linear-gradient(90deg,#000a,#ffffff14 55%,#0008);}
-.glb-cover::after{content:"";position:absolute;top:0;bottom:0;right:3px;width:3px;background:repeating-linear-gradient(180deg,#e8dcc288 0 1px,transparent 1px 3px);opacity:.5;}
-.glb-cover:hover,.glb-cover:focus-visible{transform:rotateY(-6deg) translateZ(52px) translateY(-8px);box-shadow:0 26px 44px #000d,0 0 26px #d4a37330;outline:none;z-index:5;}
-.glb-book.is-opening .glb-cover{transform:rotateY(0deg) translateZ(170px) translateY(-16px) scale(1.12);box-shadow:0 40px 70px #000e,0 0 44px #d4a37345;z-index:8;}
+  transition:transform .55s cubic-bezier(.22,.9,.24,1);}
+.glb-face{position:absolute;backface-visibility:hidden;}
+.glb-front{inset:0;transform:translateZ(14px);border:1px solid;border-radius:3px 7px 7px 3px;
+  box-shadow:inset 0 0 0 1px #0006,inset 0 2px 3px #ffffff14;
+  display:flex;align-items:center;justify-content:center;}
+.glb-spine{top:0;bottom:0;left:-14px;width:28px;transform:rotateY(-90deg);border:1px solid;border-radius:6px 0 0 6px;
+  box-shadow:inset 0 0 8px #0009;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.glb-spine::before{content:"";position:absolute;inset:8px 4px;border-top:1px solid #d4a37344;border-bottom:1px solid #d4a37344;}
+.glb-spine-title{font-family:Lora,Georgia,serif;font-size:8px;letter-spacing:.08em;color:#e8cf9fdd;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;overflow:hidden;max-height:88%;text-shadow:0 1px 2px #000;}
+.glb-pages{top:1.5%;bottom:1.5%;right:-14px;width:27px;transform:rotateY(90deg);
+  background:repeating-linear-gradient(90deg,#e9ddc4 0 2px,#c9bb9c 2px 3px);
+  box-shadow:inset 0 0 6px #0007;}
+.glb-top{left:2%;right:2%;top:-14px;height:27px;transform:rotateX(90deg);
+  background:repeating-linear-gradient(0deg,#e9ddc4 0 2px,#cfc2a4 2px 3px);
+  box-shadow:inset 0 0 6px #0006;}
 .glb-frame{position:absolute;inset:9px;border:1px solid #d4a37355;border-radius:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:8px 6px;}
 .glb-frame::before{content:"";position:absolute;inset:3px;border:1px solid #d4a37333;border-radius:2px;pointer-events:none;}
 .glb-ornament{color:rgb(var(--gold));font-size:13px;text-shadow:0 1px 3px #000;}
@@ -3035,6 +3061,10 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .glb-pen{font-family:Lora,Georgia,serif;font-style:italic;font-size:9.5px;color:#d8bd93;opacity:.85;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;}
 .glb-frame svg{color:#e8cf9f;}
 .glb-ribbon{position:absolute;left:50%;bottom:-9px;width:9px;height:16px;transform:translateX(-50%);border-radius:0 0 3px 3px;box-shadow:0 3px 6px #0008;}
+.glb-book3d:hover,.glb-book3d:focus-visible{transform:rotateY(-5deg) translateZ(58px) translateY(-8px);outline:none;}
+.glb-book3d:hover .glb-front,.glb-book3d:focus-visible .glb-front{box-shadow:inset 0 0 0 1px #0006,0 0 30px #d4a37338;}
+.glb-book.is-opening .glb-book3d{transform:rotateY(0deg) translateZ(190px) translateY(-16px) scale(1.12);}
+.glb-book.is-opening .glb-front{box-shadow:inset 0 0 0 1px #0006,0 0 48px #d4a3734d;}
 .glb-arrow{position:absolute;top:42%;z-index:6;width:40px;height:40px;border-radius:50%;border:1px solid rgb(var(--gold) / .4);background:#1a130cd9;color:rgb(var(--gold-light));display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .18s;}
 .glb-arrow:hover{background:#2a1c10;box-shadow:0 0 18px #d4a37333;}
 .glb-arrow-left{left:14px;}
@@ -3046,19 +3076,17 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
   .glb-sections{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;padding:2px 2px 8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
   .glb-sections::-webkit-scrollbar{display:none;}
   .glb-chip{flex:none;}
-  .glb-stage{height:440px;}
-  .glb-track{bottom:116px;}
-  .glb-book{width:104px;}
-  .glb-book .glb-cover{--tilt:-18deg;}
-  .glb-title{font-size:14.5px;}
+  .glb-stage{height:470px;}
+  .glb-track{bottom:120px;gap:18px;}
+  .glb-book{width:112px;}
   .glb-desk{height:120px;}
   .glb-arrow{width:34px;height:34px;}
   .glb-heading h1{font-size:34px;}
+  .glb-title{font-size:15px;}
 }
 @media (prefers-reduced-motion: reduce){
-  .glb-cover,.glb-book.is-opening .glb-cover{transition:none;}
+  .glb-book3d,.glb-book.is-opening .glb-book3d{transition:none;}
 }
-
 /* ==== Received flower gift: the ceremony ==== */
 .flower-recipient{position:relative;overflow:hidden;min-height:100vh;background:
   radial-gradient(90% 60% at 50% 108%,#3a2a16 0%,transparent 55%),
@@ -3078,7 +3106,8 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .fg-seal{position:absolute;left:50%;top:16px;transform:translateX(-50%);width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
   background:radial-gradient(circle at 35% 30%,#c9503f,#8e2f24 60%,#6d1f18);box-shadow:0 4px 12px #0009,inset 0 2px 4px #ffffff2e;}
 .fg-seal-mark{color:#f3d9b0;font-size:17px;text-shadow:0 1px 2px #0007;}
-.fg-open-hint{display:inline-block;border-bottom:1px solid #a98a5566;font-size:12.5px;padding:8px 0;margin-top:16px;color:#d8bd93;font-family:Lora,Georgia,serif;letter-spacing:.02em;}
+.fg-open-hint{display:inline-block;margin-top:18px;padding:11px 26px;border-radius:999px;border:1px solid rgb(var(--gold) / .55);background:linear-gradient(180deg,#3a2812,#2a1c10);color:rgb(var(--gold-light));font-family:Lora,Georgia,serif;font-size:13.5px;letter-spacing:.03em;box-shadow:0 6px 20px #0007,0 0 18px #d4a37326;animation:fgHintPulse 2.6s ease-in-out infinite;}
+@keyframes fgHintPulse{0%,100%{box-shadow:0 6px 20px #0007,0 0 14px #d4a37320;}50%{box-shadow:0 6px 22px #0008,0 0 30px #d4a3734d;}}
 .fg-petals{position:absolute;left:50%;top:38%;pointer-events:none;}
 .fg-petals i{position:absolute;border-radius:60% 40% 55% 45%;background:radial-gradient(circle at 35% 30%,#f2c9c0,#d98a80);opacity:0;animation:fgPetal 1.9s cubic-bezier(.2,.6,.3,1) var(--del) forwards;}
 @keyframes fgPetal{0%{opacity:0;transform:translate(0,0) rotate(0deg) scale(.4);}18%{opacity:.95;}100%{opacity:0;transform:translate(var(--dx),var(--dy)) rotate(var(--rot)) scale(1);}}
@@ -3087,6 +3116,7 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
 .flower-recipient .flower-reveal{animation:flowerReveal 1.25s cubic-bezier(.22,.8,.26,1) .25s both;}
 @media(max-width:760px){}
 @media(prefers-reduced-motion:reduce){
+  .fg-open-hint{animation:none;}
   .flower-opening img{transition:none;}
   .flower-opening.is-open img{animation:none;}
   .fg-petals{display:none;}

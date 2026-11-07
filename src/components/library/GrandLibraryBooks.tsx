@@ -87,7 +87,8 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
 
   const clampTarget = useCallback((value: number) => {
     const stage = stageRef.current;
-    const max = Math.max(0, trackWidth - (stage?.clientWidth ?? 0));
+    const actualTrack = trackRef.current?.scrollWidth ?? trackWidth;
+    const max = Math.max(0, actualTrack - (stage?.clientWidth ?? 0));
     return Math.min(max, Math.max(0, value));
   }, [trackWidth]);
 
@@ -99,10 +100,11 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     const step = (now: number) => {
       const cam = camera.current;
       const idle = now - interaction.current.lastTouch > DRIFT_RESUME_MS;
-      if (!reduced && idle && !interaction.current.dragging && trackWidth > (stageRef.current?.clientWidth ?? 0)) {
+      const actualTrack = trackRef.current?.scrollWidth ?? trackWidth;
+      if (!reduced && idle && !interaction.current.dragging && actualTrack > (stageRef.current?.clientWidth ?? 0)) {
         cam.driftPhase += 0.0028;
         // Ping-pong drift across the whole row, slowest at the ends.
-        const max = Math.max(0, trackWidth - (stageRef.current?.clientWidth ?? 0));
+        const max = Math.max(0, actualTrack - (stageRef.current?.clientWidth ?? 0));
         cam.target = (Math.sin(cam.driftPhase) * 0.5 + 0.5) * max;
       }
       cam.x += (cam.target - cam.x) * 0.06;
@@ -168,6 +170,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
 
   return (
     <section className="glb-scene" aria-labelledby="grand-room-title">
+      <div className="glb-back-shelves" aria-hidden="true" />
       <div className="glb-glow glb-glow-left" aria-hidden="true" />
       <div className="glb-glow glb-glow-right" aria-hidden="true" />
 
@@ -179,13 +182,13 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
 
       <div className="glb-controls">
         <div className="glb-sections" role="group" aria-label="Filter the desk by shelf">
-          {SHELF_SECTIONS.map((section) => (
+          {SHELF_SECTIONS.filter((section) => section.id !== "all").map((section) => (
             <button
               key={section.id}
               type="button"
               aria-pressed={sectionId === section.id}
               className={`glb-chip ${sectionId === section.id ? "is-active" : ""}`}
-              onClick={() => setSectionId(section.id)}
+              onClick={() => setSectionId(sectionId === section.id ? "all" : section.id)}
             >
               {section.label}
             </button>
@@ -244,22 +247,35 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
                 >
                   <button
                     type="button"
-                    className="glb-cover"
-                    style={{ background: binding.bg, borderColor: binding.border }}
+                    className="glb-book3d"
                     onClick={() => openBook(note)}
                     aria-label={`Open letter: ${title}`}
                   >
-                    <span className="glb-frame" aria-hidden="true">
-                      <span className="glb-ornament">✦</span>
-                      <span className="glb-title">{title}</span>
-                      <span className="glb-pen">{penName}</span>
-                      {note.is_locked && <Lock className="w-3 h-3" aria-label="Passcode protected" />}
+                    <span
+                      className="glb-face glb-front"
+                      style={{ background: binding.bg, borderColor: binding.border }}
+                    >
+                      <span className="glb-frame" aria-hidden="true">
+                        <span className="glb-ornament">✦</span>
+                        <span className="glb-title">{title}</span>
+                        <span className="glb-pen">{penName}</span>
+                        {note.is_locked && <Lock className="w-3 h-3" aria-label="Passcode protected" />}
+                      </span>
+                      <span
+                        className="glb-ribbon"
+                        style={{ background: binding.ribbon }}
+                        aria-hidden="true"
+                      />
                     </span>
                     <span
-                      className="glb-ribbon"
-                      style={{ background: binding.ribbon }}
+                      className="glb-face glb-spine"
+                      style={{ background: binding.bg, borderColor: binding.border }}
                       aria-hidden="true"
-                    />
+                    >
+                      <span className="glb-spine-title">{title}</span>
+                    </span>
+                    <span className="glb-face glb-pages" aria-hidden="true" />
+                    <span className="glb-face glb-top" aria-hidden="true" />
                   </button>
                 </div>
               );

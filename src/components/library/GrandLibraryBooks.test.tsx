@@ -52,10 +52,12 @@ describe("Grand Library books", () => {
         onRandom={vi.fn()}
       />,
     );
+    // No "All Shelves" control: the whole collection is the default desk.
+    expect(screen.queryByRole("button", { name: "All Shelves" })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "To Someone I Miss" }));
     expect(screen.getByRole("button", { name: "Open letter: I miss you" })).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Open letter: Plain note" })).not.toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "All Shelves" }));
+    fireEvent.click(screen.getByRole("button", { name: "To Someone I Miss" }));
     expect(screen.getByRole("button", { name: "Open letter: Plain note" })).toBeInTheDocument();
   });
 });
