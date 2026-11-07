@@ -2735,3 +2735,6 @@ body[data-view=rooms]::after { top:144px; }
 .gc-preview .env-excerpt { font-size:16px; -webkit-line-clamp:4; }
 .gc-preview .env-sign { font-size:12px; }
 @media(max-width:640px) { .gc-full-preview { padding:22px; font-size:21px; } }
+@media(max-width:640px) {
+  body[data-view=landing]::after { top:98px; right:3%; width:34px; height:34px; }
+}
