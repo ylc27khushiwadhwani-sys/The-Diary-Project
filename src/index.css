@@ -65,8 +65,8 @@
   body::after {
     content: "";
     position: fixed;
-    top: 128px;
-    right: 19%;
+    top: 84px;
+    right: 8%;
     width: 64px;
     height: 64px;
     border-radius: 50%;
@@ -81,7 +81,7 @@
   }
   html.light body::before, html.light body::after { display: none; }
   @media (max-width: 640px) {
-    body::after { top: 100px; right: 4%; width: 50px; height: 50px; }
+    body::after { top: 72px; right: 3%; width: 50px; height: 50px; }
   }
 
   ::selection {
@@ -1375,7 +1375,7 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 .lp-headline {
   font-family: "Cormorant Garamond", Georgia, serif;
   font-weight: 600;
-  font-size: clamp(2.6rem, 7.2vw, 5rem);
+  font-size: clamp(2.6rem, 8vw, 6rem);
   line-height: 1.04;
   letter-spacing: -0.01em;
   color: #fbf3e2;
@@ -1518,7 +1518,7 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 /* ===== Landing: the confessional + the self-writing letter ===== */
 .lp-quiet {
   margin: 16px auto 0;
-  max-width: 54ch;
+  max-width: 74ch;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-style: italic;
   font-size: clamp(1.05rem, 2.4vw, 1.3rem);
@@ -2610,6 +2610,8 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
   padding: 0 clamp(6px, 2vw, 28px);
   pointer-events: none;
   z-index: 1;
+  transform: scale(1.3);
+  transform-origin: bottom center;
 }
 .gf-cluster { display: flex; align-items: flex-end; gap: 2px; }
 .gf-flower {
@@ -2631,8 +2633,8 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
 .gf-heart { fill: var(--petal-deep); }
 .gf-cup-rim { stroke: var(--petal-deep); stroke-width: 1.4; opacity: 0.7; }
 @keyframes gfSway {
-  0%, 100% { transform: rotate(-2deg); }
-  50% { transform: rotate(2deg); }
+  0%, 100% { transform: rotate(-3.4deg); }
+  50% { transform: rotate(3.4deg); }
 }
 /* night: golden variations */
 .gf-v2 { --petal-hi: #f6dfa0; --petal: #e3af45; --petal-deep: #ad7a22; }

@@ -184,6 +184,12 @@ export const GardenFlowers: React.FC<{ className?: string }> = ({
     />
     <Cluster
       flowers={[
+        { type: "iris", variant: "gf-v1", height: 120, delay: -2.4, duration: 5.3 },
+        { type: "cup", variant: "gf-v5", height: 104, delay: -0.7, duration: 4.6 },
+      ]}
+    />
+    <Cluster
+      flowers={[
         { type: "cup", variant: "gf-v3", height: 152, delay: -1.1, duration: 5.2 },
         { type: "iris", variant: "gf-v4", height: 118, delay: -2.9, duration: 4.9 },
         { type: "round", variant: "gf-v5", height: 138, delay: -0.3, duration: 5.8 },
