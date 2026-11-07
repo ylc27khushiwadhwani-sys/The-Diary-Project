@@ -5,7 +5,7 @@
 /* Theme tokens. The dark (candlelit) library is the default; `html.light`
    re-tones these for the sunlit garden library. */
 :root {
-  --bg: 13 9 6;            /* #0d0906 */
+  --bg: 7 15 41;           /* #070f29 night sky */
   --card: 26 19 12;        /* #1a130c */
   --hairline: 212 163 115 / 0.15;
   --cream: 243 236 224;    /* #f3ece0 - main reading text */
@@ -24,17 +24,56 @@
     overflow-x: clip;
   }
   body {
-    background-color: #0d0906;
+    /* Night garden: deep blue sky and a dark green horizon
+       (gardenletters.online night reference). The moon and stars are the
+       body::after / body::before layers below. */
+    background-color: #070f29;
     color: #f3ece0;
     font-family: 'Lora', Georgia, serif;
     background-image:
-      linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, transparent 9%, transparent 91%, rgba(0, 0, 0, 0.5) 100%),
-      radial-gradient(ellipse at 50% 12%, rgba(212, 163, 115, 0.26) 0%, transparent 62%),
-      radial-gradient(ellipse at 14% 45%, rgba(74, 48, 26, 0.5) 0%, transparent 55%),
-      radial-gradient(ellipse at 86% 72%, rgba(58, 36, 19, 0.5) 0%, transparent 55%),
-      radial-gradient(ellipse at 50% 105%, rgba(139, 74, 82, 0.1) 0%, transparent 60%);
+      radial-gradient(circle 340px at 85% 8%, rgba(228, 237, 255, 0.42) 0%, rgba(196, 214, 255, 0.16) 38%, rgba(196, 214, 255, 0) 70%),
+      linear-gradient(to bottom, #070f29 0%, #122047 62%, #1b2e5c 90%, #16341f 100%);
     background-attachment: fixed;
   }
+
+  /* Stars, twinkling, behind the content and never receiving taps. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      radial-gradient(1.5px 1.5px at 30px 40px, rgba(255, 255, 255, 0.9), transparent 100%),
+      radial-gradient(1px 1px at 120px 90px, rgba(255, 255, 255, 0.6), transparent 100%),
+      radial-gradient(1px 1px at 200px 160px, rgba(255, 255, 255, 0.7), transparent 100%),
+      radial-gradient(1.5px 1.5px at 250px 60px, rgba(255, 255, 255, 0.85), transparent 100%),
+      radial-gradient(1px 1px at 80px 200px, rgba(255, 255, 255, 0.55), transparent 100%),
+      radial-gradient(1.2px 1.2px at 170px 240px, rgba(255, 255, 255, 0.7), transparent 100%),
+      radial-gradient(1px 1px at 40px 130px, rgba(255, 255, 255, 0.5), transparent 100%),
+      radial-gradient(1.3px 1.3px at 230px 200px, rgba(255, 255, 255, 0.6), transparent 100%);
+    background-size: 280px 280px;
+    animation: starTwinkle 4.5s ease-in-out infinite;
+  }
+  /* The moon, high on the right. */
+  body::after {
+    content: "";
+    position: fixed;
+    top: 46px;
+    right: 7%;
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at 38% 34%, #fdfdf4 0%, #e9e5c9 55%, #cfc9a6 100%);
+    box-shadow: 0 0 44px 12px rgba(228, 237, 255, 0.32);
+  }
+  @keyframes starTwinkle {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.55; }
+  }
+  html.light body::before, html.light body::after { display: none; }
 
   ::selection {
     background-color: #801313;
@@ -1556,52 +1595,71 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
 }
 
 /* ===== The two doors ===== */
-/* The two room doors: real arched wooden doors - plank grain, a heavy
-   frame, a brass ring handle and a small name plaque. */
+/* The two room doors: ornate arched doors - a brass frame, frosted glass,
+   gold wrought scrollwork, a tall pull handle and a small name plaque
+   (her fancy-door reference, drawn in CSS/SVG, no stock assets). */
 .door-card {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 16px;
-  min-height: clamp(320px, 50vh, 460px);
+  min-height: clamp(340px, 54vh, 480px);
   padding: 64px 34px 48px;
   border-radius: 999px 999px 12px 12px / 300px 300px 12px 12px;
-  border: 5px solid #1c1109;
   background:
-    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(226, 177, 122, 0.14) 0%, rgba(0, 0, 0, 0) 70%),
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.30) 0 2px, transparent 2px 68px),
-    linear-gradient(180deg, #43301c 0%, #322213 55%, #26180b 100%);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.02) 38%, rgba(0, 0, 0, 0) 60%),
+    radial-gradient(ellipse 72% 52% at 50% 30%, rgba(150, 180, 220, 0.22) 0%, rgba(150, 180, 220, 0) 72%),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(226, 177, 122, 0.16) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, #241a10 0%, #1a1209 60%, #120c06 100%);
   box-shadow:
     0 24px 48px rgba(0, 0, 0, 0.6),
-    inset 0 0 0 3px rgba(122, 82, 44, 0.35),
-    inset 0 2px 0 rgba(243, 217, 164, 0.14);
+    inset 0 0 0 4px #9a7038,
+    inset 0 0 0 7px rgba(226, 177, 122, 0.55),
+    inset 0 2px 0 rgba(243, 217, 164, 0.2);
   cursor: pointer;
-  transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+  transition: box-shadow 0.25s, transform 0.2s;
 }
 .door-card:hover {
-  border-color: #3a2712;
   box-shadow:
     0 30px 58px rgba(0, 0, 0, 0.68),
-    0 0 38px rgba(226, 177, 122, 0.2),
-    inset 0 0 0 3px rgba(160, 112, 60, 0.5),
-    inset 0 2px 0 rgba(243, 217, 164, 0.2);
+    0 0 38px rgba(226, 177, 122, 0.25),
+    inset 0 0 0 4px #b0813f,
+    inset 0 0 0 7px rgba(240, 200, 140, 0.75),
+    inset 0 2px 0 rgba(243, 217, 164, 0.28);
 }
-/* the brass ring handle */
+/* the tall brass pull handle */
 .door-card::after {
   content: "";
   position: absolute;
-  right: 30px;
-  top: 58%;
-  width: 22px;
-  height: 22px;
-  border-radius: 9999px;
-  border: 3px solid #b58a46;
-  background: radial-gradient(circle at 35% 30%, #e2b17a, #6e4119);
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.7), inset 0 0 4px rgba(0, 0, 0, 0.5);
+  right: 36px;
+  top: 56%;
+  width: 9px;
+  height: 88px;
+  transform: translateY(-50%);
+  border-radius: 6px;
+  background: linear-gradient(90deg, #8a6526 0%, #e8c98f 45%, #f6e3b8 52%, #8a6526 100%);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.65), 0 0 0 2px rgba(74, 50, 18, 0.55);
   pointer-events: none;
 }
+/* the gold scrollwork overlay */
+.door-iron {
+  position: absolute;
+  inset: 12px;
+  width: calc(100% - 24px);
+  height: calc(100% - 24px);
+  pointer-events: none;
+}
+.door-iron path {
+  stroke: #d9ab60;
+  stroke-width: 2.4;
+  fill: none;
+  stroke-linecap: round;
+  opacity: 0.85;
+}
 .door-plaque {
+  position: relative;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 9px;
@@ -1618,6 +1676,8 @@ html[data-tod='day'] .hall-candle { filter: brightness(0.85); }
   white-space: nowrap;
 }
 .door-desc {
+  position: relative;
+  z-index: 2;
   font-family: "Cormorant Garamond", Georgia, serif;
   font-style: italic;
   font-size: 0.95rem;
@@ -2077,14 +2137,14 @@ html.light {
 }
 
 html.light body {
-  background-color: #f3ecdb;
+  /* Day garden: soft sky overhead, warm sunlit air, green at the horizon. */
+  background-color: #eef3e4;
   color: #3d2f1e;
   background-image:
-    linear-gradient(to right, rgba(122, 96, 56, 0.07) 0%, transparent 9%, transparent 91%, rgba(122, 96, 56, 0.07) 100%),
-    radial-gradient(ellipse at 50% 8%, rgba(255, 241, 196, 0.7) 0%, transparent 60%),
-    radial-gradient(ellipse at 10% 42%, rgba(148, 178, 118, 0.30) 0%, transparent 55%),
-    radial-gradient(ellipse at 90% 66%, rgba(148, 178, 118, 0.26) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 108%, rgba(190, 150, 96, 0.20) 0%, transparent 60%);
+    radial-gradient(circle 300px at 82% 6%, rgba(255, 246, 200, 0.85) 0%, rgba(255, 240, 170, 0.25) 40%, rgba(255, 240, 170, 0) 70%),
+    radial-gradient(ellipse at 8% 40%, rgba(140, 175, 108, 0.32) 0%, transparent 55%),
+    radial-gradient(ellipse at 92% 64%, rgba(140, 175, 108, 0.28) 0%, transparent 55%),
+    linear-gradient(to bottom, #eaf4fb 0%, #f6f2df 34%, #f3ecd4 62%, #dfe8c4 88%, #cfe0ae 100%);
 }
 
 /* --- chrome: dark-wood utility surfaces become sunlit oak/cream --------- */
@@ -2245,24 +2305,30 @@ html.light .date-seal-box { border-color: rgba(133, 100, 58, 0.4); background: r
 
 /* --- the two doors -------------------------------------------------------- */
 html.light .door-card {
-  border-color: #8a6a3c;
   background:
-    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 240, 200, 0.55) 0%, rgba(255, 240, 200, 0) 70%),
-    repeating-linear-gradient(90deg, rgba(120, 92, 50, 0.16) 0 2px, transparent 2px 68px),
-    linear-gradient(180deg, #e7d4a9 0%, #d9c391 55%, #c9ae77 100%);
+    linear-gradient(160deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.12) 38%, rgba(255, 255, 255, 0) 60%),
+    radial-gradient(ellipse 72% 52% at 50% 30%, rgba(214, 233, 248, 0.55) 0%, rgba(214, 233, 248, 0) 72%),
+    radial-gradient(ellipse 80% 40% at 50% 0%, rgba(255, 240, 200, 0.5) 0%, rgba(255, 240, 200, 0) 70%),
+    linear-gradient(180deg, #f0e5c8 0%, #e7d6ad 60%, #dcc691 100%);
   box-shadow:
     0 24px 48px rgba(110, 82, 40, 0.3),
-    inset 0 0 0 3px rgba(160, 128, 74, 0.3),
+    inset 0 0 0 4px #c9a86a,
+    inset 0 0 0 7px rgba(255, 250, 235, 0.75),
     inset 0 2px 0 rgba(255, 252, 240, 0.7);
 }
 html.light .door-card:hover {
-  border-color: #75541f;
   box-shadow:
     0 30px 58px rgba(110, 82, 40, 0.35),
     0 0 34px rgba(220, 190, 120, 0.35),
-    inset 0 0 0 3px rgba(160, 128, 74, 0.45),
-    inset 0 2px 0 rgba(255, 252, 240, 0.8);
+    inset 0 0 0 4px #b58f4e,
+    inset 0 0 0 7px rgba(255, 252, 240, 0.95),
+    inset 0 2px 0 rgba(255, 252, 240, 0.85);
 }
+html.light .door-card::after {
+  background: linear-gradient(90deg, #9a7232 0%, #e8c070 45%, #f8e6b8 52%, #9a7232 100%);
+  box-shadow: 0 3px 8px rgba(110, 82, 40, 0.4), 0 0 0 2px rgba(120, 88, 40, 0.35);
+}
+html.light .door-iron path { stroke: #a06c2c; }
 html.light .door-plaque {
   border-color: rgba(133, 100, 58, 0.5);
   background: linear-gradient(180deg, rgba(251, 243, 222, 0.95), rgba(239, 226, 192, 0.95));
@@ -2332,15 +2398,6 @@ html.light .memory-hour { color: rgba(140, 89, 41, 0.8); }
   .shelf-stage.books-open .group > div[role="button"] { animation: none; }
 }
 
-/* Stronger garden air in daylight mode */
-html.light body {
-  background-image:
-    linear-gradient(to right, rgba(122, 96, 56, 0.07) 0%, transparent 9%, transparent 91%, rgba(122, 96, 56, 0.07) 100%),
-    radial-gradient(ellipse at 50% 8%, rgba(255, 241, 196, 0.75) 0%, transparent 60%),
-    radial-gradient(ellipse at 8% 40%, rgba(140, 175, 108, 0.42) 0%, transparent 55%),
-    radial-gradient(ellipse at 92% 64%, rgba(140, 175, 108, 0.38) 0%, transparent 55%),
-    radial-gradient(ellipse at 50% 108%, rgba(190, 150, 96, 0.22) 0%, transparent 60%);
-}
 
 /* --- Garden flowers (gardenletters.online reference): golden at night,
    coloured by day. Tall iris-like blooms with a soft sway. --------------- */

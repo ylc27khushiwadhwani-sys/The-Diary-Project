@@ -46,6 +46,20 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             whileHover={{ y: -5 }}
             className="door-card group"
           >
+            <svg className="door-iron" viewBox="0 0 300 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M42 150 Q150 18 258 150" />
+              <path d="M68 158 Q150 52 232 158" />
+              <path d="M150 34 L150 120" />
+              <path d="M108 48 L126 126" />
+              <path d="M192 48 L174 126" />
+              <path d="M78 88 L112 140" />
+              <path d="M222 88 L188 140" />
+              <path d="M96 190 L96 400" />
+              <path d="M204 190 L204 400" />
+              <path d="M60 300 c-26 -6 -30 -38 -8 -46 c16 -6 28 6 22 20 c-5 11 -20 12 -24 2" />
+              <path d="M240 300 c26 -6 30 -38 8 -46 c-16 -6 -28 6 -22 20 c5 11 20 12 24 2" />
+              <path d="M150 420 c-18 0 -26 -16 -14 -26 c9 -7 22 -1 20 10" />
+            </svg>
             <span className="door-plaque">
               <BookOpen className="w-4 h-4 text-gold" />
               <span className="door-name">The Reading Room</span>
@@ -65,6 +79,20 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             whileHover={{ y: -5 }}
             className="door-card group"
           >
+            <svg className="door-iron" viewBox="0 0 300 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M42 150 Q150 18 258 150" />
+              <path d="M68 158 Q150 52 232 158" />
+              <path d="M150 34 L150 120" />
+              <path d="M108 48 L126 126" />
+              <path d="M192 48 L174 126" />
+              <path d="M78 88 L112 140" />
+              <path d="M222 88 L188 140" />
+              <path d="M96 190 L96 400" />
+              <path d="M204 190 L204 400" />
+              <path d="M60 300 c-26 -6 -30 -38 -8 -46 c16 -6 28 6 22 20 c-5 11 -20 12 -24 2" />
+              <path d="M240 300 c26 -6 30 -38 8 -46 c-16 -6 -28 6 -22 20 c5 11 20 12 24 2" />
+              <path d="M150 420 c-18 0 -26 -16 -14 -26 c9 -7 22 -1 20 10" />
+            </svg>
             <span className="door-plaque">
               <Feather className="w-4 h-4 text-gold" />
               <span className="door-name">Your Study</span>

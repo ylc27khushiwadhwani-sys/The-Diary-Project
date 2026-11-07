@@ -45,9 +45,9 @@ export const Librarian: React.FC<LibrarianProps> = ({
       </svg>
     </div>
     <div className="min-w-0">
-      <span className={`label-caps block mb-0.5 ${headline ? "text-[11px]" : "text-[9px]"}`}>
-        The Librarian
-      </span>
+      {!headline && (
+        <span className="label-caps block mb-0.5 text-[9px]">The Librarian</span>
+      )}
       {headline ? (
         <h1 className="font-serif italic text-cream text-4xl sm:text-5xl md:text-6xl leading-tight">
           {line}
