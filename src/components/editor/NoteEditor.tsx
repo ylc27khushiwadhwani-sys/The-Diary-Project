@@ -181,7 +181,7 @@ export const NoteEditor: React.FC<NoteEditorProps> = ({
     });
   };
 
-  const letterPreview = (<aside className="gc-preview" aria-label="Live letter preview" aria-live="off"><OpenBookCard note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} onOpen={() => {}} /><p>Preview of your book. Updates as you write. Your full letter is kept intact.</p>
+  const letterPreview = (<aside className="gc-preview" aria-label="Live letter preview" aria-live="off"><OpenBookCard preview note={{...note, id: note?.id || "preview", title, content: content || "Your words will appear here...", tags: withLetterStyle(tags, letterStyle)} as Note} onOpen={() => {}} /><p>Preview of your book. Updates as you write. Your full letter is kept intact.</p>
         <article className="gc-full-preview" aria-label="Full letter preview" style={{fontFamily: LETTER_FONTS[letterStyle.font].family}}>
           <h2>To: {title || "whoever needs this"}</h2>
           <p>{content || "Your words will appear here..."}</p>
