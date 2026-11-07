@@ -26,6 +26,7 @@ beforeEach(() => {
 describe("configured public feed sample fallback", () => {
   it("shows all 28 samples for a successful empty query, without persisting them", async () => {
     render(<PublicFeedPage />);
+    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
     expect(
       await screen.findByText(/28 sample letters rest/),
     ).toBeInTheDocument();
@@ -48,6 +49,7 @@ describe("configured public feed sample fallback", () => {
       error: null,
     });
     render(<PublicFeedPage />);
+    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
     expect(await screen.findByText("A real public letter")).toBeInTheDocument();
     expect(screen.queryByText(/sample letters rest/)).not.toBeInTheDocument();
     expect(
@@ -58,6 +60,7 @@ describe("configured public feed sample fallback", () => {
   it("does not disguise a database failure with sample content", async () => {
     range.mockResolvedValue({ data: null, error: { message: "Unavailable" } });
     render(<PublicFeedPage />);
+    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
     expect(
       await screen.findByText("This shelf is currently quiet."),
     ).toBeInTheDocument();
@@ -72,6 +75,7 @@ describe("configured public feed sample fallback", () => {
       ]),
     );
     render(<PublicFeedPage />);
+    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
     expect(
       await screen.findByText(/28 sample letters rest/),
     ).toBeInTheDocument();
@@ -82,6 +86,7 @@ describe("configured public feed sample fallback", () => {
 
   it("opens sample parchment read-only without requesting response rows for a fake ID", async () => {
     render(<PublicFeedPage />);
+    fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
     fireEvent.click(await screen.findByText(INITIAL_PUBLIC_NOTES[0].title!));
     expect(
       await screen.findByText("Volume retrieved from the shelf"),

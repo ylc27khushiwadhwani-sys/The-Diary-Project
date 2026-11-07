@@ -5,9 +5,10 @@ import { supabase, isSupabaseConfigured } from "../lib/supabase";
 import { useAuth } from "../contexts/AuthContext";
 import { PaywallModal } from "../components/payments/PaywallModal";
 import { fetchQuota, isLimitError } from "../lib/payments";
-import { InteractiveBookshelf } from "../components/bookshelf/InteractiveBookshelf";
+import { InteractiveBookshelf, SHELF_SECTIONS } from "../components/bookshelf/InteractiveBookshelf";
 import { LibraryAisles } from "../components/library/LibraryAisles";
 import { BookReaderModal } from "../components/bookshelf/BookReaderModal";
+import { GrandLibraryRoom } from "../components/library/GrandLibraryRoom";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 import { ResponseComposer } from "../components/feed/ResponseComposer";
 import { ReportModal } from "../components/feed/ReportModal";
@@ -35,6 +36,7 @@ export const PublicFeedPage: React.FC = () => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [browseMode, setBrowseMode] = useState<"shelf" | "aisles">("shelf");
+  const [roomSection, setRoomSection] = useState<string | null>(null);
   const [aisleNote, setAisleNote] = useState<Note | null>(null);
 
   // Free writers hold a fixed number of letters; the ask only appears once it is reached.
@@ -161,10 +163,15 @@ export const PublicFeedPage: React.FC = () => {
     );
   }
 
+  if (roomSection === null) {
+    return <GrandLibraryRoom onChoose={(id) => {setRoomSection(id); setCollectionId(null); setFeedSearch("");}} />;
+  }
+
   return (
     <div className="relative min-h-screen overflow-x-hidden text-amber-100">
       <GrandHallBackdrop />
       <div id="bookshelf" className="scroll-mt-16 py-10 relative z-10">
+        <div className="text-center mb-6"><button type="button" className="library-return-room" onClick={() => setRoomSection(null)}>← Return to the library room</button></div>
         {/* Library header */}
         <div className="text-center mb-6 px-4">
           <div className="flex items-center justify-center gap-2 mb-1.5">
@@ -172,7 +179,7 @@ export const PublicFeedPage: React.FC = () => {
             <span className="label-caps">The Grand Library</span>
           </div>
           <h1 className="font-serif text-3xl sm:text-4xl text-cream tracking-tight">
-            Every shelf, every section, every unsent thing
+            {SHELF_SECTIONS.find(section => section.id === roomSection)?.label ?? "Every shelf, every section, every unsent thing"}
           </h1>
           {!loading && visibleNotes.length > 0 && (
             <p className="font-body text-xs text-muted italic mt-2">
@@ -329,6 +336,8 @@ export const PublicFeedPage: React.FC = () => {
           </div>
         ) : (
           <InteractiveBookshelf
+            key={roomSection}
+            initialSectionId={roomSection}
             notes={visibleNotes}
             onWriteClick={openWriter}
             onRespondLetter={handleStartResponse}

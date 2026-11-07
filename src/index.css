@@ -2930,3 +2930,34 @@ html.light .landing-garden-stem {opacity:.4;}
 html.light .landing-garden-stem img {filter:none;}
 .landing-butterfly {opacity:.6;}
 @media(max-width:640px){.landing-garden-stem{flex-basis:10%;margin:0;}.landing-garden-stem:nth-child(n+7){display:none;}}
+
+/* An original painted room, not hundreds of decorative DOM books. */
+.grand-library-room{position:relative;min-height:720px;height:calc(100svh - 100px);max-height:1050px;isolation:isolate;overflow:hidden;background:#23150e;color:#fff2d4;}
+.grand-room-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;}
+.grand-library-room:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(#100b0780,transparent 30%,transparent 75%,#100b07cc);pointer-events:none;}
+.grand-room-heading{position:absolute;top:22px;left:25%;right:25%;text-align:center;text-shadow:0 2px 12px #000;}
+.grand-room-heading p{font-size:9px;letter-spacing:.3em;color:#e7c591;}
+.grand-room-heading h1{font-family:"Cormorant Garamond",Georgia,serif;font-size:clamp(32px,3.5vw,56px);line-height:1.1;margin:4px 0 8px;}
+.grand-room-heading>span{font-family:Lora,Georgia,serif;font-size:12px;display:block;max-width:310px;margin:auto;}
+.grand-room-plaque{position:absolute;width:27%;padding:8px 12px;background:linear-gradient(125deg,#362215f5,#1d130df5,#42291af5);border:1px solid #bd9257;border-radius:7px;box-shadow:0 6px 15px #0009,inset 0 0 0 3px #1a110a,inset 0 0 0 4px #a3793b66;}
+.grand-room-plaque:nth-child(-n+3){left:4%;transform:perspective(900px) rotateY(9deg);}
+.grand-room-plaque:nth-child(n+4){right:4%;transform:perspective(900px) rotateY(-9deg);}
+.grand-room-plaque-0,.grand-room-plaque-3{top:22%;}.grand-room-plaque-1,.grand-room-plaque-4{top:44%;}.grand-room-plaque-2,.grand-room-plaque-5{top:66%;}
+.grand-room-plaque button{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 7px;color:#f5deb5;font-family:Lora,Georgia,serif;font-size:clamp(12px,1.1vw,17px);line-height:1.25;min-height:40px;text-align:left;cursor:pointer;border-radius:3px;transition:background .2s,color .2s;}
+.grand-room-plaque button+button{border-top:1px solid #b7894d55;}
+.grand-room-plaque button:hover,.grand-room-plaque button:focus-visible{background:#e9bd6933;color:#fff8e7;outline:1px solid #e9bd69;outline-offset:1px;}
+.grand-room-note{position:absolute;bottom:22px;left:15%;right:15%;text-align:center;font:italic 12px Lora,Georgia,serif;color:#ead5b5;text-shadow:0 1px 6px #000;}
+.library-return-room{border:1px solid rgb(var(--gold)/.5);padding:9px 20px;border-radius:25px;color:rgb(var(--gold));font:13px Lora,Georgia,serif;background:rgb(var(--card)/.8);cursor:pointer;}
+@media(max-width:640px){
+ .grand-library-room{height:780px;min-height:780px;}
+ .grand-room-art{object-fit:fill;}
+ .grand-room-heading{left:8%;right:8%;top:24px;}
+ .grand-room-heading h1{font-size:37px;}.grand-room-heading>span{font-size:11px;max-width:260px;}
+ .grand-room-plaque{width:43%;padding:5px 7px;}
+ .grand-room-plaque:nth-child(-n+3){left:3%;transform:none;}.grand-room-plaque:nth-child(n+4){right:3%;transform:none;}
+ .grand-room-plaque button{font-size:12px;padding:10px 3px;min-height:55px;gap:4px;}
+ .grand-room-plaque-0,.grand-room-plaque-3{top:24%;}.grand-room-plaque-1,.grand-room-plaque-4{top:46%;}.grand-room-plaque-2,.grand-room-plaque-5{top:68%;}
+ .grand-room-note{left:8%;right:8%;font-size:11px;bottom:20px;line-height:1.6;}
+}
+
+.coffee-btn .coffee-saucer{width:66px;height:66px;object-fit:cover;border-radius:50%;flex-shrink:0;box-shadow:0 2px 8px #0005;}

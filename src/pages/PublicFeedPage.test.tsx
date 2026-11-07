@@ -93,12 +93,15 @@ afterEach(() => {
   localStorage.clear();
 });
 
-const renderFeed = () =>
-  render(
+const renderFeed = () => {
+  const result = render(
     <AuthProvider>
       <PublicFeedPage />
     </AuthProvider>,
   );
+  fireEvent.click(screen.getByRole("button", {name:"All Shelves"}));
+  return result;
+};
 
 const typeSearch = async (query: string) => {
   const input = await screen.findByLabelText(/search letters/i);
