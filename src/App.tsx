@@ -5,7 +5,6 @@ import React, { useEffect, useState } from "react";
 import { BookOpen, Feather, Library, LogOut, Mail, ShieldCheck } from "lucide-react";
 import { useAuth } from "./contexts/AuthContext";
 import { PenNameBadge } from "./components/auth/PenNameBadge";
-import { ThemeToggle } from "./components/common/ThemeToggle";
 import { SignInModal } from "./components/auth/SignInModal";
 import { HelplineModal } from "./components/safety/HelplineModal";
 import { LandingPage } from "./pages/LandingPage";
@@ -250,7 +249,6 @@ export const App: React.FC = () => {
 
           {/* Daylight lamp + user profile */}
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             {profile && (
               <div className="flex items-center gap-1 sm:gap-2 shrink-0 [&_.truncate]:max-w-[44px] sm:[&_.truncate]:max-w-none">
                 <PenNameBadge

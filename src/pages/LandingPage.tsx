@@ -2,7 +2,6 @@ import React from "react";
 import { motion } from "framer-motion";
 import { CoffeeButton } from "../components/payments/CoffeeButton";
 import { CandleLanternIcon } from "../components/common/CandleLanternIcon";
-import { ThemeToggle } from "../components/common/ThemeToggle";
 import { InkText } from "../components/cinematic/InkText";
 import { RoomMemory } from "../components/cinematic/RoomMemory";
 import { SelfWritingLetter } from "../components/landing/SelfWritingLetter";
@@ -39,7 +38,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           <span className="font-serif italic">The Paper Vault</span>
         </span>
         <nav className="lp-nav" aria-label="Enter the vault">
-          <ThemeToggle />
           <button
             type="button"
             onClick={() => onAuth("signin")}

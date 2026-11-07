@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 
 /**
  * The library has two lights: the original candlelit dark, and a sunlit
@@ -18,22 +18,14 @@ const ThemeContext = createContext<{
   toggleTheme: () => {},
 });
 
-const readInitial = (): Theme => {
-  try {
-    return localStorage.getItem(STORAGE_KEY) === "light" ? "light" : "dark";
-  } catch {
-    return "dark";
-  }
-};
-
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<Theme>(readInitial);
+  const theme: Theme = "dark";
 
   useEffect(() => {
     const root = document.documentElement;
-    root.classList.toggle("light", theme === "light");
+    root.classList.remove("light");
     root.style.colorScheme = theme;
     try {
       localStorage.setItem(STORAGE_KEY, theme);
@@ -42,8 +34,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, [theme]);
 
-  const toggleTheme = () =>
-    setTheme((t) => (t === "light" ? "dark" : "light"));
+  const toggleTheme = () => {};
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
