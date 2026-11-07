@@ -2341,3 +2341,41 @@ html.light body {
     radial-gradient(ellipse at 92% 64%, rgba(140, 175, 108, 0.38) 0%, transparent 55%),
     radial-gradient(ellipse at 50% 108%, rgba(190, 150, 96, 0.22) 0%, transparent 60%);
 }
+
+/* --- Garden flowers (gardenletters.online reference): golden at night,
+   coloured by day. Tall iris-like blooms with a soft sway. --------------- */
+.garden-flowers {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 clamp(8px, 3vw, 40px);
+  pointer-events: none;
+  z-index: 1;
+}
+.gf-cluster { display: flex; align-items: flex-end; gap: 6px; }
+.gf-flower {
+  width: auto;
+  transform-origin: bottom center;
+  animation: gfSway 5.2s ease-in-out infinite;
+  --petal: #d9a440;
+  --petal-deep: #a87424;
+  --stem: #7c6231;
+}
+.gf-stem-path { stroke: var(--stem); stroke-width: 3; stroke-linecap: round; }
+.gf-leaf { fill: var(--stem); opacity: 0.85; }
+.gf-petal-up { fill: var(--petal); }
+.gf-petal-fall { fill: var(--petal-deep); }
+.gf-heart { fill: var(--petal-deep); }
+@keyframes gfSway {
+  0%, 100% { transform: rotate(-1.8deg); }
+  50% { transform: rotate(1.8deg); }
+}
+html.light .gf-crimson { --petal: #b4343c; --petal-deep: #7d1f28; --stem: #4f7a3a; }
+html.light .gf-gold { --petal: #e5b83b; --petal-deep: #b3862a; --stem: #557d3e; }
+html.light .gf-blue { --petal: #5b7fc0; --petal-deep: #3c5a94; --stem: #4f7a3a; }
+@media (prefers-reduced-motion: reduce) {
+  .gf-flower { animation: none; }
+}

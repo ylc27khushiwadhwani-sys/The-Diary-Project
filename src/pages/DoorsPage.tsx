@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Feather } from "lucide-react";
 import { Librarian } from "../components/library/Librarian";
+import { GardenFlowers } from "../components/common/GardenFlowers";
 import { LibraryCard } from "../components/library/LibraryCard";
 import { registerVisit } from "../lib/visits";
 
@@ -27,10 +28,11 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
   return (
     <div className="relative text-amber-100">
       <div className="candle-glow absolute inset-0 pointer-events-none" />
+      <GardenFlowers />
       <div className="relative z-10 mx-auto max-w-4xl px-4 pt-8 pb-6 sm:pt-10 text-center">
         <Librarian
           headline
-          line="Say it anyway."
+          line="Say what you couldn't say."
           className="justify-center mb-8"
         />
 

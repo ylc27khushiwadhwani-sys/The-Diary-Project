@@ -19,6 +19,7 @@ import { ReportModal } from "../components/feed/ReportModal";
 import { SignInModal } from "../components/auth/SignInModal";
 import { CandleFlame } from "../components/cinematic/CandleFlame";
 import { WhisperWall } from "../components/library/WhisperWall";
+import { GardenFlowers } from "../components/common/GardenFlowers";
 
 interface ReadingRoomPageProps {
   onEnterLibrary: () => void;
@@ -69,6 +70,7 @@ export const ReadingRoomPage: React.FC<ReadingRoomPageProps> = ({
   return (
     <div className="relative min-h-screen text-amber-100">
       <div className="candle-glow absolute inset-0 pointer-events-none" />
+      <GardenFlowers />
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-10 sm:py-14">
         {/* The Librarian greets by visit count and hour */}
         <Librarian
