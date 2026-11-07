@@ -47,6 +47,7 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             className="door-card group"
           >
             <svg className="door-iron" viewBox="0 0 300 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M30 158 Q150 2 270 158" />
               <path d="M42 150 Q150 18 258 150" />
               <path d="M68 158 Q150 52 232 158" />
               <path d="M150 34 L150 120" />
@@ -58,6 +59,8 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
               <path d="M204 190 L204 400" />
               <path d="M60 300 c-26 -6 -30 -38 -8 -46 c16 -6 28 6 22 20 c-5 11 -20 12 -24 2" />
               <path d="M240 300 c26 -6 30 -38 8 -46 c-16 -6 -28 6 -22 20 c5 11 20 12 24 2" />
+              <path d="M62 356 c-20 20 -8 44 14 40 c16 -3 20 -22 8 -28" />
+              <path d="M238 356 c20 20 8 44 -14 40 c-16 -3 -20 -22 -8 -28" />
               <path d="M150 420 c-18 0 -26 -16 -14 -26 c9 -7 22 -1 20 10" />
             </svg>
             <span className="door-plaque">
@@ -80,6 +83,7 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
             className="door-card group"
           >
             <svg className="door-iron" viewBox="0 0 300 460" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+              <path d="M30 158 Q150 2 270 158" />
               <path d="M42 150 Q150 18 258 150" />
               <path d="M68 158 Q150 52 232 158" />
               <path d="M150 34 L150 120" />
@@ -91,6 +95,8 @@ export const DoorsPage: React.FC<DoorsPageProps> = ({
               <path d="M204 190 L204 400" />
               <path d="M60 300 c-26 -6 -30 -38 -8 -46 c16 -6 28 6 22 20 c-5 11 -20 12 -24 2" />
               <path d="M240 300 c26 -6 30 -38 8 -46 c-16 -6 -28 6 -22 20 c5 11 20 12 24 2" />
+              <path d="M62 356 c-20 20 -8 44 14 40 c16 -3 20 -22 8 -28" />
+              <path d="M238 356 c20 20 8 44 -14 40 c-16 -3 -20 -22 -8 -28" />
               <path d="M150 420 c-18 0 -26 -16 -14 -26 c9 -7 22 -1 20 10" />
             </svg>
             <span className="door-plaque">
