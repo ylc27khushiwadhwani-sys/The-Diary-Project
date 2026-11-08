@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { ChevronLeft, ChevronRight, Feather, Lock } from "lucide-react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Note } from "../../types/database";
 import { prefersReducedMotion } from "../../lib/motion";
@@ -410,7 +411,11 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
         </div>
       )}
 
-      {renderReader && onCloseReader && (
+      {renderReader && onCloseReader &&
+        // Portal to body: inside the page's z-10 stacking context the reader
+        // painted under the sticky header (z-50), clipping the letter's top
+        // on phones. At root its z-60 sits above the header.
+        createPortal(
         <AnimatePresence>
           {readerNote && (
             <div
@@ -432,7 +437,8 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
               </motion.div>
             </div>
           )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body,
       )}
 
       <p className="glb-count" role="note">
