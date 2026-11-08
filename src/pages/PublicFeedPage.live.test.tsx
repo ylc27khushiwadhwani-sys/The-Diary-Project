@@ -57,8 +57,7 @@ describe("configured public feed sample fallback", () => {
     await waitFor(()=>expect(random).not.toBeDisabled());
     expect(screen.queryByRole("button",{name:"All Shelves"})).not.toBeInTheDocument();
     fireEvent.click(random);
-    expect(await screen.findByText("Volume retrieved from the shelf")).toBeInTheDocument();
-    expect(document.querySelector("article.reader-open-volume")?.textContent).toContain("Eligible public letter");
+    await waitFor(()=>expect(document.querySelector("article.reader-open-volume")?.textContent).toContain("Eligible public letter"),{timeout:4000});
   });
 
   it("keeps real public letters without mixing in samples", async () => {

@@ -6,6 +6,7 @@ import React, {
   useState,
 } from "react";
 import { ChevronLeft, ChevronRight, Feather, Lock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Note } from "../../types/database";
 import { prefersReducedMotion } from "../../lib/motion";
 import {
@@ -30,6 +31,12 @@ interface GrandLibraryBooksProps {
   onChoose: (sectionId: string) => void;
   onRandom: () => void;
   randomDisabled?: boolean;
+  /** Letter currently being read in-scene (the opened book stays on the desk). */
+  readerNote?: Note | null;
+  /** Render the reading view for the opened book, inside the scene. */
+  renderReader?: (note: Note) => React.ReactNode;
+  /** Close the in-scene reader. */
+  onCloseReader?: () => void;
 }
 
 // Antique bindings, shared spirit with the bookshelf spines.
@@ -55,7 +62,10 @@ const STAGE_SIDE_PAD = 60;
 // Past this many letters the desk ends with a note pointing at the archive.
 const MAX_BOOKS = 400;
 const DRIFT_RESUME_MS = 6000;
-const OPEN_ANIMATION_MS = 1500;
+// Pull-out and cover swing complete, then the opened book grows into the
+// in-scene reader (handoff). The 3D book fades as the reader arrives.
+const OPEN_ANIMATION_MS = 1350;
+const HANDOFF_DONE_MS = 1950;
 
 export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   notes,
@@ -64,9 +74,15 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   onChoose,
   onRandom,
   randomDisabled,
+  readerNote = null,
+  renderReader,
+  onCloseReader,
 }) => {
   const [sectionId, setSectionId] = useState("all");
   const [openingId, setOpeningId] = useState<string | null>(null);
+  const [handingOff, setHandingOff] = useState(false);
+  const [flipOrigin, setFlipOrigin] = useState<{ x: number; y: number; scale: number; opacity: number } | null>(null);
+  const busyRef = useRef(false);
 
   const books = useMemo(
     () =>
@@ -82,6 +98,13 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   const camera = useRef({ x: 0, target: 0, driftPhase: Math.PI / 2 });
   const interaction = useRef({ dragging: false, dragged: false, startX: 0, startCam: 0, lastTouch: 0 });
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const handoffTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // The camera holds still while a book is being opened or read, so the
+  // opening stays one continuous, steady movement.
+  useEffect(() => {
+    busyRef.current = !!openingId || !!readerNote;
+  }, [openingId, readerNote]);
 
   const trackWidth = books.length * SPACING - BOOK_GAP + STAGE_SIDE_PAD * 2;
 
@@ -100,6 +123,10 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     const step = (now: number) => {
       const cam = camera.current;
       const idle = now - interaction.current.lastTouch > DRIFT_RESUME_MS;
+      if (busyRef.current) {
+        raf = requestAnimationFrame(step);
+        return;
+      }
       const actualTrack = trackRef.current?.scrollWidth ?? trackWidth;
       if (!reduced && idle && !interaction.current.dragging && actualTrack > (stageRef.current?.clientWidth ?? 0)) {
         cam.driftPhase += 0.0028;
@@ -154,7 +181,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     interaction.current.lastTouch = performance.now();
   };
 
-  const openBook = (note: Note) => {
+  const openBook = (note: Note, el: HTMLElement) => {
     if (interaction.current.dragged) return; // that was a walk, not a choice
     if (openingId) return;
     if (prefersReducedMotion()) {
@@ -163,9 +190,28 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     }
     setOpeningId(note.id);
     openTimer.current = setTimeout(() => {
-      setOpeningId(null);
+      // Measure the pulled-out book so the reader grows out of its actual
+      // position - one continuous movement, no jump.
+      const rect = el.getBoundingClientRect();
+      const scene = stageRef.current?.getBoundingClientRect();
+      if (scene) {
+        const targetW = Math.min(880, scene.width - 24);
+        setFlipOrigin({
+          x: rect.left + rect.width / 2 - (scene.left + scene.width / 2),
+          y: rect.top + rect.height / 2 - (scene.top + scene.height / 2),
+          scale: Math.max(0.12, rect.width / targetW),
+          opacity: 0.55,
+        });
+      } else {
+        setFlipOrigin(null);
+      }
+      setHandingOff(true);
       onOpen(note);
     }, OPEN_ANIMATION_MS);
+    handoffTimer.current = setTimeout(() => {
+      setOpeningId(null);
+      setHandingOff(false);
+    }, HANDOFF_DONE_MS);
   };
 
   return (
@@ -239,16 +285,21 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
               const title = note.title || "Untitled Letter";
               const penName = note.profiles?.pen_name || "Anonymous";
               const opening = openingId === note.id;
+              const lean = ((h >> 3) % 9) - 4; // books slump against each other, like a real row
               return (
                 <div
                   key={note.id}
-                  className={`glb-book ${opening ? "is-opening" : ""}`}
-                  style={{ height, ["--tilt" as string]: `${tilt}deg` }}
+                  className={`glb-book ${opening ? "is-opening" : ""} ${opening && handingOff ? "is-handing-off" : ""}`}
+                  style={{
+                    height,
+                    ["--tilt" as string]: `${tilt}deg`,
+                    ["--lean" as string]: `${lean}deg`,
+                  }}
                 >
                   <button
                     type="button"
                     className="glb-book3d"
-                    onClick={() => openBook(note)}
+                    onClick={(e) => openBook(note, e.currentTarget)}
                     aria-label={`Open letter: ${title}`}
                   >
                     <span className="glb-firstpage" aria-hidden="true" />
@@ -303,6 +354,31 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
+      )}
+
+      {renderReader && onCloseReader && (
+        <AnimatePresence>
+          {readerNote && (
+            <div
+              className="glb-reader"
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Reading: ${readerNote.title || "Untitled Letter"}`}
+              onClick={onCloseReader}
+            >
+              <motion.div
+                className="glb-reader-book"
+                initial={flipOrigin ?? { opacity: 0, scale: 0.85 }}
+                animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+                exit={{ opacity: 0, scale: 0.9, y: 24, transition: { duration: 0.28, ease: "easeIn" } }}
+                transition={{ duration: 0.55, ease: [0.3, 0.8, 0.25, 1] }}
+                onClick={(e) => e.stopPropagation()}
+              >
+                {renderReader(readerNote)}
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
       )}
 
       <p className="glb-count" role="note">
