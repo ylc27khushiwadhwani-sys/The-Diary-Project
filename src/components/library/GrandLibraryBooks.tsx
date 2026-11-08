@@ -230,14 +230,16 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     setOpeningId(note.id);
     openTimer.current = setTimeout(() => {
       // Measure the pulled-out book so the reader grows out of its actual
-      // position - one continuous movement, no jump.
+      // position - one continuous movement, no jump. The reader overlay is
+      // fixed to the viewport, so the handoff aims at the viewport centre.
       const rect = el.getBoundingClientRect();
-      const scene = stageRef.current?.getBoundingClientRect();
-      if (scene) {
-        const targetW = Math.min(880, scene.width - 24);
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      if (vw > 0 && vh > 0) {
+        const targetW = Math.min(880, vw - 24);
         setFlipOrigin({
-          x: rect.left + rect.width / 2 - (scene.left + scene.width / 2),
-          y: rect.top + rect.height / 2 - (scene.top + scene.height / 2),
+          x: rect.left + rect.width / 2 - vw / 2,
+          y: rect.top + rect.height / 2 - vh / 2,
           scale: Math.max(0.12, rect.width / targetW),
           opacity: 0.55,
         });
