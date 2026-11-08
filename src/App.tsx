@@ -167,7 +167,7 @@ export const App: React.FC = () => {
       {/* Top Header */}
       <header className="sticky top-0 z-50 border-b border-hairline bg-background/85 backdrop-blur-md">
         <VisitBadge />
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-2 px-2 sm:px-5 py-3.5">
+        <div className="mx-auto flex max-w-5xl flex-wrap lg:flex-nowrap items-center justify-between gap-2 px-2 sm:px-5 py-3.5">
           {/* Brand */}
           <div
             onClick={() => setShowLanding(true)}
@@ -188,7 +188,7 @@ export const App: React.FC = () => {
           </div>
 
           {/* Navigation Rooms */}
-          <nav className="flex items-center gap-1 sm:gap-3">
+          <nav className="flex items-center gap-1 sm:gap-3 order-last lg:order-none w-full lg:w-auto lg:shrink-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-webkit-overflow-scrolling:touch]" aria-label="Rooms">
             <button
               onClick={() => setActiveTab("reading")}
               className={`flex items-center gap-2 px-2 sm:px-3.5 py-1.5 rounded-full text-xs font-serif whitespace-nowrap transition-all cursor-pointer ${
