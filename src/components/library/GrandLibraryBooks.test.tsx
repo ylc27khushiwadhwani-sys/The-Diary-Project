@@ -61,3 +61,73 @@ describe("Grand Library books", () => {
     expect(screen.getByRole("button", { name: "Open letter: Plain note" })).toBeInTheDocument();
   });
 });
+
+describe("desk glide pause and resume", () => {
+  const stubWidths = () => {
+    vi.spyOn(HTMLElement.prototype, "clientWidth", "get").mockReturnValue(400);
+    vi.spyOn(HTMLElement.prototype, "scrollWidth", "get").mockReturnValue(2400);
+  };
+  const camX = (track: HTMLElement) =>
+    Number(/translate3d\((-?[\d.]+)px/.exec(track.style.transform)?.[1] ?? "0");
+  const renderDesk = () => {
+    render(
+      <GrandLibraryBooks
+        notes={[makeNote("n1", "For October"), makeNote("n2", "Blue Mugs")]}
+        onOpen={vi.fn()}
+        onChoose={vi.fn()}
+        onRandom={vi.fn()}
+      />,
+    );
+    const stage = screen.getByRole("region", { name: /Letters standing as books/ });
+    return { stage, track: stage.firstElementChild as HTMLElement };
+  };
+
+  it("keeps gliding after a touch press that the browser cancels", () => {
+    vi.useFakeTimers();
+    stubWidths();
+    const { stage, track } = renderDesk();
+
+    // Let the idle glide start and ease along the row.
+    vi.advanceTimersByTime(9000);
+    const beforeTouch = camX(track);
+    vi.advanceTimersByTime(2000);
+    expect(Math.abs(camX(track) - beforeTouch)).toBeGreaterThan(1); // gliding
+
+    // A touch press begins; the browser cancels the gesture (it took over
+    // scrolling) instead of firing pointerup.
+    fireEvent.pointerDown(stage, { pointerType: "touch", clientX: 100 });
+    vi.advanceTimersByTime(6000); // let the camera fully converge on the pre-touch spot
+    const settled = camX(track);
+    vi.advanceTimersByTime(3000);
+    expect(Math.abs(camX(track) - settled)).toBeLessThan(0.01); // paused while touching
+
+    fireEvent.pointerCancel(stage, { pointerType: "touch" });
+    vi.advanceTimersByTime(9000); // past the 6s resume delay
+    const resumed = camX(track);
+    vi.advanceTimersByTime(2000);
+    expect(Math.abs(camX(track) - resumed)).toBeGreaterThan(1); // gliding again
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+
+  it("ends the drag when the pointer is released anywhere, even off the desk", () => {
+    vi.useFakeTimers();
+    stubWidths();
+    const { stage, track } = renderDesk();
+
+    vi.advanceTimersByTime(9000);
+    fireEvent.pointerDown(stage, { pointerType: "touch", clientX: 100 });
+    vi.advanceTimersByTime(6000);
+    const settled = camX(track);
+    vi.advanceTimersByTime(3000);
+    expect(Math.abs(camX(track) - settled)).toBeLessThan(0.01); // paused while touching
+
+    fireEvent.pointerUp(window); // release lands on an overlay, not the desk
+    vi.advanceTimersByTime(9000);
+    const resumed = camX(track);
+    vi.advanceTimersByTime(2000);
+    expect(Math.abs(camX(track) - resumed)).toBeGreaterThan(1); // gliding again
+    vi.useRealTimers();
+    vi.restoreAllMocks();
+  });
+});

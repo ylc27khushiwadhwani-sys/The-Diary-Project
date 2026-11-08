@@ -200,6 +200,22 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
     interaction.current.lastTouch = performance.now();
   };
 
+  // Backstop: a press that ends anywhere still ends the drag. On touch the
+  // browser can cancel the gesture mid-press (it takes over scrolling) or
+  // the release can land on an overlay - missing that end left `dragging`
+  // stuck true, which paused the desk's glide forever after one touch.
+  useEffect(() => {
+    const clearDrag = () => {
+      interaction.current.dragging = false;
+    };
+    window.addEventListener("pointerup", clearDrag);
+    window.addEventListener("pointercancel", clearDrag);
+    return () => {
+      window.removeEventListener("pointerup", clearDrag);
+      window.removeEventListener("pointercancel", clearDrag);
+    };
+  }, []);
+
   const openBook = (note: Note, el: HTMLElement) => {
     if (interaction.current.dragged) return; // that was a walk, not a choice
     if (openingId) return;
@@ -290,6 +306,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
           onPointerUp={endDrag}
+          onPointerCancel={endDrag}
           onPointerLeave={endDrag}
           onWheel={(e) => steer(e.deltaY + e.deltaX)}
           role="region"
