@@ -78,6 +78,7 @@ export interface ModerationResult {
     self_harm: boolean;
     pii: boolean;
     abuse: boolean;
+    prohibited: boolean;
   };
   reason?: string;
 }

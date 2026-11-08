@@ -23,6 +23,25 @@ const compilePatterns = (entries: { pattern: string; flags: string }[]) =>
 const SELF_HARM_PATTERNS = compilePatterns(sharedPatterns.selfHarmPatterns);
 const PII_PATTERNS = compilePatterns(sharedPatterns.piiPatterns);
 
+// Public-publishing guardrails for payment-partner prohibited-content
+// categories (explicit or promotional content only - personal experiences of
+// addiction, survival, recovery or sexuality are legitimate writing).
+const PROHIBITED_GROUPS = [
+  "adultContentPatterns",
+  "violenceWeaponsPatterns",
+  "drugPromotionPatterns",
+  "gamblingPromotionPatterns",
+  "scamPromotionPatterns",
+] as const;
+const PROHIBITED_PATTERNS = compilePatterns(
+  PROHIBITED_GROUPS.flatMap(
+    (group) =>
+      (sharedPatterns as unknown as Record<string, { pattern: string; flags: string }[]>)[
+        group
+      ] ?? [],
+  ),
+);
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -37,6 +56,9 @@ serve(async (req) => {
 
     // 2. Evaluate PII Exposure
     const isPII = PII_PATTERNS.some((pattern) => pattern.test(fullText));
+
+    // 2b. Evaluate prohibited public content (explicit/promotional categories)
+    const isProhibited = PROHIBITED_PATTERNS.some((pattern) => pattern.test(fullText));
 
     // 3. Optional: Call external OpenAI / Gemini moderation API if key exists
     const apiKey = Deno.env.get("MODERATION_API_KEY");
@@ -87,6 +109,7 @@ serve(async (req) => {
             self_harm: true,
             pii: false,
             abuse: false,
+            prohibited: false,
           },
           reason: "self_harm",
         }),
@@ -94,7 +117,7 @@ serve(async (req) => {
       );
     }
 
-    if (piiTriggered || abuseTriggered) {
+    if (piiTriggered || abuseTriggered || isProhibited) {
       return new Response(
         JSON.stringify({
           allowed: false,
@@ -103,8 +126,9 @@ serve(async (req) => {
             self_harm: false,
             pii: piiTriggered,
             abuse: abuseTriggered,
+            prohibited: isProhibited,
           },
-          reason: piiTriggered ? "pii_detected" : "abusive_language",
+          reason: piiTriggered ? "pii_detected" : abuseTriggered ? "abusive_language" : "prohibited_content",
         }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }
       );
@@ -119,6 +143,7 @@ serve(async (req) => {
           self_harm: false,
           pii: false,
           abuse: false,
+          prohibited: false,
         },
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 }

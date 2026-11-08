@@ -7,6 +7,7 @@ import {
   Mail,
   Feather,
   Scale,
+  Ban,
 } from "lucide-react";
 import { GrandHallBackdrop } from "../components/library/GrandHallBackdrop";
 
@@ -38,6 +39,11 @@ const GUARDRAILS: GuardrailItem[] = [
     body: "Letters containing personal contact details - phone numbers, email addresses, links - are held private automatically, to protect the writer and anyone they mention.",
   },
   {
+    icon: <Ban className="w-5 h-5 text-gold" />,
+    title: "Some content can't be published at all",
+    body: "Because the Vault runs on a payment partner that is legally responsible for what its platforms carry, public letters can never contain explicit sexual material, weapons or explosives promotion, drug sales, gambling promotion, or scams. Letters crossing those lines stay private automatically. This is about what gets published, never about what you feel: honest letters about addiction, survival, recovery, or your own relationships and sexuality are welcome here.",
+  },
+  {
     icon: <Flag className="w-5 h-5 text-gold" />,
     title: "Every public letter can be reported",
     body: "Open any public letter and you will find a Report option beside it. A letter that gathers 3 reports is automatically hidden from the library automatically.",
@@ -55,7 +61,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Scale className="w-5 h-5 text-gold" />,
     title: "How the screening works",
-    body: "Screening is automated, rule-based pattern matching for crisis language, personal contact details and links, and abusive or threatening phrases. It is not human review and it is not perfect: unusual wording can slip past it, and no moderator reads every letter. That is why every public letter has a Report button, and three reports hide a letter automatically. An optional AI moderation pass is only active when it has been configured.",
+    body: "Screening is automated, rule-based pattern matching for crisis language, personal contact details and links, abusive or threatening phrases, and explicit or promotional content that payment rules prohibit from public pages. It is not human review and it is not perfect: unusual wording can slip past it, and no moderator reads every letter. That is why every public letter has a Report button, and three reports hide a letter automatically. An optional AI moderation pass is only active when it has been configured.",
   },
 ];
 
@@ -119,6 +125,12 @@ export const GuidelinesPage: React.FC = () => {
           <li>
             Nothing hateful, harassing, or threatening. The shelf is for
             weight, not for weapons.
+          </li>
+          <li>
+            Nothing explicit, and nothing for sale - no adult content, no
+            selling drugs, weapons, gambling or money schemes on public
+            shelves. Writing honestly about those parts of your life is
+            different, and welcome.
           </li>
           <li>
             If a letter worries you, report it. Three reports hide a letter

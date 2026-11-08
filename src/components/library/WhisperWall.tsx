@@ -107,7 +107,7 @@ export const WhisperWall: React.FC = () => {
       setNotice(
         verdict.categories.self_harm
           ? "That one sounds heavy. It stays with you, not on the wall - free, confidential helplines are listed in the footer."
-          : "That whisper can't go on the wall (contact details, links or harsh language). Try another line.",
+          : "That whisper can't go on the wall (contact details, links, harsh language, or content we can't publish). Try another line.",
       );
       setPinning(false);
       return;

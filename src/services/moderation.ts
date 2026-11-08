@@ -15,8 +15,28 @@ const LOCAL_ABUSE_PATTERNS = compilePatterns(
     .abusePatterns ?? [],
 );
 
+// Public-publishing guardrails for payment-partner prohibited-content
+// categories. These patterns target explicit or promotional content only:
+// personal writing about addiction, assault survival, gambling harm,
+// recovery or one's own sexuality is legitimate and stays publishable.
+const PROHIBITED_GROUPS = [
+  'adultContentPatterns',
+  'violenceWeaponsPatterns',
+  'drugPromotionPatterns',
+  'gamblingPromotionPatterns',
+  'scamPromotionPatterns',
+] as const;
+const LOCAL_PROHIBITED_PATTERNS = compilePatterns(
+  PROHIBITED_GROUPS.flatMap(
+    (group) =>
+      (sharedPatterns as Record<string, { pattern: string; flags: string }[]>)[
+        group
+      ] ?? [],
+  ),
+);
+
 const blocked = (
-  reason: 'self_harm' | 'pii_detected' | 'abusive_language',
+  reason: 'self_harm' | 'pii_detected' | 'abusive_language' | 'prohibited_content',
 ): ModerationResult => ({
   allowed: false,
   status: 'held_private',
@@ -24,6 +44,7 @@ const blocked = (
     self_harm: reason === 'self_harm',
     pii: reason === 'pii_detected',
     abuse: reason === 'abusive_language',
+    prohibited: reason === 'prohibited_content',
   },
   reason,
 });
@@ -35,6 +56,7 @@ export function localScreen(fullText: string): ModerationResult | null {
   if (LOCAL_SELF_HARM_PATTERNS.some((p) => p.test(fullText))) return blocked('self_harm');
   if (LOCAL_PII_PATTERNS.some((p) => p.test(fullText))) return blocked('pii_detected');
   if (LOCAL_ABUSE_PATTERNS.some((p) => p.test(fullText))) return blocked('abusive_language');
+  if (LOCAL_PROHIBITED_PATTERNS.some((p) => p.test(fullText))) return blocked('prohibited_content');
   return null;
 }
 
@@ -62,6 +84,6 @@ export async function screenNoteContent(content: string, title: string = ''): Pr
   return {
     allowed: true,
     status: 'clean',
-    categories: { self_harm: false, pii: false, abuse: false },
+    categories: { self_harm: false, pii: false, abuse: false, prohibited: false },
   };
 }

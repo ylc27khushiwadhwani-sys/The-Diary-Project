@@ -120,5 +120,171 @@
       "pattern": "\\b(?:nigger|nigga|faggot|kike|chink|spic|tranny|retard|cunt)\\b",
       "flags": "i"
     }
+  ],
+  "adultContentPatterns": [
+    {
+      "pattern": "\\b(?:blow|hand) ?jobs?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:cum ?shot|gang ?bang|deep ?throat|cream ?pie)s?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:bukkake|threesomes?|orgy|orgies|hentai)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bpornograph",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:pornhub|xvideos|xnxx|xhamster|chaturbate)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bescort (?:service|agency)|call girls?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\berotic massage\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:selling|sell|buy(?:ing)?) (?:my )?nudes\\b|\\bnudes for (?:sale|cash|money)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bmy onlyfans\\b|\\bonlyfans link\\b|\\bsubscribe to my\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bphone sex\\b|\\bsex chat (?:with|now|tonight|available)\\b|\\bcam ?shows?\\b",
+      "flags": "i"
+    }
+  ],
+  "violenceWeaponsPatterns": [
+    {
+      "pattern": "\\bpipe bombs?\\b|\\bmolotov\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:make|build|making|building) (?:a )?(?:bomb|explosive)s?\\b|\\bbomb making\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:guns?|firearms?|ammo|weapons?) for sale\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bghost guns?\\b|\\buntraceable (?:gun|firearm)s?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bshoot up (?:the|a|my) (?:school|office|mosque|temple|church|mall)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bplan(?:ning)? (?:a )?mass (?:shooting|bombing)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bkill all (?:the )?(?:jews|muslims|christians|hindus|immigrants|gays)\\b",
+      "flags": "i"
+    }
+  ],
+  "drugPromotionPatterns": [
+    {
+      "pattern": "\\b(?:weed|cannabis|marijuana|cocaine|heroin|mdma|ecstasy|meth|lsd|shrooms|fentanyl|xanax|adderall|percocet|oxycodone|kush|ganja|pills|drugs) for sale\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bdm me for (?:weed|drugs|coke|pills|carts|shrooms)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bhit me up for (?:weed|drugs|coke|pills)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bbuy (?:weed|cocaine|coke|heroin|mdma|ecstasy|meth|lsd|shrooms|fentanyl|xanax|adderall|pills|drugs) (?:online|here|now|cheap)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bdark ?(?:net|web) (?:market|vendor)",
+      "flags": "i"
+    }
+  ],
+  "gamblingPromotionPatterns": [
+    {
+      "pattern": "\\bcasino (?:bonus|promo(?:tion)?)\\b|\\bplay (?:at )?(?:our )?online casino\\b|\\bonline casino (?:bonus|real money|sign ?up|games)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bfree spins\\b|\\bdeposit bonus\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bpromo code [a-z0-9]{3,}\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bguaranteed winnings?\\b|\\brisk[- ]free bets?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bbet now\\b|\\bplace your bets?\\b|\\bsportsbook\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bparlay (?:tips|picks)\\b|\\bbetting tips\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bjoin (?:my|our) (?:betting|gambling|casino)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:stake|1xbet|betway|bet365|draftkings|fanduel)\\s*(?:\\.com|promo|code|bonus)\\b",
+      "flags": "i"
+    }
+  ],
+  "scamPromotionPatterns": [
+    {
+      "pattern": "\\bdouble your (?:money|crypto|bitcoin|investment)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:we|i) guarantee[sd]? (?:you )?(?:returns?|profits?|income|winnings?)\\b|\\bguaranteed (?:returns?|profits?|winnings?) of\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bget rich (?:quick|fast)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bforex signals?\\b|\\bbinary options?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bcrypto (?:giveaway|investment (?:group|opportunity))\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bsend (?:me )?(?:bitcoin|btc|eth|ethereum|usdt)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:dm|whatsapp|telegram) me (?:to|for) invest\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bmake \\$?[\\d,]+ (?:a|per) (?:day|week|month) (?:from home|online|guaranteed)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bpump and dump\\b",
+      "flags": "i"
+    }
   ]
 }

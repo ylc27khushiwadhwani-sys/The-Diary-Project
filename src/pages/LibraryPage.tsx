@@ -230,7 +230,7 @@ export const LibraryPage: React.FC = () => {
     const noteHeld = (saved: Note | null | undefined) => {
       if (noteData.is_public && saved && saved.is_public === false) {
         setHeldNotice(
-          "This letter was kept private: the safety screen found contact details, links, or abusive or self-harm language in it. It is saved on your shelf but not shared. Edit it to share it.",
+          "This letter was kept private: the safety screen found contact details, links, abusive or self-harm language, or content we can't share publicly in it. It is saved on your shelf but not shared. Edit it to share it.",
         );
       }
     };
