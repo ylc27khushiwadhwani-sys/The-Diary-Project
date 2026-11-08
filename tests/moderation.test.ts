@@ -119,7 +119,6 @@ describe('Prohibited public content (payment-partner categories)', () => {
       'Double your bitcoin in a week, guaranteed returns',
       'Get rich quick with my forex signals group',
       'Send me USDT and I will triple it',
-      'Make $500 a day from home, guaranteed',
     ];
     for (const text of samples) {
       const result = await screenNoteContent(text);
@@ -142,6 +141,11 @@ describe('Lived experience stays publishable', () => {
       'Two years sober tonight. The cravings still come, but so does the morning.',
       'My brother owns a gun and it scares me every time I visit home.',
       'I lost a week to an online casino once. The shame is heavier than the debt.',
+      'I make 500 a week at the bakery and I am proud of it.',
+      'A man on the train said he was selling nudes of his ex and laughed. I keep thinking about her.',
+      'The recruiter promised I could make $500 a day from home. It was a scam and I lost my deposit.',
+      'He forced himself on me in the back seat. I was seventeen and nobody asked if I was okay.',
+      'She told me she worked as an escort for two years to pay for her mothers treatment, and she is not ashamed.',
     ];
     for (const text of samples) {
       const result = await screenNoteContent(text);

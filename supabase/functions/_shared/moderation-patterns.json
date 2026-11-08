@@ -151,7 +151,7 @@
       "flags": "i"
     },
     {
-      "pattern": "\\b(?:selling|sell|buy(?:ing)?) (?:my )?nudes\\b|\\bnudes for (?:sale|cash|money)\\b",
+      "pattern": "\\bselling (?:my )?nudes[\\s,]+(?:cheap|now|tonight|dm|for)\\b|\\bi (?:sell|am selling|'m selling) (?:my )?nudes\\b|\\bnudes for (?:sale|cash|money)\\b|\\bbuy nudes (?:here|now|online|cheap|dm)\\b",
       "flags": "i"
     },
     {
@@ -276,10 +276,6 @@
     },
     {
       "pattern": "\\b(?:dm|whatsapp|telegram) me (?:to|for) invest\\b",
-      "flags": "i"
-    },
-    {
-      "pattern": "\\bmake \\$?[\\d,]+ (?:a|per) (?:day|week|month) (?:from home|online|guaranteed)\\b",
       "flags": "i"
     },
     {

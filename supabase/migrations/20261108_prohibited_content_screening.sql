@@ -14,8 +14,11 @@
 --     A letter about addiction, assault survival, gambling harm, recovery,
 --     or one's own sexuality is legitimate writing and must still pass.
 --     "porn addiction", "I was dealing drugs in college", "they promised
---     guaranteed returns" are lived experience; the patterns below are
---     written so they do not match those.
+--     guaranteed returns", "the recruiter said I could make $500 a day"
+--     are lived experience; the patterns below are written so they do not
+--     match those. Known limit: a letter that quotes a scam or solicitation
+--     pitch verbatim in promo voice ("double your money") can still be held
+--     - the writer can edit the wording and republish.
 --   * Same known limits as the existing rules: keyword matching can miss
 --     reworded content and non-English text. This is not a guarantee.
 --
@@ -66,7 +69,7 @@ begin
 
   -- Explicit adult material and sexual services (not personal experiences).
   if norm ~ ' ((blow|hand) ?jobs?|(cum ?shot|gang ?bang|deep ?throat|cream ?pie)s?|bukkake|threesomes?|orgy|orgies|hentai|pornograph[a-z]*|pornhub|xvideos|xnxx|xhamster|chaturbate) '
-     or norm ~ ' (escort (service|agency)|call girls?|erotic massage|selling (my )?nudes|nudes for (sale|cash|money)|my onlyfans|onlyfans link|subscribe to my|phone sex|sex chat (with|now|tonight|available)|cam ?shows?) ' then
+     or norm ~ ' (escort (service|agency)|call girls?|erotic massage|selling (my )?nudes (cheap|now|tonight|dm|for)|i (sell|am selling|m selling) (my )?nudes|nudes for (sale|cash|money)|buy nudes (here|now|online|cheap|dm)|my onlyfans|onlyfans link|subscribe to my|phone sex|sex chat (with|now|tonight|available)|cam ?shows?) ' then
     return 'prohibited';
   end if;
 
@@ -87,12 +90,6 @@ begin
 
   -- Scam and prohibited financial promotion.
   if norm ~ ' (double your (money|crypto|bitcoin|investment)|(we|i) guarantee[sd]? (you )?(returns?|profits?|income|winnings?)|guaranteed (returns?|profits?|winnings?) of|get rich (quick|fast)|forex signals?|binary options?|crypto (giveaway|investment (group|opportunity))|send (me )?(bitcoin|btc|eth|ethereum|usdt)|(dm|whatsapp|telegram) me (to|for) invest|pump and dump) ' then
-    return 'prohibited';
-  end if;
-
-  -- Money-amount scam promotion: matched on the raw text because the
-  -- normaliser translates digits into letters (leetspeak undo).
-  if raw ~* 'make \$?[0-9][0-9,]* (a|per) (day|week|month) (from home|online|guaranteed)' then
     return 'prohibited';
   end if;
 
