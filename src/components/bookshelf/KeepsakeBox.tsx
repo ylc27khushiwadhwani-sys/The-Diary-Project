@@ -1,5 +1,5 @@
 import React from "react";
-import { Lock } from "lucide-react";
+import { Lock, Trash2 } from "lucide-react";
 import { Note } from "../../types/database";
 import {
   isDateSealed,
@@ -11,6 +11,7 @@ import { HeartSeal } from "../library/HeartSeal";
 interface KeepsakeBoxProps {
   notes: Note[];
   onOpen: (note: Note) => void;
+  onDelete?: (noteId: string) => void;
   title?: string;
 }
 
@@ -20,6 +21,7 @@ const TILTS = [-2.2, 1.4, -0.8, 2.1, -1.5, 0.9, -2.6, 1.8];
 export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({
   notes,
   onOpen,
+  onDelete,
   title = "The Keepsake Box",
 }) => {
   return (
@@ -32,8 +34,8 @@ export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({
           const tilt = TILTS[i % TILTS.length];
           const author = note.profiles?.pen_name || "Anonymous Writer";
           return (
+            <span key={note.id} className="keepsake-slot">
             <button
-              key={note.id}
               type="button"
               onClick={() => onOpen(note)}
               className="keepsake-letter letter-land"
@@ -65,6 +67,27 @@ export const KeepsakeBox: React.FC<KeepsakeBoxProps> = ({
                   : author}
               </span>
             </button>
+            {onDelete && (
+              <button
+                type="button"
+                className="keepsake-delete"
+                title="Delete Note"
+                aria-label={`Delete letter: ${note.title || "Untitled Letter"}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (
+                    window.confirm(
+                      "Burn and delete this unsent letter forever?",
+                    )
+                  ) {
+                    onDelete(note.id);
+                  }
+                }}
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            )}
+            </span>
           );
         })}
       </div>

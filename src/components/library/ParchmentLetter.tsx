@@ -209,8 +209,9 @@ export const ParchmentLetter: React.FC<ParchmentLetterProps> = ({
                         onDelete();
                       }
                     }}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-wood-500 hover:text-red-700 transition"
+                    className="p-1 text-wood-500 hover:text-red-700 transition"
                     title="Delete Note"
+                    aria-label="Delete this letter"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>

@@ -705,6 +705,7 @@ export const LibraryPage: React.FC = () => {
                   setPasscodeNote(selected);
                 else openForEditing(selected);
               }}
+              onDelete={handleDeleteNote}
             />
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">

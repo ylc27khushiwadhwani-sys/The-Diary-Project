@@ -789,6 +789,17 @@ html:not([data-entry]) .hall-pushin { animation: pushIn 14s cubic-bezier(0.2, 0.
 .keepsake-seal { position: absolute; top: 14px; left: 50%; margin-left: -15px; z-index: 2; }
 .keepsake-title { font-family: 'Cormorant Garamond', serif; font-weight: 600; font-size: 0.95rem; line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .keepsake-by { margin-top: 6px; font-size: 0.68rem; letter-spacing: 0.06em; color: #6b4f2a; font-family: serif; font-style: italic; }
+.keepsake-slot { position: relative; display: block; }
+.keepsake-slot .keepsake-letter { width: 100%; height: 100%; }
+.keepsake-delete {
+  position: absolute; top: 6px; right: 6px; z-index: 3;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 4px; border-radius: 9999px;
+  color: #8a6b3f; background: rgba(236, 220, 180, 0.9);
+  border: 1px solid rgba(140, 116, 71, 0.5);
+  cursor: pointer; transition: color 0.2s ease, border-color 0.2s ease;
+}
+.keepsake-delete:hover, .keepsake-delete:focus-visible { color: #b3322c; border-color: #b3322c; outline: none; }
 
 /* --- Moth by the candlelight (calm, tiny, slow) ------------------------ */
 .hall-moth { position: fixed; left: 0; top: 0; z-index: 2; pointer-events: none; opacity: 0.8; animation: mothDrift 46s ease-in-out infinite; }
