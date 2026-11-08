@@ -292,7 +292,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
               const h = hash(note.id || String(index));
               const binding = BINDINGS[h % BINDINGS.length];
               const height = 208 + (h % 5) * 14;
-              const tilt = -80 - (h % 4) * 4; // spine out; hover/touch turns the cover to you
+              const tilt = 88 + (h % 3) * 2; // binding spine faces out; hover/touch turns the cover to you
               const title = note.title || "Untitled Letter";
               const penName = note.profiles?.pen_name || "Anonymous";
               const opening = openingId === note.id;
