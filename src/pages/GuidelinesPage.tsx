@@ -41,7 +41,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Ban className="w-5 h-5 text-gold" />,
     title: "Some content can't be published at all",
-    body: "Because the Vault runs on a payment partner that is legally responsible for what its platforms carry, public letters can never contain explicit sexual material, weapons or explosives promotion, drug sales, gambling promotion, or scams. Letters crossing those lines stay private automatically. This is about what gets published, never about what you feel: honest letters about addiction, survival, recovery, or your own relationships and sexuality are welcome here.",
+    body: "Public shelves can't carry explicit sexual material, weapons or explosives promotion, drug sales, gambling promotion, or scams. When the screening detects one of these in a letter being published, the letter is held private instead, and the writer can edit and republish. The checks are automated: they can miss content and they can misclassify honest writing, so they are a guardrail, not a guarantee. Writing about your own life - addiction, survival, recovery, relationships - is not automatically prohibited, though a held letter may need rewording before it can publish.",
   },
   {
     icon: <Flag className="w-5 h-5 text-gold" />,
@@ -61,7 +61,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Scale className="w-5 h-5 text-gold" />,
     title: "How the screening works",
-    body: "Screening is automated, rule-based pattern matching for crisis language, personal contact details and links, abusive or threatening phrases, and explicit or promotional content that payment rules prohibit from public pages. It is not human review and it is not perfect: unusual wording can slip past it, and no moderator reads every letter. That is why every public letter has a Report button, and three reports hide a letter automatically. An optional AI moderation pass is only active when it has been configured.",
+    body: "Screening is automated, rule-based pattern matching for crisis language, personal contact details and links, abusive or threatening phrases, and explicit or promotional content that can't appear on public shelves. It is not human review and it is not perfect: unusual wording can slip past it, and no moderator reads every letter. That is why every public letter has a Report button, and three reports hide a letter automatically. An optional AI moderation pass is only active when it has been configured.",
   },
 ];
 

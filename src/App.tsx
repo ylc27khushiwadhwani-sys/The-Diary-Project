@@ -351,13 +351,15 @@ export const App: React.FC = () => {
 /* Full-screen overlay for the Community Guidelines & Safety page. */
 const GuidelinesOverlay: React.FC<{ onClose: () => void }> = ({ onClose }) => (
   <div className="fixed inset-0 z-[70] overflow-y-auto bg-background">
-    <button
-      onClick={onClose}
-      aria-label="Close guidelines"
-      className="fixed top-4 right-4 z-[80] px-4 py-2 rounded-full bg-wood-800/90 border border-amber-700/40 text-amber-100 font-serif text-xs hover:bg-wood-700 transition cursor-pointer"
-    >
-      Close
-    </button>
+    <div className="sticky top-0 z-[80] flex justify-end px-4 py-3 bg-background/90 backdrop-blur-sm">
+      <button
+        onClick={onClose}
+        aria-label="Close guidelines"
+        className="px-4 py-2 rounded-full bg-wood-800/90 border border-amber-700/40 text-amber-100 font-serif text-xs hover:bg-wood-700 transition cursor-pointer"
+      >
+        Close
+      </button>
+    </div>
     <GuidelinesPage />
   </div>
 );
