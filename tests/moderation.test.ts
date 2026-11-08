@@ -154,3 +154,73 @@ describe('Lived experience stays publishable', () => {
     }
   });
 });
+
+describe('Sexual-violence and violence threats', () => {
+  it('holds rape and sexual-violence threats, including the live incident line', async () => {
+    const threats = [
+      'I want to rape here',
+      'I will rape you',
+      'i wanna rape someone and get away with it',
+      'gonna rape her tonight',
+      "let's rape the new girl",
+      'rape you and your whole family',
+      'I am going to molest you',
+      'I plan to sexually assault her',
+    ];
+
+    const evasionThreats = [
+      'I WANT TO RAPE HERE',
+      'i want to r@pe here',
+      'gonna r a p e her tonight',
+      'tujhe rape kar dunga',
+      'maar dunga tujhe, dekh lena',
+    ];
+
+    for (const phrase of evasionThreats) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed, `evasion "${phrase}" must be held`).toBe(false);
+      expect(result.status).toBe('held_private');
+    }
+
+    for (const phrase of threats) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed, `"${phrase}" must be held`).toBe(false);
+      expect(result.status).toBe('held_private');
+      expect(result.categories.abuse).toBe(true);
+      expect(result.reason).toBe('abusive_language');
+    }
+  });
+
+  it('holds physical-violence threats of intent against others', async () => {
+    const threats = [
+      'I want to kill people at my office',
+      "i'm gonna stab him tomorrow",
+      'I am going to murder someone',
+    ];
+
+    for (const phrase of threats) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed, `"${phrase}" must be held`).toBe(false);
+      expect(result.status).toBe('held_private');
+      expect(result.categories.abuse).toBe(true);
+    }
+  });
+
+  it('keeps survivor and disclosure writing publishable', async () => {
+    const survivorWriting = [
+      'I was raped at seventeen and I am still learning to feel safe',
+      'He raped me and nobody believed me for years',
+      'I am a rape survivor and this is my story',
+      'My uncle threatened to rape me if I told anyone',
+      'Talking about rape culture helps me heal',
+      'I want to rap about my feelings in this song',
+      'I would never hurt anyone, I just needed to say it out loud',
+    ];
+
+    for (const phrase of survivorWriting) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed, `"${phrase}" must stay publishable`).toBe(true);
+      expect(result.status).toBe('clean');
+    }
+  });
+});

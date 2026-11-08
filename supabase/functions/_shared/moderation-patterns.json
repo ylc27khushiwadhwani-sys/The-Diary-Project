@@ -282,5 +282,27 @@
       "pattern": "\\bpump and dump\\b",
       "flags": "i"
     }
+  ],
+  "threatPatterns": [
+    {
+      "pattern": "\\bi\\s+(?:will|'?ll|want\\s+to|wanna|gonna|am\\s+going\\s+to|'?m\\s+going\\s+to|am\\s+gonna|'?m\\s+gonna|plan\\s+to|planning\\s+to|intend\\s+to|get\\s+to|deserve\\s+to)\\s+(?:rape|molest|sexually\\s+assault)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\b(?:lets|let\\s*'?s)\\s+(?:rape|molest)\\b|\\b(?:gonna|wanna)\\s+(?:rape|molest)\\b|\\b(?:rape|molest|sexually\\s+assault)\\s+(?:you|u|ya)\\b|\\b(?:rape|molest)\\s+your\\s+(?:mom|mum|mother|sister|wife|girlfriend|daughter|family)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bi\\s+(?:will|'?ll|want\\s+to|wanna|gonna|am\\s+going\\s+to|'?m\\s+going\\s+to|am\\s+gonna|'?m\\s+gonna|plan\\s+to|planning\\s+to)\\s+(?:kill|murder|shoot|stab|beat)\\s+(?:you|u|ya|him|her|them|someone|somebody|people|everyone)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\br\\s*a\\s*p\\s*e\\s+(?:you|u|ya|her|him|them)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\brape\\s+kar\\s+(?:dunga|dungi|denge|raha|rahi)\\b|\\b(?:maar|mar|kaat|kat)\\s+dunga\\b",
+      "flags": "i"
+    }
   ]
 }

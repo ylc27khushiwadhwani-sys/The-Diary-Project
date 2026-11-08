@@ -26,6 +26,20 @@ const PII_PATTERNS = compilePatterns(sharedPatterns.piiPatterns);
 // Public-publishing guardrails for payment-partner prohibited-content
 // categories (explicit or promotional content only - personal experiences of
 // addiction, survival, recovery or sexuality are legitimate writing).
+const ABUSE_PATTERNS = compilePatterns(sharedPatterns.abusePatterns ?? []);
+// Threat/evasion patterns run on normalized text, mirroring the database
+// screen_text() normalization (lowercase, leet undone, punctuation collapsed).
+const normalizeForThreatScreen = (t: string): string =>
+  " " +
+  t
+    .toLowerCase()
+    .replace(/[01345@$7]/g, (ch) => "oieasast"["01345@$7".indexOf(ch)])
+    .replace(/[^a-z0-9]+/g, " ") +
+  " ";
+const THREAT_PATTERNS = compilePatterns(
+  (sharedPatterns as unknown as Record<string, { pattern: string; flags: string }[]>)
+    .threatPatterns ?? [],
+);
 const PROHIBITED_GROUPS = [
   "adultContentPatterns",
   "violenceWeaponsPatterns",
@@ -98,7 +112,10 @@ serve(async (req) => {
 
     const selfHarmTriggered = isSelfHarm || externalCategory === "self_harm";
     const piiTriggered = isPII;
-    const abuseTriggered = externalCategory === "abuse";
+    const abuseTriggered =
+      ABUSE_PATTERNS.some((pattern) => pattern.test(fullText)) ||
+      THREAT_PATTERNS.some((pattern) => pattern.test(normalizeForThreatScreen(fullText))) ||
+      externalCategory === "abuse";
 
     if (selfHarmTriggered) {
       return new Response(

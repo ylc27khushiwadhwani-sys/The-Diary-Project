@@ -26,6 +26,22 @@ const PROHIBITED_GROUPS = [
   'gamblingPromotionPatterns',
   'scamPromotionPatterns',
 ] as const;
+// Threat and evasion patterns evaluated on normalized text (lowercase,
+// leetspeak undone, punctuation collapsed) - the same normalization the
+// database screen_text() applies, so case, spacing and simple leet tricks
+// cannot slip threats past the client while the database would hold them.
+const normalizeForThreatScreen = (t: string): string =>
+  ' ' +
+  t
+    .toLowerCase()
+    .replace(/[01345@$7]/g, (ch) => 'oieasast'['01345@$7'.indexOf(ch)])
+    .replace(/[^a-z0-9]+/g, ' ') +
+  ' ';
+const LOCAL_THREAT_PATTERNS = compilePatterns(
+  (sharedPatterns as { threatPatterns?: { pattern: string; flags: string }[] })
+    .threatPatterns ?? [],
+);
+
 const LOCAL_PROHIBITED_PATTERNS = compilePatterns(
   PROHIBITED_GROUPS.flatMap(
     (group) =>
@@ -56,6 +72,8 @@ export function localScreen(fullText: string): ModerationResult | null {
   if (LOCAL_SELF_HARM_PATTERNS.some((p) => p.test(fullText))) return blocked('self_harm');
   if (LOCAL_PII_PATTERNS.some((p) => p.test(fullText))) return blocked('pii_detected');
   if (LOCAL_ABUSE_PATTERNS.some((p) => p.test(fullText))) return blocked('abusive_language');
+  if (LOCAL_THREAT_PATTERNS.some((p) => p.test(normalizeForThreatScreen(fullText))))
+    return blocked('abusive_language');
   if (LOCAL_PROHIBITED_PATTERNS.some((p) => p.test(fullText))) return blocked('prohibited_content');
   return null;
 }
