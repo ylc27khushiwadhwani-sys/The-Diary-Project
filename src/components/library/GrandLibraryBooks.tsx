@@ -65,6 +65,13 @@ const STAGE_SIDE_PAD = 60;
 // Past this many letters the desk ends with a note pointing at the archive.
 const MAX_BOOKS = 400;
 const DRIFT_RESUME_MS = 6000;
+// One unhurried end-to-end glide of the desk. Motion is time-based, so it
+// feels the same on 120Hz phones and on slow ones (the old per-frame sine
+// crawled on low-fps devices and parked at the ends of the row).
+const DRIFT_LEG_MS = 24000;
+// Smoothstep: eases out of each end, then keeps cruising - the row is
+// always visibly gliding, with only a short settle at the turnarounds.
+const smoothLeg = (t: number) => t * t * (3 - 2 * t);
 // Pull-out and cover swing complete, then the opened book grows into the
 // in-scene reader (handoff). The 3D book fades as the reader arrives.
 const OPEN_ANIMATION_MS = 1690;
@@ -101,7 +108,8 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
 
   const stageRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
-  const camera = useRef({ x: 0, target: 0, driftPhase: Math.PI / 2 });
+  // driftPhase counts ping-pong legs (1 leg = one end-to-end glide).
+  const camera = useRef({ x: 0, target: 0, driftPhase: 0 });
   const interaction = useRef({ dragging: false, dragged: false, startX: 0, startCam: 0, lastTouch: 0, pointerType: "mouse" as string });
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handoffTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -126,8 +134,11 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   useEffect(() => {
     const reduced = prefersReducedMotion();
     let raf = 0;
+    let last = 0;
     const step = (now: number) => {
       const cam = camera.current;
+      const dt = last ? Math.min(100, now - last) : 16.7;
+      last = now;
       const idle = now - interaction.current.lastTouch > DRIFT_RESUME_MS;
       if (busyRef.current) {
         raf = requestAnimationFrame(step);
@@ -135,12 +146,13 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
       }
       const actualTrack = trackRef.current?.scrollWidth ?? trackWidth;
       if (!reduced && idle && !interaction.current.dragging && actualTrack > (stageRef.current?.clientWidth ?? 0)) {
-        cam.driftPhase += 0.00224; // 20% slower glide, per her note
-        // Ping-pong drift across the whole row, slowest at the ends.
+        cam.driftPhase += dt / DRIFT_LEG_MS;
+        const leg = cam.driftPhase % 2;
+        const along = leg < 1 ? leg : 2 - leg; // ping-pong 0 -> 1 -> 0
         const max = Math.max(0, actualTrack - (stageRef.current?.clientWidth ?? 0));
-        cam.target = (Math.sin(cam.driftPhase) * 0.5 + 0.5) * max;
+        cam.target = smoothLeg(along) * max;
       }
-      cam.x += (cam.target - cam.x) * 0.06;
+      cam.x += (cam.target - cam.x) * Math.min(1, 0.06 * (dt / 16.7));
       if (trackRef.current) {
         trackRef.current.style.transform = `translate3d(${-cam.x}px,0,0)`;
       }
