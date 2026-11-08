@@ -224,3 +224,50 @@ describe('Sexual-violence and violence threats', () => {
     }
   });
 });
+
+describe('Strong profanity screening (owner rule 2026-11-08)', () => {
+  it('holds strong profanity, including disguised spellings', async () => {
+    const cases = [
+      'Fuck this',
+      'f*ck this',
+      'f.u.c.k off',
+      'F U C K',
+      'phuck off',
+      'fuk this noise',
+      'shit happens',
+      'b*llshit',
+      'this is bullshit',
+      'bitch please',
+      'you asshole',
+      'wtf is this',
+      'ye chutiya kaam hai',
+      'madarchod',
+      'behenchod',
+      'kya gand hai',
+    ];
+    for (const phrase of cases) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed).toBe(false);
+      expect(result.status).toBe('held_private');
+      expect(result.categories.abuse).toBe(true);
+    }
+  });
+
+  it('keeps honest everyday writing publishable', async () => {
+    const cases = [
+      'This is nice',
+      'I love this website!',
+      'the grass is green after the rain',
+      'a passage from dickens I keep returning to',
+      'class begins at nine',
+      'damn it, I miss you',
+      'hell yeah, we made it',
+      'crap, I forgot to say goodbye',
+    ];
+    for (const phrase of cases) {
+      const result = await screenNoteContent(phrase);
+      expect(result.allowed).toBe(true);
+      expect(result.status).toBe('clean');
+    }
+  });
+});

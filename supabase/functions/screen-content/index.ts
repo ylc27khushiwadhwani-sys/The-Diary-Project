@@ -40,6 +40,11 @@ const THREAT_PATTERNS = compilePatterns(
   (sharedPatterns as unknown as Record<string, { pattern: string; flags: string }[]>)
     .threatPatterns ?? [],
 );
+// Strong profanity on the same normalized text (case/leet/spacing-proof).
+const PROFANITY_PATTERNS = compilePatterns(
+  (sharedPatterns as unknown as Record<string, { pattern: string; flags: string }[]>)
+    .profanityPatterns ?? [],
+);
 const PROHIBITED_GROUPS = [
   "adultContentPatterns",
   "violenceWeaponsPatterns",
@@ -115,6 +120,7 @@ serve(async (req) => {
     const abuseTriggered =
       ABUSE_PATTERNS.some((pattern) => pattern.test(fullText)) ||
       THREAT_PATTERNS.some((pattern) => pattern.test(normalizeForThreatScreen(fullText))) ||
+      PROFANITY_PATTERNS.some((pattern) => pattern.test(normalizeForThreatScreen(fullText))) ||
       externalCategory === "abuse";
 
     if (selfHarmTriggered) {

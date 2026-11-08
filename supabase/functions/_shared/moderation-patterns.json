@@ -304,5 +304,87 @@
       "pattern": "\\brape\\s+kar\\s+(?:dunga|dungi|denge|raha|rahi)\\b|\\b(?:maar|mar|kaat|kat)\\s+dunga\\b",
       "flags": "i"
     }
+  ],
+  "profanityPatterns": [
+    {
+      "pattern": "\\bf\\s*u?\\s*c\\s*k+(?:\\s*i\\s*n\\s*g+|\\s*e\\s*d|\\s*e\\s*r\\s*s?)?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bp\\s*h\\s*u\\s*c\\s*k+\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bf\\s*u\\s*k+\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bb\\s*u?\\s*l\\s*l\\s*s\\s*h\\s*i\\s*t+\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bs\\s*h\\s*i\\s*t+(?:\\s*y)?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bb\\s*i\\s*t\\s*c\\s*h+(?:\\s*e\\s*s)?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\ba\\s*s+\\s*h\\s*o\\s*l\\s*e\\s*s?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bb\\s*a\\s*s\\s*t\\s*a\\s*r\\s*d\\s*s?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bd\\s*i\\s*c\\s*k+(?:\\s*h\\s*e\\s*a\\s*d\\s*s?)?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bp\\s*u\\s*s+\\s*(?:y|i\\s*e\\s*s)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bw\\s*t\\s*f+\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bs\\s*t\\s*f\\s*u\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bm\\s*a\\s*d\\s*a?\\s*r\\s*c\\s*h\\s*o\\s*d\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bb\\s*e?\\s*h\\s*e?\\s*n\\s*c\\s*h\\s*o\\s*d\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bb\\s*h\\s*o\\s*s\\s*d\\s*i\\s*k\\s*e?\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bc\\s*h\\s*u\\s*t\\s*i\\s*(?:a|y\\s*a)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\br\\s*a\\s*n\\s*d\\s*i\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bl\\s*a\\s*u\\s*d\\s*(?:a|e)\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bl\\s*o\\s*d\\s*a\\b",
+      "flags": "i"
+    },
+    {
+      "pattern": "\\bg\\s*a\\s*a?\\s*n\\s*d\\b",
+      "flags": "i"
+    }
   ]
 }

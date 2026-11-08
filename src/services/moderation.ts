@@ -41,6 +41,14 @@ const LOCAL_THREAT_PATTERNS = compilePatterns(
   (sharedPatterns as { threatPatterns?: { pattern: string; flags: string }[] })
     .threatPatterns ?? [],
 );
+// Strong profanity (English + common Hindi/Hinglish abuse words), evaluated on
+// the same normalized text as threats so disguised spellings (f*ck, f.u.c.k,
+// F U C K, phuck) cannot slip through. Mild exclamations (damn, hell, crap)
+// stay publishable - the line is documented for the site owner.
+const LOCAL_PROFANITY_PATTERNS = compilePatterns(
+  (sharedPatterns as { profanityPatterns?: { pattern: string; flags: string }[] })
+    .profanityPatterns ?? [],
+);
 
 const LOCAL_PROHIBITED_PATTERNS = compilePatterns(
   PROHIBITED_GROUPS.flatMap(
@@ -73,6 +81,8 @@ export function localScreen(fullText: string): ModerationResult | null {
   if (LOCAL_PII_PATTERNS.some((p) => p.test(fullText))) return blocked('pii_detected');
   if (LOCAL_ABUSE_PATTERNS.some((p) => p.test(fullText))) return blocked('abusive_language');
   if (LOCAL_THREAT_PATTERNS.some((p) => p.test(normalizeForThreatScreen(fullText))))
+    return blocked('abusive_language');
+  if (LOCAL_PROFANITY_PATTERNS.some((p) => p.test(normalizeForThreatScreen(fullText))))
     return blocked('abusive_language');
   if (LOCAL_PROHIBITED_PATTERNS.some((p) => p.test(fullText))) return blocked('prohibited_content');
   return null;
