@@ -9,6 +9,8 @@ import { ChevronLeft, ChevronRight, Feather, Lock } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Note } from "../../types/database";
 import { prefersReducedMotion } from "../../lib/motion";
+import { getLetterStyle, LETTER_FONTS } from "../../utils/letterStyle";
+import { isDateSealed } from "../../utils/unseal";
 import {
   SHELF_SECTIONS,
   matchesSection,
@@ -55,9 +57,10 @@ const hash = (value: string) => {
   return Math.abs(h);
 };
 
-const BOOK_W = 132;
-const BOOK_GAP = 18;
-const SPACING = BOOK_W + BOOK_GAP;
+// Books stand spine-out, packed like a real row; a revealed/opened book
+// turns to face the reader and overlaps its neighbours.
+const BOOK_GAP = 36;
+const SPACING = BOOK_GAP + 28;
 const STAGE_SIDE_PAD = 60;
 // Past this many letters the desk ends with a note pointing at the archive.
 const MAX_BOOKS = 400;
@@ -81,6 +84,9 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   const [sectionId, setSectionId] = useState("all");
   const [openingId, setOpeningId] = useState<string | null>(null);
   const [handingOff, setHandingOff] = useState(false);
+  // Touch reveal: first tap turns a spine-out book to show its cover,
+  // second tap opens it (hover already does this on a mouse).
+  const [revealedId, setRevealedId] = useState<string | null>(null);
   const [flipOrigin, setFlipOrigin] = useState<{ x: number; y: number; scale: number; opacity: number } | null>(null);
   const busyRef = useRef(false);
 
@@ -96,7 +102,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const camera = useRef({ x: 0, target: 0, driftPhase: Math.PI / 2 });
-  const interaction = useRef({ dragging: false, dragged: false, startX: 0, startCam: 0, lastTouch: 0 });
+  const interaction = useRef({ dragging: false, dragged: false, startX: 0, startCam: 0, lastTouch: 0, pointerType: "mouse" as string });
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const handoffTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -163,6 +169,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   };
 
   const onPointerDown = (e: React.PointerEvent) => {
+    interaction.current.pointerType = e.pointerType;
     interaction.current.dragging = true;
     interaction.current.dragged = false;
     interaction.current.startX = e.clientX;
@@ -184,6 +191,10 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   const openBook = (note: Note, el: HTMLElement) => {
     if (interaction.current.dragged) return; // that was a walk, not a choice
     if (openingId) return;
+    if (interaction.current.pointerType === "touch" && revealedId !== note.id) {
+      setRevealedId(note.id); // first touch turns the book to show its cover
+      return;
+    }
     if (prefersReducedMotion()) {
       onOpen(note);
       return;
@@ -281,15 +292,16 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
               const h = hash(note.id || String(index));
               const binding = BINDINGS[h % BINDINGS.length];
               const height = 208 + (h % 5) * 14;
-              const tilt = -18 - (h % 4) * 5;
+              const tilt = -80 - (h % 4) * 4; // spine out; hover/touch turns the cover to you
               const title = note.title || "Untitled Letter";
               const penName = note.profiles?.pen_name || "Anonymous";
               const opening = openingId === note.id;
               const lean = ((h >> 3) % 9) - 4; // books slump against each other, like a real row
+              const revealed = revealedId === note.id;
               return (
                 <div
                   key={note.id}
-                  className={`glb-book ${opening ? "is-opening" : ""} ${opening && handingOff ? "is-handing-off" : ""}`}
+                  className={`glb-book ${opening ? "is-opening" : ""} ${opening && handingOff ? "is-handing-off" : ""} ${revealed && !opening ? "is-revealed" : ""}`}
                   style={{
                     height,
                     ["--tilt" as string]: `${tilt}deg`,
@@ -302,7 +314,16 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
                     onClick={(e) => openBook(note, e.currentTarget)}
                     aria-label={`Open letter: ${title}`}
                   >
-                    <span className="glb-firstpage" aria-hidden="true" />
+                    <span className="glb-firstpage" aria-hidden="true">
+                      {!note.is_locked && !isDateSealed(note) && (
+                        <span
+                          className="glb-firstpage-text"
+                          style={{ fontFamily: LETTER_FONTS[getLetterStyle(note.tags).font].family }}
+                        >
+                          {note.content.slice(0, 260)}
+                        </span>
+                      )}
+                    </span>
                     <span className="glb-cover">
                       <span
                         className="glb-face glb-front"
