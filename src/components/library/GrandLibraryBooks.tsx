@@ -59,7 +59,7 @@ const hash = (value: string) => {
 
 // Books stand spine-out, packed like a real row; a revealed/opened book
 // turns to face the reader and overlaps its neighbours.
-const BOOK_GAP = 22;
+const BOOK_GAP = 12;
 const SPACING = BOOK_GAP + 28;
 const STAGE_SIDE_PAD = 60;
 // Past this many letters the desk ends with a note pointing at the archive.
@@ -292,11 +292,11 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
               const h = hash(note.id || String(index));
               const binding = BINDINGS[h % BINDINGS.length];
               const height = 208 + (h % 5) * 14;
-              const tilt = 80 + (h % 3) * 3; // binding spine out at a reading angle; hover/touch turns the cover to you
+              const tilt = 86 + (h % 3) * 2; // binding spine out, near-square so cover wedges stay thin even at screen edges; hover/touch turns the cover to you
               const title = note.title || "Untitled Letter";
               const penName = note.profiles?.pen_name || "Anonymous";
               const opening = openingId === note.id;
-              const lean = (Math.floor(index / 2) % 2 === 0 ? -1 : 1) * (5 + (h % 4)); // alternating slump - books lean on each other in a packed zigzag
+              const lean = (Math.floor(index / 3) % 2 === 0 ? -1 : 1) * (5 + (h % 3)); // slump groups share one lean, like books resting on each other
               const revealed = revealedId === note.id;
               return (
                 <div
@@ -307,6 +307,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
                     ["--tilt" as string]: `${tilt}deg`,
                     ["--lean" as string]: `${lean}deg`,
                     ["--restz" as string]: index % 2 === 0 ? "0px" : "-14px", // leaning books rest in front of or behind their neighbor, never inside it
+                    marginLeft: index > 0 && index % 3 === 0 ? 34 : undefined, // channel between slump groups so converging tops never cross
                   }}
                 >
                   <button
