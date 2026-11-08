@@ -64,8 +64,8 @@ const MAX_BOOKS = 400;
 const DRIFT_RESUME_MS = 6000;
 // Pull-out and cover swing complete, then the opened book grows into the
 // in-scene reader (handoff). The 3D book fades as the reader arrives.
-const OPEN_ANIMATION_MS = 1350;
-const HANDOFF_DONE_MS = 1950;
+const OPEN_ANIMATION_MS = 1690;
+const HANDOFF_DONE_MS = 2255;
 
 export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
   notes,
@@ -129,7 +129,7 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
       }
       const actualTrack = trackRef.current?.scrollWidth ?? trackWidth;
       if (!reduced && idle && !interaction.current.dragging && actualTrack > (stageRef.current?.clientWidth ?? 0)) {
-        cam.driftPhase += 0.0028;
+        cam.driftPhase += 0.00224; // 20% slower glide, per her note
         // Ping-pong drift across the whole row, slowest at the ends.
         const max = Math.max(0, actualTrack - (stageRef.current?.clientWidth ?? 0));
         cam.target = (Math.sin(cam.driftPhase) * 0.5 + 0.5) * max;
@@ -370,8 +370,8 @@ export const GrandLibraryBooks: React.FC<GrandLibraryBooksProps> = ({
                 className="glb-reader-book"
                 initial={flipOrigin ?? { opacity: 0, scale: 0.85 }}
                 animate={{ x: 0, y: 0, scale: 1, opacity: 1 }}
-                exit={{ opacity: 0, scale: 0.9, y: 24, transition: { duration: 0.28, ease: "easeIn" } }}
-                transition={{ duration: 0.55, ease: [0.3, 0.8, 0.25, 1] }}
+                exit={{ opacity: 0, scale: 0.9, y: 24, transition: { duration: 0.35, ease: "easeIn" } }}
+                transition={{ duration: 0.69, ease: [0.3, 0.8, 0.25, 1] }}
                 onClick={(e) => e.stopPropagation()}
               >
                 {renderReader(readerNote)}

@@ -38,7 +38,7 @@ describe("Grand Library books", () => {
     expect(screen.getByRole("button", { name: "read in random order" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Open letter: For October" }));
     expect(onOpen).not.toHaveBeenCalled(); // waits for the pull-out and cover-opening beat
-    vi.advanceTimersByTime(1600);
+    vi.advanceTimersByTime(1800);
     expect(onOpen).toHaveBeenCalledWith(expect.objectContaining({ id: "n1" }));
     vi.useRealTimers();
   });
