@@ -2984,3 +2984,8 @@ body:has(.grand-library-room) .vault-site-footer{background:#170e09;}
   .lp-star, .lp-constellation { animation:none; }
   .lp-shoot { display:none; }
 }
+
+/* Guidelines overlay: keep decorative layers from interfering with reading.
+   The hall moth is position:fixed z-2 and otherwise drifts over card text;
+   the entry-sequence veil (z 200) is below the overlay (z 300). */
+.guidelines-overlay .hall-moth { display: none; }

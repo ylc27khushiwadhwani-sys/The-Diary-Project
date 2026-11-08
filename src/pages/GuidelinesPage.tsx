@@ -56,7 +56,7 @@ const GUARDRAILS: GuardrailItem[] = [
   {
     icon: <Feather className="w-5 h-5 text-gold" />,
     title: "Pseudonymous by default",
-    body: "Writers appear only under an anonymous pen name. Email addresses are used solely to preserve a private library across devices - never shown, never shared.",
+    body: "Writers appear only under an anonymous pen name. Your email preserves your private library across devices and is only shared with the payment provider if you choose to pay - readers never see it.",
   },
   {
     icon: <Scale className="w-5 h-5 text-gold" />,
